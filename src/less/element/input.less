@@ -1,0 +1,27 @@
+.input{
+  &-div{
+    line-height:0;
+    input{
+      padding-top:.2rem;
+      padding-bottom:.2rem;
+      line-height:.28rem;
+      width: 100%;
+      height: .68rem;
+      font-size:.28rem;
+      padding-left:.16rem;
+      color: @color-10;
+      border:1px solid @color-24;
+      border-radius: .68rem;
+      &:focus{
+        border:1px solid @color-233;
+        .shadow-input(#ccc);
+      }
+    }
+  }
+}
+input{
+   .placeholder(.28rem,@color-104);
+  &:focus{
+    outline: none;
+  }
+}
