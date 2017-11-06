@@ -2,7 +2,31 @@ export default{
   name:'home-index',
   data() {
     return {
-      title:'绑定手机'
+      title:'首页',
+      headMenu:['酒吧','清吧','KTV'],
+      headActiveIndex:0,
+      swiperList:[
+        '/images/demo.png','/images/demo.png','/images/demo.png','/images/demo.png','/images/demo.png'],
+      clubList:[
+        {
+          name:'CLUB QUEEN',
+          address:'重庆观音桥',
+          distance:'5.5km',
+          img:'/images/demo.png',
+        },
+        {
+          name:'CLUB QUEEN',
+          address:'重庆观音桥',
+          distance:'5.5km',
+          img:'/images/demo.png',
+        },
+        {
+          name:'CLUB QUEEN',
+          address:'重庆观音桥',
+          distance:'5.5km',
+          img:'/images/demo.png',
+        },
+      ]
     }
   },
   beforeDestroy:function(){
@@ -12,14 +36,13 @@ export default{
     var that = this;
     WY.oneReady('user-info',function(o){
         if(!o || !o.phone){
-          vueRouter.push('/login/phone');
+          //vueRouter.push('/login/phone');
         }
     } , this);
   },
   methods:{
-    listContentTipTap:function(index){
-      var obj = this.list[index];
-      obj.listContentTip = !obj.listContentTip;
+    headMenuClick:function(index){
+      this.headActiveIndex = index;
     }
   }
 }

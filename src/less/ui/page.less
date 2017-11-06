@@ -3,13 +3,23 @@
   padding-bottom:.26rem;
   font-size: .26rem;
   color:@color-10;
-  position: relative;
+  position: fixed;
+  width: 100%;
+  left: 0;
+  top:0;
+  z-index: 1000;
   border-bottom: 1px solid @color-194;
   .back{
     position: absolute;
     height: .34rem;
     left:.30rem;
     top:.26rem;
+  }
+  .right-ico{
+    position: absolute;
+    height: .34rem;
+    top:.24rem;
+    right:.24rem;
   }
 }
 .page-body{
@@ -32,4 +42,21 @@
   background: rgba(0,0,0,.4);
 }
 .page-footer{
+   height: 1.02rem;
+  padding-top:.18rem;
+  padding-bottom:.14rem;
+  .item{
+    height: 100%;
+    line-height: 0;
+    text-align: center;
+  }
+  img{
+    width: .3rem;
+    height: .3rem;
+  }
+  .text{
+    padding-top:.1rem;
+    font-size:.20rem;
+    line-height: .20rem;
+  }
 }

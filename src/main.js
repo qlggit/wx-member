@@ -4,6 +4,8 @@ import Vue from 'vue'
 import App from './App'
 import WY from './js/wy/index.js'
 import router from './router/index.js'
+import VueAwesomeSwiper from 'vue-awesome-swiper'
+Vue.use(VueAwesomeSwiper);
 Vue.config.productionTip = false;
 window.vueRouter = router;
 router.beforeEach(function(to , from , next){

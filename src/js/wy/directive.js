@@ -32,13 +32,3 @@ Vue.directive('user-info',{
     }
   }
 });
-Vue.directive('dynamic-detail',{
-  inserted:function(el , binding){
-    var id = binding.value;
-    el.onclick = function(event){
-      var url = '/dynamic/page/detail?id='+id;
-      vueRouter.push(url);
-      event.stopPropagation();
-    }
-  }
-});

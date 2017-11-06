@@ -1,15 +1,18 @@
 <template>
   <div class="page-header back-white text-center">
-    <div class="back" v-back ><</div>
+    <slot name="city-select"></slot>
+    <div v-if="!notBack" class="back" v-back ><</div>
     {{title}}
+    <slot name="search"></slot>
   </div>
 </template>
 <script>
   export default {
-    props:['title'],
+    props:['headerData'],
     data:function(){
       return {
-        title:this.title
+        title:this.headerData.title,
+        notBack:this.headerData.notBack,
       };
     },
     beforeDestroy:function(){

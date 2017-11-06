@@ -5,11 +5,11 @@ WY.$ = function(selector , parent){
 window.$ = window.$ || WY.$;
 $.init = function(selector , parent){
   var rows = [];
-  if(typeof selector == 'string' && selector.indexOf('<') == 0){
+  if(typeof selector === 'string' && selector.indexOf('<') === 0){
     divDemo.innerHTML = selector;
     rows = divDemo.children || divDemo.childNodes;
   }else{
-    if(typeof selector == 'object'){
+    if(typeof selector === 'object'){
       rows.push(selector);
     }
     else [].slice.call($(parent || document)).forEach(function(a){
@@ -32,7 +32,7 @@ $.constructor = $.init.constructor;
 $.fn = $.init.prototype;
 Object.assign($.fn,{
   attr:function(attr,val){
-    if(arguments.length == 1){
+    if(arguments.length === 1){
       return this[0].getAttribute(attr);
     }
     else{
@@ -52,13 +52,13 @@ $.each = function(data , func){
   if(data){
     if(data.length && !isNaN(data.length)){
       for(var i=0;i<data.length;i++){
-        if(func(i , data[i])===false)return false;
+        if(func(i , data[i])===false)return;
       }
-      return false;
+      return;
     }
-    if(typeof data == 'object'){
+    if(typeof data === 'object'){
       for(var key in data){
-        if(func(key , data[key])===false)return false;
+        if(func(key , data[key])===false)return;
       }
     }
   }

@@ -1,6 +1,6 @@
 <template>
    <div>
-     <header-component :title="title"></header-component>
+     <header-component :header-data="{title:title}"></header-component>
      <div class="pt-30 color-104 fz-30 break-none pl-24">
        为了保障您的个人财产和信息安全请绑定手机
      </div>

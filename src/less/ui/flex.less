@@ -74,6 +74,11 @@
   -webkit-justify-content: @justify-content;
   justify-content: @justify-content;
 }
+.flex-justify-content(@justify-content) when (@justify-content=space-around){
+  -moz-justify-content: @justify-content;
+  -webkit-justify-content: @justify-content;
+  justify-content: @justify-content;
+}
 //交叉轴对齐方式
 .flex-align-items(@align-items) when (@align-items=flex-start){
   -webkit-box-align: start;
@@ -129,6 +134,9 @@
 }
 .flex-center{
   .flex(row,center)
+}
+.flex-around{
+  .flex(row,space-around)
 }
 .flex-left{
   .flex(row,flex-start)
