@@ -1,9 +1,10 @@
 <template>
-  <div class="pt-84 pb-102">
+  <div class="pt-header pb-footer">
     <header-component :header-data="{title:title,notBack:1}">
         <city-select slot="city-select" :city-select-data="{title:'重庆'}"></city-select>
-      <img slot="search" src="/images/search.png" class="right-ico" alt="">
+      <img slot="search" src="/images/search.png" @click="showClubSearch" class="right-ico" alt="">
     </header-component>
+    <wy-club-search v-if="clubSearchAble"></wy-club-search>
     <div class="head-type-menu" >
       <div v-for="(item, index) in headMenu"
            @click="headMenuClick(index)"
@@ -15,8 +16,8 @@
     </div>
     <div class="club-item-content">
       <div v-for="item in clubList" class="club-item-list">
-        <div class="shadow-bottom-auto">
-          <img :src="item.img" alt="" class="">
+        <div class="shadow-bottom-auto" v-merchant-detail="item.id">
+          <img :src="item.img | imgUrlFilter" alt="" class="">
         </div>
         <div class="title">{{item.name}}</div>
         <div class="text clearfix">
@@ -28,9 +29,7 @@
         </div>
       </div>
     </div>
-    <footer-component>
-
-    </footer-component>
+    <footer-component></footer-component>
   </div>
 </template>
 <script>
