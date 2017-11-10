@@ -1,4 +1,7 @@
 WY.request = function(options){
+  if(location.port !== '3001'){
+    options.url = 'http://127.0.0.1:3001'+options.url;
+  }
   WY.trigger('request-start-filter',options);
   options = Object.assign({
     method:'GET',

@@ -1,4 +1,14 @@
 window.WY = {};
+(function(){
+  WY.clientWidth = document.documentElement ? document.documentElement.clientWidth : document.body.clientWidth;
+  WY.clientHeight = document.documentElement ? document.documentElement.clientHeight : document.body.clientHeight;
+  var fontSize = 100 * WY.clientWidth / 750;
+  document.documentElement.style.fontSize = fontSize + 'px';
+  WY.fontSizeScale = fontSize / 100;
+  WY.getScaleSize = function(size){
+    return size * WY.fontSizeScale;
+  }
+})();
 require('./base.js');
 require('./handler.js');
 require('./vue.js');
@@ -12,6 +22,7 @@ require('./component.js');
 require('./validate.js');
 require('./wx.js');
 require('./directive.js');
+require('./filter.js');
 require('./ready.js');
 require('../ui/index');
 WY.bind('request-start-filter',function(options){
@@ -25,4 +36,13 @@ WY.ready('session-complete' , function(){
 });
 WY.trigger('session');
 WY.trigger('require-complete');
+
+window.requestAnimFrame = (function(){
+  return  window.requestAnimationFrame       ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame    ||
+    function( callback ){
+      window.setTimeout(callback, 1000 / 60);
+    };
+})();
 export default WY;

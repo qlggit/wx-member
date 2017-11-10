@@ -7,7 +7,7 @@
       </div>
       <div class="position-relative pl-24 pr-24 pb-40">
         <div class="merchant-title color-24"><span>{{name}}</span><wy-star :star-count="lvl"></wy-star></div>
-        <div class="merchant-address mt-20 color-104"><span>{{address}}</span><img src="/images/location.png" class="" alt=""></div>
+        <div class="merchant-address color-104 mr-20"><span>{{address}}</span><img src="/images/location.png" class="location-ico" alt=""></div>
         <div class="btn btn-sm back-24 color-white position-absolute merchant-talk-btn">聊天室</div>
       </div>
     </div>

@@ -21,4 +21,5 @@ WY.oneUnBind = function(oneObj){
     })
   }
 };
-document.documentElement.style.fontSize = 100 * (document.documentElement ? document.documentElement.clientWidth : document.body.clientWidth) / 750 + 'px';
+
+

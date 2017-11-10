@@ -3,7 +3,7 @@
     <swiper :options="swiperOption" ref="mySwiper">
       <swiper-slide v-for="item in swiperData.list">
         <div class="shadow-bottom-auto">
-          <img :src="item" class="swiper-img " alt="">
+          <img :src="item.img | imgUrlFilter" class="swiper-img " alt="">
         </div>
       </swiper-slide>
       <div class="swiper-pagination"  slot="pagination"></div>
@@ -14,7 +14,6 @@
 
 <script>
   require('swiper/dist/css/swiper.css');
-  // swiper options example:
   export default {
     name: 'carrousel',
     props:['swiperData'],

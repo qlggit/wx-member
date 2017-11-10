@@ -1,13 +1,22 @@
 .inline-block{
   display: inline-block;
+  line-height:1;
 }
-.overflow-hidden{
-  overflow: hidden;
+.block{
+  display:block;
+}
+.overflow{
+  &-hidden{
+    overflow: hidden;
+  }
+  &-scroll{
+    overflow: scroll;
+  }
 }
 .display-table{
   display: table;
   text-align: center;
-  & > div{
+  & > *{
     display: table-cell;
     vertical-align: middle;
   }

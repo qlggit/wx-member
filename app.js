@@ -12,10 +12,15 @@ global.publicDir = process.env.NODE_ENV?'dist':'dist';
 global.viewDir = process.env.NODE_ENV?'dist':'dist';
 app.use(function(req , res , next){
 	var method = req.method;
+	// if(req.connection.remoteAddress.indexOf('127.0.0.1') > -1 || req.connection.remoteAddress.indexOf('localhost') > -1){
+	//   res.setHeader('Access-Control-Allow-Origin','*');
+	//   res.setHeader('Access-Control-Allow-Headers','sessionId');
+	//   res.setHeader('Access-Control-Allow-Methods','*');
+  // }
 	//非get post不进入后面逻辑
-	if(method != 'GET' && method != 'POST'){
-		return res.status(405).end();
-	}
+	// if(method != 'GET' && method != 'POST'){
+	// 	return res.status(405).end();
+	// }
 	next();
 });
 //静态文件目录

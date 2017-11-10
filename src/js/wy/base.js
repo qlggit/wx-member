@@ -205,3 +205,11 @@ WY.common.convertBase64UrlToBlob = function (urlData , type){
   }
   return new Blob( [ab] , {type : type});
 };
+WY.common.sum = function(array , func){
+  func = func || function(a){return a - 0};
+  var sum = 0;
+  array.forEach(function(a){
+    sum += func(a);
+  });
+  return sum;
+};

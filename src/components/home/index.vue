@@ -20,10 +20,10 @@
           <img :src="item.img | imgUrlFilter" alt="" class="">
         </div>
         <div class="title">{{item.name}}</div>
-        <div class="text clearfix">
+        <div class="text clearfix mt-20">
           <div class="float-left color-104">{{item.address}}</div>
-          <div class="float-right">
-            <div class="ico inline-block text-middle"></div>
+          <div class="float-right lh-0">
+            <div class="ico inline-block text-middle location-ico"></div>
             <div class="inline-block text-middle fz-24 color-24" >距离我{{item.distance}}</div>
           </div>
         </div>

@@ -48,7 +48,7 @@ module.exports = function(req , res , next){
         res.render(path , data);
     };
     res.useSend = function(body){
-        body.message = body.message || (body.code == 0?'操作成功':'操作失败');
+        body.message = body.message || (body.code === 0 || body.status === true?'操作成功':'操作失败');
         res.send(body);
     };
     res.useRedirect = function(path){

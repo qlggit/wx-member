@@ -46,6 +46,15 @@ Object.assign($.fn,{
       if(func(i , this[i])===false)return this;
     }
     return this;
+  },
+  bind:function(type,func){
+    return this.each(function(i , a){
+      type.split(' ').forEach(function(b){
+        a.addEventListener(b , function(e){
+          func.call(a , e);
+        } , false);
+      });
+    })
   }
 });
 $.each = function(data , func){

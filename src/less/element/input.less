@@ -9,7 +9,6 @@
       height: .68rem;
       font-size:.28rem;
       padding-left:.16rem;
-      color: @color-10;
       border:1px solid @color-24;
       border-radius: .68rem;
       &:focus{
@@ -21,7 +20,47 @@
 }
 input{
    .placeholder(.28rem,@color-104);
+  color: @color-10;
   &:focus{
     outline: none;
   }
 }
+.search-input{
+  position: relative;
+  height: .55rem;
+  border-radius: .55rem;
+  border: 1px solid @color-194;
+  padding-left:.6rem;
+  padding-right:.6rem;
+  line-height:0;
+  padding-top:.10rem;
+  input{
+    height: .28rem;
+    line-height: .28rem;
+    font-size:.28rem;
+    width: 100%;
+    border: 0;
+  }
+  .ico{
+    position: absolute;
+    top:.11rem;
+    height: .29rem;
+  }
+  .search-left-ico{
+    left: .16rem;
+  }
+  .del-ico{
+    right: .16rem;
+  }
+}
+.checkbox{
+  width: .36rem;
+  height: .36rem;
+  background-image: url(/images/page/checkbox-none.png);
+  background-size: 100% 100%;
+  display: inline-block;
+  &.active{
+    background-image: url(/images/page/checkbox-checked.png);
+  }
+}
+

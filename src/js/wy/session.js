@@ -8,6 +8,9 @@ function putSession(){
   session.userInfo = WY.common.parse(localStorage.userInfo || '');
   if(session.sessionId)WY.ready('session-complete',session);
   if(session.userInfo){
+    if(!session.userInfo.phone){
+      //vueRouter.push('/login/phone');
+    }
     WY.ready('user-info',session.userInfo);
   }
 }
@@ -35,7 +38,7 @@ function login(){
       }
     })
   }else{
-    location.href = '/in?callback=' + encodeURIComponent(location.pathname);
+    //location.href = '/in?callback=' + encodeURIComponent(location.pathname);
   }
 }
 function getSession(){
@@ -71,4 +74,10 @@ WY.bind('session',function(status){
 session.isOwner = function(unionid){
   return unionid == session.unionid;
 };
-
+WY.setLocalStorage = function(key , data){
+  localStorage[key] = JSON.stringify(data);
+};
+WY.getLocalStorage = function(key){
+  var v = localStorage[key];
+  return v && JSON.parse(v);
+};
