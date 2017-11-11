@@ -1,11 +1,7 @@
 //admin 1234yqs_admin
 module.exports = {
     uploadPath:'build/upload',
-    apiImgUrl:'http://img.yqsapp.com/',
-    apiUrl:'http://api.yqsapp.com',
-    webUrl:'http://wbapi.yqsapp.com',
-    appid:'00001yqs',
-    appsecrect:'8uRomZ58IYCzdnnduNoS6B8heY9QZCjo',
+    apiUrl:'http://172.19.56.131',
     "log4js":{
         "customBaseDir" :"../logs/pc-boss",
         "customDefaultAtt" :{

@@ -171,6 +171,12 @@ html {
 div::-webkit-scrollbar {
   display: none;
 }
+.write-ellipsis {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 100%;
+}
 .color-white {
   color: white;
 }
@@ -276,6 +282,12 @@ div::-webkit-scrollbar {
 }
 .overflow-scroll {
   overflow: scroll;
+}
+.overflow-scroll-x {
+  overflow-x: scroll;
+}
+.overflow-scroll-y {
+  overflow-y: scroll;
 }
 .display-table {
   display: table;
@@ -1275,7 +1287,6 @@ div::-webkit-scrollbar {
   font-size: .32rem;
 }
 .club-item-list .text {
-  margin-top: .2rem;
   font-size: .24rem;
 }
 .club-item-list .ico {

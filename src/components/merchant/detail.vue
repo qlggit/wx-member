@@ -18,7 +18,11 @@
     </div>
     <div v-if="showInfo&&showInfo.length" class="pt-40 pb-40 pl-24 pr-24 mt-20 back-242">
       <div class="fz-28 color-24 mb-20">环境展示</div>
-      <wy-marquee :marquee-data="{list:showInfo,itemWidth:320,itemHeight:280,height:280,margin:8}"></wy-marquee>
+      <div class="overflow-scroll-x">
+        <div :style="{width:showInfo.length * 3.28+'rem',height:2.8+'rem'}">
+          <img v-for="item in showInfo" :src="item.img" style="width:3.20rem;height:2.80rem;margin-right: .08rem;" alt="">
+        </div>
+      </div>
     </div>
      <wy-buy-button :buy-data="{merchantId:merchantId}"></wy-buy-button>
   </div>
