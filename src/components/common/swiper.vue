@@ -2,13 +2,12 @@
   <div>
     <swiper :options="swiperOption" ref="mySwiper">
       <swiper-slide v-for="item in swiperData.list">
-        <div class="shadow-bottom-auto">
+        <div v-if="!swiperData.notSlide" class="shadow-bottom-auto">
           <img :src="item.img | imgUrlFilter" class="swiper-img " alt="">
         </div>
       </swiper-slide>
-      <div class="swiper-pagination"  slot="pagination"></div>
+      <div v-if="!swiperData.notPagination" class="swiper-pagination"  slot="pagination"></div>
     </swiper>
-
   </div>
 </template>
 

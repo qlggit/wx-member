@@ -16,9 +16,6 @@ export default{
   created:function(){
     var that = this;
     WY.oneReady('user-info',function(o){
-        if(!o || !o.phone){
-          //vueRouter.push('/login/phone');
-        }
     } , this);
     WY.oneBind('club-search',function(o){
         that.clubSearchAble = o;

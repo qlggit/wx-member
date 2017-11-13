@@ -67,7 +67,7 @@ Vue.directive('book-seat',{
 });
 Vue.directive('router-link',{
   inserted:function(el , binding){
-    var url = binding.value;
+    var url = binding.value || 'http://www.baidu.com';
     el.onclick = function(event){
       vueRouter.push(url);
       event.stopPropagation();

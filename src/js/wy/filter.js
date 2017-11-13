@@ -7,3 +7,10 @@ Vue.filter('imgUrlFilter', function (value) {
   }
   return value;
 });
+Vue.filter('sexUrlFilter', function (value) {
+  return value === "1"?'/images/my/man.png':'/images/my/woman.png';
+});
+Vue.filter('moneyFilter', function (value) {
+  if(isNaN(value))return 0;
+  return (value / 100).toFixed(2);
+});

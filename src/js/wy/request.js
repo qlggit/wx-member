@@ -5,8 +5,8 @@ WY.request = function(options){
   WY.trigger('request-start-filter',options);
   options = Object.assign({
     method:'GET',
-    headers:{}
   },options);
+  options.headers = Object.assign({'X-Requested-With':'XMLHttpRequest'},options.headers);
   options.method = options.method.toUpperCase();
   var xmlHttp=new XMLHttpRequest();
   var readyState = 0;

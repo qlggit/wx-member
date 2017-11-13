@@ -6,7 +6,9 @@ function putSession(){
   session.apiImgUrl = localStorage.apiImgUrl || '';
   session.debug = localStorage.debug || '';
   session.userInfo = WY.common.parse(localStorage.userInfo || '');
-  if(session.sessionId)WY.ready('session-complete',session);
+  if(session.sessionId){
+    WY.ready('session-complete',session);
+  }
   if(session.userInfo){
     if(!session.userInfo.phone){
       //vueRouter.push('/login/phone');
@@ -17,7 +19,6 @@ function putSession(){
 function putStorage(session , userInfo){
   userInfo = userInfo || session.userInfo;
   if(userInfo){
-    userInfo.openId = userInfo.openId || userInfo.h5OpenId;
     userInfo.headImg = WY.getHeadImg(userInfo.headImg);
     localStorage.userInfo = WY.common.stringify(userInfo);
   }
@@ -25,8 +26,8 @@ function putStorage(session , userInfo){
   localStorage.openId = session.openId || localStorage.openId || '';
   localStorage.unionid = session.unionid || localStorage.unionid || '';
 }
-function login(){
-  if(session.unionid){
+function login(sts){
+  if(!sts && session.unionid){
     if(session.userInfo && localStorage.loginTime && Date.now() - localStorage.loginTime < 20 * 60 * 1000){
       //return false;
     }
@@ -38,7 +39,7 @@ function login(){
       }
     })
   }else{
-    //location.href = '/in?callback=' + encodeURIComponent(location.pathname);
+    location.href = '/in?callback=' + encodeURIComponent(location.pathname);
   }
 }
 function getSession(){
@@ -58,8 +59,8 @@ function loginFlush(){
   });
 }
 WY.bind('request-status-error',function(status){
-  if(status == 401){
-    login();
+  if(status === 401){
+    login(1);
   }
 });
 WY.bind('login',function(status){
@@ -72,7 +73,7 @@ WY.bind('session',function(status){
   getSession();
 });
 session.isOwner = function(unionid){
-  return unionid == session.unionid;
+  return unionid === session.unionid;
 };
 WY.setLocalStorage = function(key , data){
   localStorage[key] = JSON.stringify(data);

@@ -1,7 +1,7 @@
 var request =require('request');
 module.exports = {
     send:function(req, res , options ){
-        var sendData = useCommon.extend({} , options.data);
+        var sendData = Object.assign({} , options.data);
         var method = options.method || 'GET';
         var headers = options.headers || {};
         var __ = {

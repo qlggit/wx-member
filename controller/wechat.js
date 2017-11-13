@@ -8,12 +8,11 @@ router.get('/entrance', function(req, res, next) {
         unionid:req.session.unionid,
         openId :query.openid,
         nickName  :query.nickname,
-        avatarUrl   :query.headimgurl,
-        gender   :query.sex,
+        headImgUrl   :query.headimgurl,
+        sex   :query.sex,
         province   :query.province,
         city   :query.city,
         country   :query.country,
-        loginSource:'wxh5',
     };
     useRequest.send(req , res , {
       url:useUrl.login.reg,
@@ -21,7 +20,7 @@ router.get('/entrance', function(req, res, next) {
       method:'POST',
       done:function(data){
           req.session.userInfo = sendData;
-          return res.useRedirect(req.session.callback || '/');;
+          return res.useRedirect(req.session.callback || '/');
          if(data.code == 0){
            req.session.apiSessionId = data.data.jsessionid;
            req.session.userInfo = data.data;

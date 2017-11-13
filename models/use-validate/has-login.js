@@ -4,6 +4,9 @@ module.exports = function(req , res , next){
         return next();
     }
     redirectUrl = '/wechat/login';
+    console.log(req.xhr);
+    console.log(req.headers);
+    console.log(req['X-Requested-With']);
     if(req.xhr){
         return res.sendErrorMessage('HTTP_CODE_401',{
             redirectUrl:redirectUrl
