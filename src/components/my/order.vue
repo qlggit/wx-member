@@ -2,7 +2,7 @@
   <div class="pt-header pb-74 height-100-100 back-242">
     <header-component :header-data="{title:'我的订单'}"></header-component>
     <div class="back-transparent height-100-100 pt-20 overflow-scroll-y">
-      <div v-for="item in orderList" class="my-order-list back-242 mb-20">
+      <div v-for="(item,index) in orderList" class="my-order-list back-242 mb-20">
         <div class="pl-24 pr-24">
           <div class="pt-24 pb-24 clearfix fz-26 color-104 border-b-233">
             <div class="float-left">{{item.placeName}}</div>
@@ -21,6 +21,10 @@
               <div class="float-right">￥{{smItem.number}}</div>
             </div>
           </div>
+        </div>
+        <div v-if="item.showMore" class="pt-20 pb-20 flex-center" @click="showMoreWine(index)">
+          <div class="fz-24 color-104">展示更多</div>
+          <img src="/images/ico/down.png" class="ml-10 width-22 height-14" alt="">
         </div>
         <div class="pl-24 pr-24 ">
           <div class="text-right pt-20 pb-20 border-b-233 color-24 fz-26">

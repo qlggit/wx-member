@@ -72,6 +72,7 @@ export default{
     },
     selectPlace:function(index){
       this.placeIndex = index;
+      this.morePlaceAble = 0;
     },
     showMorePlace:function(sts){
       this.morePlaceAble = sts === undefined?!this.morePlaceAble:sts;

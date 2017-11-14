@@ -32,11 +32,15 @@
     <div class="mt-20 my-list clearfix text-center mb-20 color-24">
       <div v-for="item in myList" v-router-link="item.url" class="float-left item" :style="{width:100/myList.length+'%'}">
         <div class="position-relative img mb-22 margin-auto lh-0">
-          <div v-if="item.number" :class="item.number>10?'fz-22':'fz-24'" class="num position-absolute color-white">{{item.number}}</div>
+          <div v-if="item.number" :class="item.number>10?'fz-22':'fz-24'" class="num border-rad-100 position-absolute color-white">{{item.number}}</div>
           <img :src="item.ico" alt="" class="width-100-100">
         </div>
         <div class="text fz-28">{{item.name}}</div>
       </div>
+    </div>
+    <div class="mt-20 pt-50 pb-50 fz-30 pl-24 pr-26 flex-between" v-router-link="'/my/qrcode'">
+      <div class="color-24">我的二维码</div>
+      <div class="ico-right"></div>
     </div>
     <footer-component></footer-component>
   </div>

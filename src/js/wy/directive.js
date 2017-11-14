@@ -1,7 +1,6 @@
 import Vue from 'vue'
 Vue.directive('share',{
   inserted:function(el){
-    console.log('directive share');
     el.onclick = function(event){
       console.log('click share');
       event.stopPropagation();
@@ -11,7 +10,6 @@ Vue.directive('share',{
 });
 Vue.directive('back',{
   inserted:function(el){
-    console.log('directive back');
     el.onclick = function(event){
       console.log('click back');
       event.stopPropagation();
@@ -69,7 +67,10 @@ Vue.directive('router-link',{
   inserted:function(el , binding){
     var url = binding.value || 'http://www.baidu.com';
     el.onclick = function(event){
-      vueRouter.push(url);
+      if(/^(\w+\.?)+\:/.test(url)){
+        location.href = url;
+      }
+      else vueRouter.push(url);
       event.stopPropagation();
     }
   }

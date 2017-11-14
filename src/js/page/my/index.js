@@ -8,19 +8,22 @@ export default{
           name:'存取酒',
           code:'wine',
           ico:'/images/my/access.png',
-          url:'/my/wine'
+          url:'/my/wine',
+          number:0,
         },
         {
           name:'我的订座',
           code:'seat',
           ico:'/images/my/seat.png',
-          url:'/my/seat'
+          url:'/my/seat',
+          number:0,
         },
         {
           name:'我的订单',
           code:'order',
           ico:'/images/my/order.png',
-          url:'/my/order'
+          url:'/my/order',
+          number:0,
         },
       ]
     }

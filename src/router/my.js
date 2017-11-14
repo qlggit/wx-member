@@ -2,6 +2,8 @@ import myIndex from '@/components/my/index'
 import myWine from '@/components/my/wine'
 import myOrder from '@/components/my/order'
 import mySeat from '@/components/my/seat'
+import myInfo from '@/components/my/info'
+import myQrcode from '@/components/my/qrcode'
 export default function(routes){
   routes.push({
     path: '/my',
@@ -22,5 +24,15 @@ export default function(routes){
     path: '/my/seat',
     name: 'my-seat',
     component: mySeat
+  });
+  routes.push({
+    path: '/my/info',
+    name: 'my-info',
+    component: myInfo
+  });
+  routes.push({
+    path: '/my/qrcode',
+    name: 'my-info',
+    component: myQrcode
   });
 }

@@ -1187,24 +1187,22 @@ QRBitBuffer.prototype = {
         this.length++;
     }
 };
-WY.qrcode = function(canvas , options){
+export default function(canvas , options){
   if( typeof options === 'string' ){
     options	= { text: options };
-    options	= Object.assign( {}, {
-      render		: "canvas",
-      width		: 256,
-      height		: 256,
-      typeNumber	: -1,
-      correctLevel	: QRErrorCorrectLevel.H,
-      background      : "#ffffff",
-      foreground      : "#000000"
-    }, options);
   }
+  options	= Object.assign( {}, {
+    render		: "canvas",
+    width		: 256,
+    height		: 256,
+    typeNumber	: -1,
+    correctLevel	: QRErrorCorrectLevel.H,
+    background      : "#ffffff",
+    foreground      : "#000000"
+  }, options);
   var qrcode	= new QRCode(options.typeNumber, options.correctLevel);
   qrcode.addData(options.text);
   qrcode.make();
-  canvas.width	= options.width;
-  canvas.height	= options.height;
   var ctx		= canvas.getContext('2d');
   var tileW	= options.width  / qrcode.getModuleCount();
   var tileH	= options.height / qrcode.getModuleCount();
@@ -1216,5 +1214,4 @@ WY.qrcode = function(canvas , options){
       ctx.fillRect(Math.round(col*tileW),Math.round(row*tileH), w, h);
     }
   }
-  return canvas;
 };
