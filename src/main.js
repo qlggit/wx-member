@@ -14,6 +14,9 @@ router.beforeEach(function(to , from , next){
     to:to,
     from:from
   });
+  if(WY.routerChange && WY.routerChange(to , from) === false){
+    return false;
+  }
   next();
 });
 /* eslint-disable no-new */

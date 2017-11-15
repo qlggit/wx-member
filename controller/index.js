@@ -1,8 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var mongo = useMongo();
-var md5 = require('md5');
-
 router.get('/', function(req, res, next) {
     res.useRender('index');
 });

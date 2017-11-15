@@ -1,11 +1,11 @@
 <template>
   <div class="pb-footer" v-if="userInfo">
     <div class="head-bg position-relative" >
-      <div class="blur-bg position-full z-index-1" :style="{
+      <div class="blur-bg position-full position-absolute z-index-1" :style="{
       backgroundImage:'url('+userInfo.headImgUrl+')'
     }">
       </div>
-      <div class="position-full z-index-100">
+      <div class="position-full position-absolute z-index-100">
         <div class="my-header position-relative">
           <img :src="userInfo.headImgUrl | imgUrlFilter" class="head-img position-absolute border-rad-100" alt="">
           <div>

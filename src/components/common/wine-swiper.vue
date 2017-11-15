@@ -5,7 +5,7 @@
         <div class="select-head pl-24 pb-20 color-104 fz-30 position-absolute width-100-100 left-0 top-0 z-index-100">
           {{swiperData.placeList[swiperData.placeIndex].name}}
           <div class="select-ico"></div>
-          <select class="opacity-0 position-full z-index-100" @change="selectPlace(0)"></select>
+          <select class="opacity-0 position-full position-absolute z-index-100" @change="selectPlace(0)"></select>
         </div>
         <div class="height-100-100 overflow-scroll">
           <div v-for="item in swiperData.wineList" class="wine-list flex-left fz-32 color-24">

@@ -18,6 +18,12 @@ import buyButton from '@/components/common/buy-button'
 import clubSearch from '@/components/common/club-search'
 import numberSelect from '@/components/common/number-select'
 
+
+import otherInfo from '@/components/common/other-info'
+import date from '@/components/common/date'
+import showSvg from '@/components/common/show-svg'
+import makeSvg from '@/components/common/make-svg'
+
 Vue.component('footer-component',footerComponent);
 Vue.component('header-component',headerComponent);
 
@@ -30,7 +36,15 @@ Vue.component('wy-buy-button',buyButton);
 Vue.component('wy-club-search',clubSearch);
 Vue.component('wy-number-select',numberSelect);
 
+Vue.component('wy-other-info',otherInfo);
+Vue.component('wy-date',date);
+Vue.component('wy-show-svg',showSvg);
+Vue.component('wy-make-svg',makeSvg);
+
 Vue.component('wy-window',window);
 Vue.component('wy-toast',toast);
 Vue.component('wy-loading',loading);
 Vue.component('wy-share',share);
+
+import picker from 'vue-3d-picker';
+Vue.component('picker', picker);

@@ -17,7 +17,7 @@
          <input type="text" v-model="userInfo.remark" maxlength="20" placeholder="请输入个性签名" class="input-auto width-40-100 back-transparent" id="remarkInput">
        </div>
        <div class="border-b-194 pl-20 flex-between height-100 back-242 position-relative pr-20">
-         <select class="position-full opacity-0" @change="selectAge">
+         <select class="position-full position-absolute opacity-0" @change="selectAge">
            <option v-for="item in ageList" :selected="item==userInfo.age?'selected':false" :value="item">{{item}}</option>
          </select>
          <div class="color-104">年龄</div>
