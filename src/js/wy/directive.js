@@ -9,11 +9,15 @@ Vue.directive('share',{
   }
 });
 Vue.directive('back',{
-  inserted:function(el){
+  inserted:function(el,binding ){
+    var url = binding.value;
     el.onclick = function(event){
-      console.log('click back');
       event.stopPropagation();
-      vueRouter.go(-1);
+      if(url){
+        vueRouter.push(url);
+      }else{
+        vueRouter.go(-1);
+      }
     }
   }
 });

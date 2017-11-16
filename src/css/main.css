@@ -459,6 +459,9 @@ div::-webkit-scrollbar {
 .width-200 {
   width: 2rem;
 }
+.width-284 {
+  width: 2.84rem;
+}
 .width-auto {
   width: auto;
 }
@@ -470,6 +473,9 @@ div::-webkit-scrollbar {
 }
 .height-40 {
   height: .4rem;
+}
+.height-30 {
+  height: .3rem;
 }
 .height-14 {
   height: .14rem;
@@ -540,6 +546,9 @@ div::-webkit-scrollbar {
 .pt-132 {
   padding-top: 1.32rem;
 }
+.pt-220 {
+  padding-top: 2.2rem;
+}
 .pt-header {
   padding-top: 0.9rem;
 }
@@ -551,6 +560,9 @@ div::-webkit-scrollbar {
 }
 .pl-20 {
   padding-left: .20rem;
+}
+.pl-156 {
+  padding-left: 1.56rem;
 }
 .pl-product {
   padding-left: 2rem;
@@ -596,6 +608,9 @@ div::-webkit-scrollbar {
 }
 .pb-30 {
   padding-bottom: .3rem;
+}
+.pb-34 {
+  padding-bottom: .34rem;
 }
 .pb-20 {
   padding-bottom: .2rem;
@@ -1510,7 +1525,6 @@ div::-webkit-scrollbar {
 }
 .book-window {
   height: 3.18rem;
-  padding-top: .5rem;
   border-top: 1px solid #cdcdcd;
 }
 .book-window .item-list {

@@ -1,8 +1,9 @@
 <template>
   <picker v-if="dateVisible" v-model="dateVisible" :data-items="items" @change="onValuesChange">
-    <div class="top-content fz-30 color-24 position-relative clearfix" slot="top-content">
-      <div class="float-left">{{dateData.title}}</div>
-      <div class="btn btn-lt float-right back-24 color-white width-30-100" @click="selectValue">确定</div>
+    <div class="top-content fz-30 color-24 position-relative flex-between pt-20 pb-20 back-242 pl-20 pr-20" slot="top-content">
+      <div class="btn btn-lt color-999 width-30-100" @click="selectCancel">取消</div>
+      <div class="width-40-100">{{dateData.title}}</div>
+      <div class="btn btn-lt  back-24 color-white width-30-100" @click="selectValue">确定</div>
     </div>
   </picker>
 </template>
@@ -17,16 +18,8 @@
       }
     },
     watch:{
-      dateVisible:function(v){
-        this.$emit('input',v);
-      }
     },
     created:function(){
-      console.log(this.dateVisible);
-      var nowDate = new Date;
-      this.nowYear = WY.common.parseDate(nowDate,'Y') - 0;
-      this.nowMonth = WY.common.parseDate(nowDate,'m') - 0;
-      this.nowDay = WY.common.parseDate(nowDate,'d') - 0;
       var startDate = this.dateData.startDate;
       var endDate = this.dateData.endDate;
       this.endYear = endDate && (WY.common.parseDate(endDate,'Y') - 0);
@@ -41,14 +34,18 @@
       this.selectDay = WY.common.parseDate(this.selectDate  , 'd') - 0;
       var items = this.items;
       items.push({
+        index:0,
+        values:[],
       });
       items.push({
+        index:0,
+        values:[],
       });
       items.push({
+        index:0,
+        values:[],
       });
       this.setYear();
-      this.setMonth();
-      this.setDate();
     },
     methods:{
       setYear:function(){
@@ -61,11 +58,12 @@
         if(!maxYear){
           maxYear = minYear + 30;
         }
-        items[0].values = [];
+        var values = items[0].values;
         for(var i=minYear;i<=maxYear;i++){
-          items[0].values.push(i);
+          values.push(i);
         }
-        items[0].index = items[0].values.indexOf(this.selectYear);
+        items[0].index = values.indexOf(this.selectYear);
+        this.setMonth();
       },
       setMonth:function(){
         var items = this.items;
@@ -78,15 +76,20 @@
         if(!minMonth || this.startYear !== thisYear){
           minMonth = 1;
         }
-        items[1].values = [];
+        items[1].values.splice(0);
+        var values = items[1].values;
         for(var i=minMonth;i<=maxMonth;i++){
-          items[1].values.push(i);
+          values.push(i);
         }
+        console.log(this.selectMonth , minMonth , maxMonth);
+        items[1].index = 0;
         if(this.selectMonth >= minMonth && this.selectMonth <= maxMonth){
-          items[1].index = items[1].values.indexOf(this.selectMonth - 0);
+          items[1].index = values.indexOf(this.selectMonth);
         }else{
-          items[1].index = 0;
+          this.selectMonth = values[0];
         }
+        console.log(items[1].index , this.selectMonth)
+        this.setDate();
       },
       setDate:function(){
         var items = this.items;
@@ -110,33 +113,54 @@
         if(!minDay || this.startMonth !== thisMonth || this.startYear !== thisYear){
           minDay = 1;
         }
-        items[2].values = [];
+        items[2].values.splice(0);
+        var values = items[2].values;
         for(var i=minDay;i<=maxDay;i++){
-          items[2].values.push(i);
+          values.push(i);
         }
+        console.log(this.selectDay , minDay , maxDay);
+        items[2].index = 0;
         if(this.selectDay >= minDay && this.selectDay <= maxDay){
-          items[2].index = items[2].values.indexOf(this.selectDay - 0);
+          items[2].index = values.indexOf(this.selectDay - 0);
         }else{
-          items[2].index = 0;
+          this.selectDay = values[0];
         }
+        console.log(items[2].index , this.selectDay);
       },
       onValuesChange:function(v1,v2,v3){
-        console.log(v1,v2,v3);
-        console.log(this.selectYear,this.selectMonth,this.selectDay);
-        if(v1 != this.selectYear){
-          this.selectYear = v1 - 0;
-          this.setMonth();
+        if(this.selectYear != v1){
+          this.yearChange(v1);
         }
-        if(v2 != this.selectMonth){
-          this.selectMonth = v2 - 0;
-          this.setDate();
+        if(this.selectMonth != v2){
+          this.monthChange(v2);
         }
-        if(v3 != this.selectDay){
+        if(this.selectDay != v3){
           this.selectDay = v3 - 0;
         }
       },
+      yearChange:function(v){
+        clearTimeout(this.yearTimer);
+        this.yearTimer = setTimeout(function(v){
+          console.log('yearChange');
+          console.log(v,this.selectMonth);
+          this.selectYear = v - 0;
+          this.setMonth();
+        }.bind(this,v),300);
+      },
+      monthChange:function(v){
+        clearTimeout(this.monthTimer);
+        this.monthTimer = setTimeout(function(v){
+          console.log('monthChange');
+          console.log(v,this.selectDay);
+          if(v!==undefined)this.selectMonth = v - 0;
+          this.setDate();
+        }.bind(this,v),300);
+      },
       selectValue:function(){
         this.$emit('click',[this.selectYear,this.selectMonth,this.selectDay]);
+        this.$emit('input',0);
+      },
+      selectCancel:function(){
         this.$emit('input',0);
       }
     }

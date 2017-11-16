@@ -1,12 +1,13 @@
 <template>
-  <div class="width-100-100 height-100-100 overflow-scroll">
-    <div v-if="imgInit" :style="{
+  <div v-if="imgInit" class="width-100-100 height-100-100 overflow-hidden back-transparent">
+      <svg class="width-100-100 height-100-100 show-svg"
+           style="background-size:100% 100%;"
+           :style="{
       width:backWidth+'px',
       height:backHeight+'px',
-      background:'url('+seatData.backSrc+')',
-    }">
-      <svg class="width-100-100 height-100-100 show-svg" @click="svgClick"></svg>
-    </div>
+      backgroundImage:'url('+seatData.backSrc+')'
+      }"
+           :viewBox="[0,0,backWidth,backHeight].join(' ')" ref="showSvg"></svg>
   </div>
 </template>
 <script>
@@ -19,11 +20,30 @@
         imgInit:0,
         backWidth:0,
         backHeight:0,
-        svgObj:''
+        svgObj:'',
+        svgInitCount:0,
       }
     },
+    beforeDestroy:function(){
+      document.body.removeEventListener('touchstart',this.touchstart);
+      document.body.removeEventListener('touchmove',this.touchmove);
+    },
     created:function(){
-      var svg = WY.$('.show-svg')[0];
+      var lastY;
+      this.touchmove = function(e){
+        var y = e.targetTouches[0].clientY;
+        var st = document.scrollingElement.scrollTop;
+        if (y >= lastY && st <= 10) {
+          lastY = y;
+          e.preventDefault();
+        }
+        lastY = y;
+      };
+      this.touchstart = function(e){
+        lastY = e.targetTouches[0].clientY;
+      }
+      document.body.addEventListener('touchstart', this.touchstart);
+      document.body.addEventListener('touchmove',this.touchmove);
       var img = new Image;
       img.src = this.seatData.backSrc;
       var that = this;
@@ -31,15 +51,30 @@
         that.backWidth = img.width;
         that.backHeight = img.height;
         that.imgInit = 1;
-        that.svgObj = new seatSvg({
-          svg:svg,
-          itemList:that.seatData.itemList
-        });
+        that.svgInitCount++;
       }
     },
-    methods:{
-      svgClick:function(e){
-          this.$emit('click',e)
+    mounted:function(){
+      console.log('mounted');
+    },
+    updated:function(){
+      console.log('updated');
+      this.svgInitCount++;
+    },
+    watch:{
+      svgInitCount:function(v){
+        if(v === 2){
+          var that = this;
+          this.svgObj = new seatSvg({
+            width:this.backWidth,
+            height:this.backHeight,
+            svg:this.$refs.showSvg,
+            itemList:this.seatData.itemList,
+            click:function(e , type , data){
+              that.$emit('click',e , type , data);
+            }
+          });
+        }
       }
     }
   }

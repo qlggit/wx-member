@@ -2,7 +2,7 @@
   <div class="page-header back-white ">
     <slot name="city-select"></slot>
     <slot name="back"></slot>
-    <div v-if="!notBack" class="back" v-back ></div>
+    <div v-if="!notBack" class="back" v-back="headerData.backUrl" ></div>
     <div  class="text-center" v-if="!notTitle">{{headerData.title}}</div>
     <slot name="searchInput"></slot>
     <slot name="search"></slot>

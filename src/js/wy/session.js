@@ -39,7 +39,9 @@ function login(sts){
       }
     })
   }else{
-    location.href = '/in?callback=' + encodeURIComponent(location.pathname);
+    if(location.href.indexOf('192.168')===-1){
+      location.href = '/in?callback=' + encodeURIComponent(location.pathname);
+    }
   }
 }
 function getSession(){

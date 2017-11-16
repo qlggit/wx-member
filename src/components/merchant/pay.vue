@@ -23,7 +23,7 @@
           <span class="mr-20 color-104">订座信息：</span><span class="color-24">订座地址地址。。</span>
       </div>
       <div class="mt-280 pl-24 pr-24 pb-150">
-          <div class="btn back-24 color-white">确认支付</div>
+          <div class="btn back-24 color-white" v-router-link="'/merchant/pay-complete'">确认支付</div>
       </div>
     </div>
   </div>
