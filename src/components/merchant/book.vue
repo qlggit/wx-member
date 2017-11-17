@@ -24,7 +24,7 @@
         </div>
       </div>
       <div class="pt-42 pl-20 pr-20">
-         <div class="btn back-24 color-white">下一步</div>
+         <div class="btn back-24 color-white" @click="goNext">下一步</div>
       </div>
       <wy-date v-if="dateVisible" v-model="dateVisible" @click="onValuesChange"
                :date-data="{startDate:startDate,endDate:endDate,selectDate:selectDate,title:'请选择预约时间'}" ></wy-date>

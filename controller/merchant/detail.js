@@ -1,53 +1,54 @@
 var express = require('express');
 var router = express.Router();
 
-router.get('/data',function(req, res, next) {
-  res.useSend({
-    code:0,
+router.get('/list',function(req, res, next) {
+  useRequest.send(req , res , {
+    url:useUrl.merchant.fileList,
     data:{
-      name:'club queen',
-      headerBanner:[{img:'/images/demo.png'},{img:'/images/demo.png'},{img:'/images/demo.png'}],
-      lvl:3.5,
-      latitude:0,
-      longitude:0,
-      address:'地理位置地理位置',
-      remark:'这就是商家简介这就是商家简介这就是商家简介这就是商家简介这就是商家简介这就是商家简介',
-      activity:[
-        {
-          name:'活动名',
-          img:'/images/demo.png',
-          url:'',
-          type:''
-        },{
-          name:'活动名',
-          img:'/images/demo.png',
-          url:'',
-          type:''
-        },{
-          name:'活动名',
-          img:'/images/demo.png',
-          url:'',
-          type:''
-        }
-      ],
-      showInfo:[
-        {
-          img:'/images/demo.png',
-          url:'',
-          type:''
-        },{
-          img:'/images/demo.png',
-          url:'',
-          type:''
-        },{
-          img:'/images/demo.png',
-          url:'',
-          type:''
-        }
-      ],
-
+      supplierFileType:req.query.supplierFileType
+    },
+    done:function(a){
+      res.useSend(a);
     }
+  })
+});
+
+router.get('/listAll',function(req, res, next) {
+  var all = [];
+  var types = ['banner','activity','environment'];
+  var supplierId = req.query.supplierId;
+  types.forEach(function(type){
+    all.push(new Promise(function(rev , rej){
+      useRequest.send(req , res , {
+        url:useUrl.merchant.fileList,
+        data:{
+          supplierFileType:type,
+          pageNum:0,
+          pageSize:100,
+          supplierId:supplierId
+        },
+        done:function(a){
+          rev(a.data.list);
+        }
+      })
+    }))
   });
+  Promise.all(all).then(function(values){
+    res.send({
+      data:values
+    })
+  })
+});
+router.get('/info',function(req, res, next) {
+  useRequest.send(req , res , {
+    url:useUrl.merchant.detail,
+    data:{
+      supplierId:req.query.supplierId
+    },
+    done:function(a){
+      res.useSend(a);
+    }
+  })
 });
 exports.router = router;
 

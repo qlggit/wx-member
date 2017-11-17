@@ -64,7 +64,19 @@
     watch:{
       svgInitCount:function(v){
         if(v === 2){
-          var that = this;
+          this.makeSvgData();
+        }
+      },
+      seatData:function(v , o){
+        if(this.svgInitCount >= 2){
+          this.makeSvgData();
+        }
+      }
+    },
+    methods:{
+      makeSvgData:function(){
+        var that = this;
+        if(!this.svgObj){
           this.svgObj = new seatSvg({
             width:this.backWidth,
             height:this.backHeight,
@@ -74,6 +86,9 @@
               that.$emit('click',e , type , data);
             }
           });
+        }else{
+          this.svgObj.removeItem();
+          this.svgObj.setItemList(this.seatData.itemList);
         }
       }
     }

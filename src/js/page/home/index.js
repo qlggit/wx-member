@@ -3,11 +3,22 @@ export default{
   data() {
     return {
       title:'首页',
-      headMenu:['酒吧','清吧','KTV'],
+      headMenu:[{
+        name:'酒吧',
+        code:'bar',
+      },{
+        name:'清吧',
+        code:'clear',
+      },{
+        name:'KTV',
+        code:'ktc',
+      }],
       headActiveIndex:0,
       clubSearchAble:false,
-      swiperList:[],
-      clubList:''
+      bannerTypeCode:'bar',
+      swiperList:'',
+      isLastPage:'',
+      clubList:[]
     }
   },
   beforeDestroy:function(){
@@ -20,19 +31,43 @@ export default{
     WY.oneBind('club-search',function(o){
         that.clubSearchAble = o;
     } , this);
-    this.doSearch();
+    WY.oneBind('scroll-bottom',function(o){
+        console.log('scroll-bottom');
+        that.showMore();
+    } , this);
+    this.searchBanner();
+    this.searchList();
   },
   methods:{
     headMenuClick:function(index){
       this.headActiveIndex = index;
+      this.bannerTypeCode = this.headMenu[index].code;
       this.reset();
-      this.doSearch();
+      this.searchBanner();
+      this.searchList();
     },
-    doSearch:function(){
+    searchBanner:function(){
       var that = this;
-        WY.get('/merchant/list/data',{},function(a){
-          that.clubList = a.data.shops;
-          that.swiperList = a.data.banner;
+      WY.get('/merchant/list/banner',{
+        bannerTypeCode:this.bannerTypeCode
+      },function(a){
+        a.data.forEach(function(a){
+          a.img = a.bannerUrl;
+        });
+        that.swiperList = a.data;
+      });
+    },
+    searchList:function(){
+        var that = this;
+        if(this.isSearch)return false;
+        this.isSearch = 1;
+        WY.get('/merchant/list/data',{
+          supplierTypeCode:this.bannerTypeCode,
+          pageNum:this.pageNum++,
+        },function(a){
+          that.isSearch = 0;
+          that.isLastPage = a.data.isLastPage;
+          that.clubList = this.clubList.concat(a.data.list);
         })
     },
     reset:function(){
@@ -41,6 +76,11 @@ export default{
     },
     showClubSearch:function(index){
       this.clubSearchAble = 1;
+    },
+    showMore:function(){
+      if(this.isLastPage == false){
+        this.searchList();
+      }
     }
   }
 }

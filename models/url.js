@@ -1,13 +1,22 @@
-var sendUrl = useConfig.get('sendUrl') ;
 var apiUrl = useConfig.get('apiUrl') ;
+var threeUrl = useConfig.get('threeUrl') ;
 module.exports = {
     sms:{
-        send:sendUrl + '/router/rest'
+        send:apiUrl + '/api/sms/v_1/send',
+        check:apiUrl + '/api/sms/v_1/invalidSms',
     },
     login:{
-        reg:sendUrl + '/router/rest'
+      login:apiUrl + '/api/user/v_1/login',
+      check:apiUrl + '/api/user/v_1/selectSanfangByUuid',
+      info:apiUrl + '/api/user/v_1/infoById',
     },
     merchant:{
-        search:apiUrl + '/v1/app/main/list',
+        banner:apiUrl + '/api/banner/v_1/getBannerList',
+        list:apiUrl + '/api/supplier/v_1/list',
+        fileList:apiUrl + '/api/supplier/v_1/listFile',
+        detail:apiUrl + '/api/supplier/v_1/info',
+    },
+    user:{
+        edit:apiUrl + '/api/user/v_1/updateByPrimaryKey',
     },
 };

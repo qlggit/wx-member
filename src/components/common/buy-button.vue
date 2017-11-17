@@ -11,7 +11,7 @@
       return {
         hasBuy:!this.buyData.notBuy,
         hasBook:!this.buyData.notBook,
-        merchantId:!this.buyData.merchantId,
+        merchantId:this.buyData.merchantId,
       };
     },
     beforeDestroy:function(){

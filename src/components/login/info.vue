@@ -28,7 +28,7 @@
          <div class="">{{userInfo.province}}{{userInfo.city}}</div>
        </div>
        <div class="mt-48 pt-10 pl-20 pr-20">
-          <div class="btn back-24 color-white" v-router-link="'/login/phone'">下一步</div>
+          <div class="btn back-24 color-white" @click="goNext">下一步</div>
        </div>
        <!--<div class="mt-20 pt-30 pl-20 color-194">-->
          <!--点击下一步代表您已阅读并同意<span class="text-underline color-104">&nbsp;《用户协议》&nbsp;</span>-->

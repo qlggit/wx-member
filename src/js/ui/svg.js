@@ -41,7 +41,6 @@ function seatSvg(options){
   this.tableG = svgObj.add('g',{});
   this.chairG = svgObj.add('g',{});
   this.allSvgData = [];
-  this.thisSvgData = '';
   this.svg = options.svg;
   this.scale = 1;
   this.minScale = .5;
@@ -79,6 +78,7 @@ seatSvg.prototype = {
           options.click && options.click(e ,a.type, a.svgData);
           e.stopPropagation && e.stopPropagation();
         }
+        that.allSvgData.push(ele);
       });
     }
   },
@@ -258,24 +258,23 @@ seatSvg.prototype = {
   targetActive:function(){
     this.targetEle.style.stroke = 'red';
   },
-  removeSvgData:function(){
-    if(this.thisSvgData){
-      var index = this.allSvgData.indexOf(this.thisSvgData);
-      this.allSvgData.splice(index,1);
-    }
-    this.svg.removeChild(this.thisSvgData.svg);
-    this.thisSvgData = null;
+  setItemList:function(itemList){
+    this.options.itemList = itemList;
+    this.setData();
   },
-  findSvgData:function(ele){
-    var o;
-    this.allSvgData.every(function(a){
-      if(a.svg === ele){
-        o = a;
-        return false;
-      }
-      return true;
+  removeItem:function(item){
+    var removes;
+    if(item){
+      removes.push(item);
+      var index = this.allSvgData.indexOf(item);
+      this.allSvgData.splice(index,1);
+    }else{
+      removes = this.allSvgData;
+    }
+    removes.forEach(function(a){
+        a.parentElement && a.parentElement.removeChild(a);
     });
-    return o;
+    removes.splice(0);
   },
   getParent:function(category){
     return ({

@@ -1,7 +1,9 @@
 WY.toast = function(options){
-  if(typeof options == 'string')options = {
-    content:options
-  };
+  if(!options || typeof options !== 'object'){
+    options = {
+      content:options
+    };
+  }
   WY.trigger('toast' , options);
 };
 WY.loading = function(sts){

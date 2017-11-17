@@ -4,6 +4,9 @@ module.exports = {
         var sendData = Object.assign({} , options.data);
         var method = options.method || 'GET';
         var headers = options.headers || {};
+        if(req.session.tokenModel){
+          headers.tokenInfo = [req.session.tokenModel.userId,req.session.tokenModel.token].join('_');
+        }
         var __ = {
             url:options.url,
             method:method.toUpperCase(),
@@ -19,6 +22,10 @@ module.exports = {
         console.log('request start : ');
         console.log(__);
         request(__ , function(err , response , body){
+            if(response && response.statusCode == 401){
+                res.status(401).end();
+                return false;
+            }
             try{
                 body = JSON.parse(body);
             }catch(e){
@@ -28,6 +35,16 @@ module.exports = {
                     data:body,
                     message:'系统繁忙'
                 }
+            }
+            if(body){
+              body.baseCode = body.code;
+              if(body.code == 10000){
+                body.code = 0;
+              }
+              if(body.result && !body.data){
+                body.data = body.result;
+                delete body.result;
+              }
             }
             console.log(body);
             options.done(body || {code:1,msg:'系统异常'});

@@ -20,7 +20,7 @@
       </div>
       <div class="border-b-194  flex-between pl-24 pr-24 height-128 back-242 ">
           <div>性别</div>
-          <div class="color-104">{{userInfo.sex==1?'帅哥':'美女'}}</div>
+          <div class="color-104">{{userInfo.gender==1?'帅哥':'美女'}}</div>
       </div>
       <div class="border-b-194  flex-between pl-24 pr-24 height-128 back-242">
           <div>年龄</div>

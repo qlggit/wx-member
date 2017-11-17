@@ -29,12 +29,11 @@ module.exports = function(dbname){
         return null;
       }
       if(!mongooseData[tablename] && !options){
-        useLog.log("Schema data is null --" + tablename);
+        useLog.log(tablename + " Schema data is null");
         return null;
       }
       if(__mongooseDB[tablename])return __mongooseDB[tablename];
       var db = __mongoose[tablename] = __mongoose[tablename] || this.mongoose.model(tablename , new this.mongoose.Schema(mongooseData[tablename] || options));
-      db.name = tablename;
       return __mongooseDB[tablename] = new mongooseDb(db);
     },
     createData:function(tablename , data , options){
@@ -50,22 +49,6 @@ module.exports = function(dbname){
       options = options || mongooseData[tablename];
       for(var key in options){
         if(data[key]!=null)rt[key] = data[key];
-      }
-      return rt;
-    },
-    createQuery:function(tablename , data , options){
-        var rt = {};
-      if(!tablename){
-        useLog.log("tablename is null");
-        return rt;
-      }
-      if(!mongooseData[tablename] && !options){
-        useLog.log("Schema data is null");
-        return rt;
-      }
-      options = options || mongooseData[tablename];
-      for(var key in options){
-        if(data[key]!=null && data[key] !== '')rt[key] = data[key];
       }
       return rt;
     }

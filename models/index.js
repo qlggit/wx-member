@@ -39,7 +39,8 @@ module.exports = {
         //validate
         global.useMulter = this.multer;
         //加载session
-        app.use(require('./session')());
+        global.useSession = require('./session/mongo');
+        app.use(useSession.init());
         global.usePageSize = 20;
         global.useWechat =  require('./use-wechat');
         app.use(function(req , res , next){

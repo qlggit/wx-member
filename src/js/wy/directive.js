@@ -69,12 +69,59 @@ Vue.directive('book-seat',{
 });
 Vue.directive('router-link',{
   inserted:function(el , binding){
-    var url = binding.value || 'http://www.baidu.com';
+    var url = binding.value;
+    var modifiers = binding.modifiers;
     el.onclick = function(event){
-      if(/^(\w+\.?)+\:/.test(url)){
-        location.href = url;
+      if(url){
+        if(modifiers.url || /^(\w+\.?)+\:/.test(url)){
+          location.href = url;
+        }
+        else vueRouter.push(url);
       }
-      else vueRouter.push(url);
+      event.stopPropagation();
+    }
+  }
+});
+import smsTimer from '../ui/sms-timer';
+Vue.directive('sms-send',{
+  update:function(el , binding){
+    el.isSmsSending = 0;
+    el.onclick = function(event){
+      if(!el.isSmsSending){
+        var arg = binding.arg || 'BINDING';
+        var phone = binding.value ;
+        if(!phone || !/^1\d{10}$/.test(phone)){
+          WY.toast('请输入有效的手机号');
+            return false;
+        }
+        WY.post('/sms/send',{
+          sendType:arg,
+          phone:phone
+        },function(a){
+          if(a.code == 0){
+            el.isSmsSending = 1;
+            smsTimer(el , 60 , function(){
+              el.isSmsSending = 0;
+            });
+          }else{
+            WY.toast(a.message);
+          }
+        });
+      }
+      event.stopPropagation();
+    }
+  }
+});
+
+Vue.directive('scroll-box',{
+  inserted:function(el , binding){
+    var top = WY.getScaleSize(binding.value || 0);
+    el.onclick = function(event){
+      var child = el.children[0];
+      console.log(this.scrollTop,this.clientHeight,top,child.clientHeight);
+      if(this.scrollTop + this.clientHeight - top  === child.clientHeight){
+         WY.trigger('scroll-bottom' , el , binding);
+      }
       event.stopPropagation();
     }
   }
