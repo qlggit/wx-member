@@ -8,6 +8,11 @@ function putSession(newSession){
   session.debug = localStorage.debug || '';
   session.userInfo = newSession.userInfo;
   session.sanfangs = newSession.sanfangs;
+  if(location.href.indexOf('server/') > 0){
+    session.tokenInfo = localStorage.tokenInfo = [WY.hrefData.userId,WY.hrefData.token].join('_') || localStorage.tokenInfo;
+    WY.ready('token-complete',session.tokenInfo);
+    return false;
+  }
   if(session.sessionId){
     WY.ready('session-complete',session);
   }else{

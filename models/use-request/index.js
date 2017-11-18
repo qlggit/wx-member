@@ -4,9 +4,8 @@ module.exports = {
         var sendData = Object.assign({} , options.data);
         var method = options.method || 'GET';
         var headers = options.headers || {};
-        if(req.session.tokenModel){
-          headers.tokenInfo = [req.session.tokenModel.userId,req.session.tokenModel.token].join('_');
-        }
+        var tokenModel = req.session.tokenModel;
+        headers.tokenInfo = options.tokenInfo || (tokenModel && [tokenModel.userId,tokenModel.token].join('_') || '');
         var __ = {
             url:options.url,
             method:method.toUpperCase(),

@@ -115,14 +115,14 @@ Vue.directive('sms-send',{
 
 Vue.directive('scroll-box',{
   inserted:function(el , binding){
-    var top = WY.getScaleSize(binding.value || 0);
-    el.onclick = function(event){
-      var child = el.children[0];
-      console.log(this.scrollTop,this.clientHeight,top,child.clientHeight);
-      if(this.scrollTop + this.clientHeight - top  === child.clientHeight){
-         WY.trigger('scroll-bottom' , el , binding);
+    el.onscroll = function(event){
+      if(Math.abs(this.scrollTop + this.clientHeight - this.scrollHeight)  < 10){
+        WY.trigger('scroll-bottom' , el , binding);
       }
-      event.stopPropagation();
     }
+  }
+  ,unbind:function(el){
+    el.ontouchmove = null;
+    el.ontouchstart = null;
   }
 });

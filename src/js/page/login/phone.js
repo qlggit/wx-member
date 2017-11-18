@@ -28,7 +28,7 @@ export default{
         return false;
       }
       var that = this;
-      WY.post('/sms/check',{
+      WY.post('/login/build',{
         sendType:'BINDING',
         phone:this.phone,
         smsCode:this.smsCode

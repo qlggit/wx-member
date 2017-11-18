@@ -1,3 +1,7 @@
+var tokenInfo;
+WY.ready('token-complete',function(o){
+  tokenInfo = o;
+});
 WY.request = function(options){
   if(location.port !== '3001'){
     options.url = 'http://127.0.0.1:3001'+options.url;
@@ -7,6 +11,9 @@ WY.request = function(options){
     method:'GET',
   },options);
   options.headers = Object.assign({'X-Requested-With':'XMLHttpRequest'},options.headers);
+  if(tokenInfo){
+    options.headers.tokenInfo = tokenInfo;
+  }
   options.method = options.method.toUpperCase();
   var xmlHttp=new XMLHttpRequest();
   var readyState = 0;
@@ -110,7 +117,7 @@ WY.post = function(url , data , call){
   });
 };
 WY.postFile = function(url , data , call , error){
-  if(typeof data == 'function' && !call){
+  if(typeof data === 'function' && !call){
     call = data;
     data = {};
   }

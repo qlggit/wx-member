@@ -141,8 +141,6 @@
       yearChange:function(v){
         clearTimeout(this.yearTimer);
         this.yearTimer = setTimeout(function(v){
-          console.log('yearChange');
-          console.log(v,this.selectMonth);
           this.selectYear = v - 0;
           this.setMonth();
         }.bind(this,v),300);
@@ -150,8 +148,6 @@
       monthChange:function(v){
         clearTimeout(this.monthTimer);
         this.monthTimer = setTimeout(function(v){
-          console.log('monthChange');
-          console.log(v,this.selectDay);
           if(v!==undefined)this.selectMonth = v - 0;
           this.setDate();
         }.bind(this,v),300);

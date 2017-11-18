@@ -18,6 +18,7 @@ export default{
       bannerTypeCode:'bar',
       swiperList:'',
       isLastPage:'',
+      pageNum:1,
       clubList:[]
     }
   },
@@ -67,11 +68,11 @@ export default{
         },function(a){
           that.isSearch = 0;
           that.isLastPage = a.data.isLastPage;
-          that.clubList = this.clubList.concat(a.data.list);
+          that.clubList = that.clubList.concat(a.data.list);
         })
     },
     reset:function(){
-      this.page = 0;
+      this.pageNum = 1;
       this.clubList = [];
     },
     showClubSearch:function(index){

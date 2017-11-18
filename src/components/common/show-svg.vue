@@ -34,14 +34,13 @@
         var y = e.targetTouches[0].clientY;
         var st = document.scrollingElement.scrollTop;
         if (y >= lastY && st <= 10) {
-          lastY = y;
           e.preventDefault();
         }
         lastY = y;
       };
       this.touchstart = function(e){
         lastY = e.targetTouches[0].clientY;
-      }
+      };
       document.body.addEventListener('touchstart', this.touchstart);
       document.body.addEventListener('touchmove',this.touchmove);
       var img = new Image;

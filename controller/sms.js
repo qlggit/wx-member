@@ -23,8 +23,8 @@ router.post('/check', function(req, res, next) {
      data:{
        sendType:req.body.sendType || 'BINDING',
        phone:req.body.phone,
-       sendCode:req.body.sendCode,
-       ip:req.body.ip,
+       sendCode:req.body.smsCode,
+       ip:req.remoteAddress,
      },
      method:'POST',
      notBody:1,

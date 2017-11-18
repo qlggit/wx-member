@@ -19,6 +19,10 @@ window.WY = {};
   WY.clientWidth = document.documentElement ? document.documentElement.clientWidth : document.body.clientWidth;
   WY.clientHeight = document.documentElement ? document.documentElement.clientHeight : document.body.clientHeight;
   var fontSize = 100 * WY.clientWidth / 750;
+  //pc处理
+  if(WY.clientWidth > 750){
+    fontSize = 50;
+  }
   document.documentElement.style.fontSize = fontSize + 'px';
   WY.fontSizeScale = fontSize / 100;
   WY.getScaleSize = function(size){

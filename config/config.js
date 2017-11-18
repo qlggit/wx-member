@@ -2,9 +2,9 @@
 module.exports = {
     "port":3001,
     uploadPath:'build/upload',
-    apiUrl:'http://192.168.1.245:4200',
-    // apiUrl:'http://192.168.1.154:8012',
-    threeUrl:'http://192.168.1.245:8080',
+    // apiUrl:'http://192.168.1.245:4200',
+    apiUrl:'http://192.168.1.154:8012',
+    threeUrl:'http://47.100.20.78:8080',
     apiImgUrl:'http://192.168.1.245:8080',
     wechatLoginUrl:'http://h5.yqsapp.com/wechat/entrance/test?port=3001',
     wechatJssdkUrl:'http://h5.yqsapp.com/wechat/jssdk/test?prot=3001',
