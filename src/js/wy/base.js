@@ -213,3 +213,10 @@ WY.common.sum = function(array , func){
   });
   return sum;
 };
+WY.common.copyProp = function(o , prop){
+  var rt = {};
+  for(var key in prop){
+    rt[key] = o[key];
+  }
+  return rt;
+};

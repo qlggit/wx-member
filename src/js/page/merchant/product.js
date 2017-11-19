@@ -4,17 +4,18 @@ export default{
     return {
       menuIndex:0,
       menuList:'',
-      productList:'',
+      productList:[],
       allPrice:0,
       number:1,
       showThisWindow:false,
       name:'酒水单',
       tableAble:1,
-      page:0,
+      pageNum:1,
       maxListHeight:0,
       selectedList:'',
       productSelectListAble:0,
       allNumber:0,
+      merchantId:WY.hrefData.merchantId,
     }
   },
   beforeDestroy:function(){
@@ -23,19 +24,19 @@ export default{
   created:function(){
     var that = this;
     this.productList = [];
+    WY.setLocalStorage('merchantId' , WY.hrefData.merchantId);
     this.selectedList = WY.getLocalStorage('selectedList') || [];
     this.maxListHeight = WY.clientHeight -  WY.getScaleSize(100);
     WY.oneReady('user-info',function(o){
         WY.get('/merchant/product/category' , function(data){
           that.menuList = data.data;
+          that.doSearch();
         });
-        that.doSearch();
     } , this);
     this.setAll();
   },
   methods:{
     changeNumber:function(data){
-      console.log(data);
       //列表选取
       var that = this;
       if(data.number < 1){
@@ -101,13 +102,21 @@ export default{
       this.tableAble = !this.tableAble;
     },
     reset:function(){
-      this.page = 0;
+      this.pageNum = 1;
       this.productList = [];
     },
     doSearch:function(){
       var that = this;
-      WY.get('/merchant/product/list' , function(data){
-        data.data.forEach(function(a){
+      WY.get('/merchant/product/list',{
+        pageNum:this.pageNum++,
+        supplierId:WY.hrefData.supplierId,
+        goodsTypeId:1 || this.menuList[this.menuIndex].yukeGoodsTypeId,
+      } , function(data){
+        var list = data.data.list;
+        list.forEach(function(a){
+          a.id = a.goodsId;
+          a.name = a.goodsName;
+          a.price = a.unitPrice ;
           //没选择过的 number初始化为0
           if(that.selectedList.every(function(b){
             if(b.id === a.id){
@@ -117,7 +126,7 @@ export default{
             return true;
             })) a.number = 0;
         });
-        that.productList = that.productList.concat( data.data);
+        that.productList = that.productList.concat(list);
       });
     },
     changeMnuIndex:function(index , data){
@@ -128,6 +137,6 @@ export default{
     showSelectedProductList:function(v){
       if(v === undefined)v = ! this.productSelectListAble;
       this.productSelectListAble = v;
-    }
+    },
   }
 }

@@ -1,7 +1,13 @@
 var request =require('request');
 module.exports = {
     send:function(req, res , options ){
-        var sendData = Object.assign({} , options.data);
+        var sendData;
+        if(typeof sendData !== 'object'){
+          sendData = options.data;
+
+        }else{
+          sendData = Object.assign({} , options.data);
+        }
         var method = options.method || 'GET';
         var headers = options.headers || {};
         var tokenModel = req.session.tokenModel;
@@ -12,7 +18,7 @@ module.exports = {
             headers:headers
         };
         if(method.toUpperCase() === 'POST' && !options.notBody){
-                __.body = JSON.stringify(sendData);
+                __.body = useCommon.stringify(sendData);
                 __.headers["content-type"] =  "application/json";
         }else{
             var urlStr = useCommon.serialize(sendData);

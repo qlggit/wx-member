@@ -450,7 +450,7 @@ div::-webkit-scrollbar {
   width: .22rem;
 }
 .width-100 {
-  width: .4rem;
+  width: 1rem;
 }
 .width-128 {
   width: 1.28rem;
@@ -547,6 +547,9 @@ div::-webkit-scrollbar {
 }
 .pt-220 {
   padding-top: 2.2rem;
+}
+.pt-280 {
+  padding-top: 2.8rem;
 }
 .pt-340 {
   padding-top: 3.4rem;
@@ -1290,6 +1293,9 @@ div::-webkit-scrollbar {
 }
 .number-select .add {
   margin-left: -0.06rem;
+}
+.svg-img {
+  background-size: 100% 100%;
 }
 .flex-basis-30 {
   flex-basis: 30px;

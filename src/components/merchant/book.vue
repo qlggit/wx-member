@@ -44,11 +44,11 @@
                 </div>
               </div>
               <div class="flex-between">
-                <div class="lh-40 height-40">最低消费： ￥{{seatData.minConsume}}</div>
+                <div class="lh-40 height-40">最低消费： ￥{{seatData.lowCostAmount}}</div>
                 <div class="  lh-40 height-40">
                   <span class="mr-10" >人数: </span>
-                  <span v-if="seatData.isSelected&&seatData.hasMe">{{seatData.myNumber}}/{{seatData.allNumber}}</span>
-                 <wy-number-select v-else @changeNumber="changeNumber" :number-data="{number:seatData.myNumber,minNumber:1}"></wy-number-select>
+                  <span v-if="seatData.selectAble">{{seatData.myNumber}}/{{seatData.locCount }}</span>
+                  <wy-number-select v-else @changeNumber="changeNumber" :number-data="{number:seatData.myNumber,minNumber:1}"></wy-number-select>
                 </div>
               </div>
             </div>
@@ -60,7 +60,7 @@
           </div>
           <div class="clearfix text-center">
             <div class="btn-50 back-233 float-left color-24" @click="showConfirmWindow(0)">换桌</div>
-            <div  v-router-link="'/merchant/product'" class="btn-50 back-24 float-right color-white">
+            <div  @click="doSubmit" class="btn-50 back-24 float-right color-white">
               {{
                   seatData.hasMe?'买酒':(seatData.isSelected?'拼桌':'订座')
               }}

@@ -10,6 +10,7 @@ Vue.config.productionTip = false;
 window.vueRouter = router;
 router.beforeEach(function(to , from , next){
   WY.hrefData = WY.common.getHrefData(to.fullPath);
+  WY.hrefData.supplierId = WY.hrefData.merchantId = WY.hrefData.supplierId || WY.hrefData.merchantId;
   WY.trigger('router-change',{
     to:to,
     from:from

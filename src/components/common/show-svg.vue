@@ -43,15 +43,7 @@
       };
       document.body.addEventListener('touchstart', this.touchstart);
       document.body.addEventListener('touchmove',this.touchmove);
-      var img = new Image;
-      img.src = this.seatData.backSrc;
-      var that = this;
-      img.onload = function(){
-        that.backWidth = img.width;
-        that.backHeight = img.height;
-        that.imgInit = 1;
-        that.svgInitCount++;
-      }
+      this.doInit();
     },
     mounted:function(){
       console.log('mounted');
@@ -70,9 +62,25 @@
         if(this.svgInitCount >= 2){
           this.makeSvgData();
         }
+      },
+      'seatData.backSrc':function(v , o){
+        if(o){
+          this.doInit();
+        }
       }
     },
     methods:{
+      doInit:function(){
+        var img = new Image;
+        img.src = this.seatData.backSrc;
+        var that = this;
+        img.onload = function(){
+          that.backWidth = img.width;
+          that.backHeight = img.height;
+          that.imgInit = 1;
+          that.svgInitCount++;
+        }
+      },
       makeSvgData:function(){
         var that = this;
         if(!this.svgObj){

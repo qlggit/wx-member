@@ -4,14 +4,29 @@ var router = express.Router();
 router.get('/create',useValidate.adminLogin, function(req, res, next) {
     res.useRender('index');
 });
-router.post('/create',useValidate.adminLogin.check, function(req, res, next) {
+router.post('/add',useValidate.adminLogin.check, function(req, res, next) {
+  console.log(req.body.jsonStr);
+  console.log(typeof  req.body.jsonStr);
   useRequest.send(req , res , {
-    url:'',
+    url:useUrl.seatInfo.add,
     method:'POST',
     tokenInfo:req.headers.tokenInfo,
-    data:{},
+    data:req.body.jsonStr,
+    done:function(a){
+      res.useSend(a);
+    }
+  });
+});
+router.post('/fileAdd',useValidate.adminLogin.check, function(req, res, next) {
+  useRequest.send(req , res , {
+    url:useUrl.seatInfo.addBack,
+    method:'POST',
+    tokenInfo:req.headers.tokenInfo,
+    data:JSON.parse(req.body.jsonStr || '[]'),
     done:function(){
-
+        res.send({
+          code:0
+        });
     }
   });
 });

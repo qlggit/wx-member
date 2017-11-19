@@ -89,31 +89,45 @@ export default{
       this.seatData = '';
       this.seatItemList.splice(0);
       var seatItemList = this.seatItemList;
-      for(var i=0;i<7;i++){
-        seatItemList.push({
-          type:['table','room','chair'].sort(function(){return .5-Math.random()}).pop(),
-          svgData:{
-            width:100,
-            height:100,
-            x:Math.random()*1180,
-            y:Math.random()*808,
-            status:'',
-            seatId:'',
-            seatName:'ABCEDFGE'.split('').sort(function(){return .5-Math.random()}).pop()+'区的',
-            minConsume:Math.ceil(Math.random()*10)*1000,
-            maxNumber:Math.ceil(Math.random()*15),
-            isSelected:[0,1].sort(function(){return .5-Math.random()}).pop(),
-            selectAble:[0,1].sort(function(){return .5-Math.random()}).pop(),
-            isMe:[0,1].sort(function(){return .5-Math.random()}).pop(),
-            hasMe:[0,1].sort(function(){return .5-Math.random()}).pop(),
-            tableAble:[0,1].sort(function(){return .5-Math.random()}).pop(),
-            allNumber:Math.ceil(Math.random()*10),
-            allGroup:Math.ceil(Math.random()*3),
-            myNumber:1,
-            addAble:1,
-          }
-        })
-      }
+      WY.get('/merchant/seat/list',{
+        supplierId:WY.hrefData.supplierId,
+      } , function(a){
+        a.data.forEach(function(d){
+          var type = ({
+            seat:'table',
+            room:'room'
+          })[d.seatType];
+          var img = '/images/seat/'+({
+            table:'table',
+            room:'room'
+          })[type] + '.png';
+          seatItemList.push({
+            type:type,
+            svgData:{
+              backImg:img,
+              type:type,
+              seatType:d.seatType,
+              x:d.seatX ,
+              y:d.seatY ,
+              seatStatus :d.seatStatus ,
+              seatId:d.yukeSupplierSeatId,
+              seatShape:d.seatShape,
+              seatName:d.seatName ,
+              lowCostAmount:d.lowCostAmount ,
+              locCount:d.locCount ,
+              isSelected:d.seatStatus !=='noselected',
+              selectAble:d.seatStatus !=='lock',
+              isMe:[0,1].sort(function(){return .5-Math.random()}).pop(),
+              hasMe:[0,1].sort(function(){return .5-Math.random()}).pop(),
+              tableAble:[0,1].sort(function(){return .5-Math.random()}).pop(),
+              hadCount:d.hadCount || 0 ,
+              allGroup:Math.ceil(Math.random()*3),
+              myNumber:1,
+              addAble:1,
+            }
+          })
+        });
+      });
     },
     svgClick:function(e , type , data){
       if(type === 'svg'){
@@ -122,6 +136,7 @@ export default{
       if(data.isMe)data.hasMe = 1;
       if(data.hasMe)data.isSelected = 1;
       if(data.isSelected)data.selectAble = 1;
+      console.log(data);
       this.seatData = data;
       this.showConfirmWindow(1);
     },
@@ -139,6 +154,19 @@ export default{
         return WY.toast('请先选择座位');
       }
       this.showConfirmWindow(1);
+    },
+    doSubmit:function(){
+      var data = {
+        bookTime:this.selectDate,
+        orderNum:this.seatData.myNumber,
+        orderType:this.selectDate.isSelected?'normal':'table',
+        seatId:this.seatData.seatId,
+        shippingWine:this.toBuyWine,
+        supplierId:WY.hrefData.supplierId,
+      };
+      WY.post('/merchant/seat/add',data , function(a){
+        console.log(a);
+      });
     }
   },
   watch:{

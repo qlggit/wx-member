@@ -5,7 +5,7 @@
         <div class="item" v-for="(item,index) in menuList"
              :class="menuIndex===index?'active':''"
         @click="changeMnuIndex(index,item)">
-          {{item.name}}
+          {{item.typeName}}
         </div>
     </div>
     <div class="height-100-100 back-transparent overflow-scroll product-main">
@@ -13,7 +13,7 @@
         <img :src="item.img | imgUrlFilter" class="img" alt="">
         <div>
           <div class="fz-30 color-24 mb-20">{{item.name}}</div>
-          <div class="fz-24 color-104">{{item.remark}}</div>
+          <div class="fz-24 color-104">{{item.keywords}}</div>
           <div class="mt-10 fz-34 color-24"><span class="mr-10">￥</span><span>{{item.price}}</span></div>
           <wy-number-select :number-data="{number:item.number || 0,type:'auto',dataId:item.id}" @changeNumber="changeNumber"></wy-number-select>
         </div>
@@ -44,7 +44,7 @@
             </div>
           </div>
         </div>
-      <div class="buy-btn text-center back-24 color-white fz-36 position-absolute right-0 top-0" v-router-link="'/merchant/pay'">确定支付</div>
+      <div class="buy-btn text-center back-24 color-white fz-36 position-absolute right-0 top-0" v-router-link="'/merchant/pay'" >确定支付</div>
     </div>
   </div>
 </template>

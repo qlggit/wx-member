@@ -9,11 +9,20 @@ mySvg.prototype = {
     var ele = document.createElementNS("http://www.w3.org/2000/svg",e);
     if(options.attr){
       for(var key in options.attr){
-        ele.setAttribute(key , options.attr[key]);
+        if(options.attr[key])ele.setAttribute(key , options.attr[key]);
+      }
+      if(e === 'image' && options.attr.href){
+        var img = new Image;
+        img.src = options.attr.href;
+        img.onload = function(){
+          ele.setAttribute('width' , img.width);
+          ele.setAttribute('height' , img.height);
+        }
       }
     }
     var styles = [];
     if(options.style){
+      options.style.backgroundSize = '100% 100%';
       for(var key in options.style){
         styles.push(key + ':' + options.style[key]);
       }
@@ -77,7 +86,7 @@ seatSvg.prototype = {
         ele.onclick = function(e){
           options.click && options.click(e ,a.type, a.svgData);
           e.stopPropagation && e.stopPropagation();
-        }
+        };
         that.allSvgData.push(ele);
       });
     }
@@ -214,44 +223,38 @@ seatSvg.prototype = {
     this.svg.style.marginTop = y - mt * scale / autoScale   + 'px';
   },
   addRoom:function(svgData){
-    return this.svgObj.add('rect',{
+    return this.svgObj.add('image',{
       parent:this.getParent('room'),
       attr:{
         width:svgData.width,
         height:svgData.height,
         x:svgData.x,
-        y:svgData.y
-      },
-      style:{
-        fill:this.getColor('room'),
+        y:svgData.y,
+        'href':svgData.backImg,
       }
     });
   },
   addTable:function(svgData){
-    return this.svgObj.add('rect',{
+    return this.svgObj.add('image',{
       parent:this.getParent('table'),
       attr:{
         width:svgData.width,
         height:svgData.height,
         x:svgData.x,
-        y:svgData.y
-      },
-      style:{
-        fill:this.getColor('table'),
+        y:svgData.y,
+        'href':svgData.backImg,
       }
     });
   },
   addChair:function(svgData){
-    return this.svgObj.add('rect',{
+    return this.svgObj.add('image',{
       parent:this.getParent('chair'),
       attr:{
         width:svgData.width,
         height:svgData.height,
         x:svgData.x,
-        y:svgData.y
-      },
-      style:{
-        fill:this.getColor('chair'),
+        y:svgData.y,
+        'href':svgData.backImg,
       }
     });
   },
@@ -259,8 +262,8 @@ seatSvg.prototype = {
     this.targetEle.style.stroke = 'red';
   },
   setItemList:function(itemList){
-    this.options.itemList = itemList;
-    this.setData();
+      this.options.itemList = itemList;
+      this.setData();
   },
   removeItem:function(item){
     var removes;

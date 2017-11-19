@@ -22,14 +22,25 @@ module.exports = {
     },
     seatOrder:{
         add:apiUrl + '/api/seat/v_1/orderSeat',
+        again:apiUrl + '/api/seat/v_1/orderTableSeat',
         list:apiUrl + '/api/seat/v_1/orderList',
         detail:apiUrl + '/api/seat/v_1/orderDetailList',
     },
     seatInfo:{
         list:apiUrl + '/api/seat/v_1/listSeat',
         backImg:apiUrl + '/api/seat/v_1/getSeatPicInfo',
+        addBack:apiUrl + '/api/seat/v_1/getSeatPicInfo',
+        add:apiUrl + '/api/seat/v_1/addSeat',
     },
     file:{
         upload:threeUrl + '/upload',
+    },
+    product:{
+        list:apiUrl + '/api/goods/v_1/list',
+        category:apiUrl + '/api/goods/v_1/listGoodsType',
+    },
+    order:{
+        add:apiUrl + '/api/shopping/v_1/orderGoods',
+        info:apiUrl + '/api/shopping/v_1/orderList',
     },
 };

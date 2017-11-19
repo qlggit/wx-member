@@ -58,6 +58,7 @@ module.exports = function(obj){
             }
         };
         obj.stringify = function(data){
+          if(typeof data !== 'object')return data+'';
             try{
                 return JSON.stringify(data) + '';
             }catch (e){
