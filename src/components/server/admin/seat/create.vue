@@ -1,17 +1,19 @@
 <template>
-  <div v-if="showAble">
-    <div v-if="hasBackImg" class="pt-280 position-relative height-100-100 back-transparent">
+  <div v-if="showAble" class="height-100-100">
+    <div v-if="hasBackImg" class="pt-seat-header position-relative height-100-100 back-transparent">
       <div class="position-absolute left-0 top-0 width-100-100">
         <fieldset class="width-50-100 margin-auto pt-40 fz-30 ">
           <legend>座位详情</legend>
           <div :style="{visibility:selectSeat?'visible':'hidden'}">
+            <div class="pt-10 pb-20" v-if="seatData">总座位数:{{seatData.itemList.length}}</div>
+            <div class="pt-10 pb-20">当前座位资料</div>
             <div class="pt-10 pb-20">座位类型:{{selectSeat.seatTypeName}}</div>
             <div class="pt-10 pb-20">座位名称:<input v-model="selectSeat.seatName" /></div>
             <div class="pt-10 pb-20">容纳人数:<input v-model="selectSeat.locCount" /></div>
             <div class="pt-10 pb-20">最低消费:<input v-model="selectSeat.lowCostAmount" /></div>
           </div>
           <div class="width-50-100 margin-auto">
-            <div class="btn btn-sm back-24 color-white" @click="doSubmit">保存所有</div>
+            <div class="btn btn-sm back-24 color-white" @click="doSubmit">{{hasAutoSeatData?'保存':'新增所有'}}</div>
           </div>
         </fieldset>
       </div>

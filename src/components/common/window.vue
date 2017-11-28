@@ -18,7 +18,7 @@
     props:['windowData'],
     data() {
       return {
-        zIndex:this.windowData.zIndex || 3000
+        zIndex:this.windowData.zIndex || 800
       }
     },
 

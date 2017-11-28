@@ -2,21 +2,26 @@
   <div class="pt-header pb-74 height-100-100 back-242">
     <header-component :header-data="{title:'我的订座'}"></header-component>
     <div class="back-transparent height-100-100 pt-20 overflow-scroll-y">
-      <div v-for="item in orderList" class="my-order-list back-242 mb-20">
+      <div v-if="orderList">
+        <div v-if="orderList.length === 0" class="color-104 pt-20 text-center fz-30">
+          暂无未处理订单
+        </div>
+        <div v-for="item in orderList" class="my-order-list back-242 mb-20">
           <div class="pl-24 pr-24">
             <div class="pt-24 pb-24 clearfix fz-26 color-104 border-b-233">
-              <div class="float-left">{{item.placeName}}</div>
+              <div class="float-left">{{item.supplierName}}</div>
               <div class="float-right">{{item.statusName}}</div>
             </div>
             <div class="pt-42 pb-42 fz-28 color-24 flex-left border-b-233">
-                <div class="width-200">订座</div>
-                <div class="width-200">{{item.address}}</div>
-                <div class="width-200">￥{{item.price}}</div>
+              <div class="width-200">{{item.orderType==='normal'?'订座':'拼桌'}}</div>
+              <div class="width-200">{{item.seatName}}</div>
+              <div class="width-200">￥{{item.costAmount?item.costAmount:0}}</div>
             </div>
           </div>
-        <div class="pt-24 pb-24 clearfix pr-26">
-          <div class="float-right">
-            <div class="btn btn-lt back-24 color-white" v-router-link="'/merchant/product'">继续下单</div>
+          <div class="pt-24 pb-24 clearfix pr-26">
+                <div v-if="item.noPay"
+                     class="btn btn-lt btn-auto back-24 color-white float-right mr-20" v-router-link="item.payUrl">去支付</div>
+                <div v-if="item.hasMe" class="btn btn-lt back-24 btn-auto color-white float-right" v-router-link="item.productUrl">继续下单</div>
           </div>
         </div>
       </div>

@@ -88,10 +88,19 @@ export default{
     });
     WY.oneReady('user-info',function(o){
       that.userInfo = o;
+      that.doSearch();
     } , this);
   },
   methods:{
     doSearch:function(){
+      var that = this;
+      WY.get('/my/order/list' , {
+        pageNum:1,
+        pageSize:100,
+        startDate:WY.common.parseDate(new Date , 'Y-m-d'),
+      } , function(a){
+        that.orderList = a.data.list;
+      });
     },
     showMoreWine:function(index){
       this.orderList[index].showMore = false;

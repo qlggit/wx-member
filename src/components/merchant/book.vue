@@ -1,8 +1,8 @@
 <template>
   <div class="height-100-100 width-100-100 book-content pt-header">
     <header-component :header-data="{title:name}"></header-component>
-    <wy-show-svg :seat-data="{
-      backSrc:'/images/svg.jpg',
+    <wy-show-svg v-if="svgBackImg" :seat-data="{
+      backSrc:svgBackImg,
       itemList:seatItemList
     }" @click="svgClick"></wy-show-svg>
     <div class="position-fixed width-100-100 bottom-0 left-0 z-index-100 book-window pl-24 pr-24">
@@ -47,7 +47,7 @@
                 <div class="lh-40 height-40">最低消费： ￥{{seatData.lowCostAmount}}</div>
                 <div class="  lh-40 height-40">
                   <span class="mr-10" >人数: </span>
-                  <span v-if="seatData.selectAble">{{seatData.myNumber}}/{{seatData.locCount }}</span>
+                  <span v-if="0">{{seatData.myNumber}}/{{seatData.locCount }}</span>
                   <wy-number-select v-else @changeNumber="changeNumber" :number-data="{number:seatData.myNumber,minNumber:1}"></wy-number-select>
                 </div>
               </div>
@@ -62,7 +62,7 @@
             <div class="btn-50 back-233 float-left color-24" @click="showConfirmWindow(0)">换桌</div>
             <div  @click="doSubmit" class="btn-50 back-24 float-right color-white">
               {{
-                  seatData.hasMe?'买酒':(seatData.isSelected?'拼桌':'订座')
+                  seatData.isTableAppling?'申请中':(seatData.hasMe?'买酒':(seatData.isSelected?'拼桌':'订座'))
               }}
             </div>
           </div>

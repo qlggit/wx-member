@@ -6,7 +6,7 @@
         <input type="text" v-model="searchValue" placeholder="搜索 酒吧/KTV" >
         <img src="/images/page/del.png" @click="clearSearch" class="del-ico ico" alt="">
       </div>
-      <div slot="search" class="close-btn inline-block" @click="closeThis()">取消</div>
+      <div slot="search" class="close-btn inline-block pt-10" @click="closeThis()">取消</div>
     </header-component>
     <div class="back-242 pl-24 pr-24 pt-40" v-show="!searchList&&!searchList.length">
         <div class="fz-30 color-24 mb-44">热门搜索</div>

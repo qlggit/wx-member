@@ -51,7 +51,10 @@ function login(sts){
 function wechatLogin(){
   location.href = '/in?callback=' + encodeURIComponent(location.pathname);
 }
+var hasGetSession;
 function getSession(){
+  if(hasGetSession)return false;
+  hasGetSession = 1;
   WY.get('/session/get',function(a){
       localStorage.apiImgUrl = a.apiImgUrl;
       localStorage.debug = a.debug ;
@@ -83,13 +86,13 @@ WY.bind('login-flush',function(){
 WY.bind('session',function(){
   getSession();
 });
-session.isOwner = function(unionid){
-  return unionid === session.unionid;
+session.isOwner = function(userId){
+  return userId === session.userId;
 };
 WY.setLocalStorage = function(key , data){
-  localStorage[key] = JSON.stringify(data);
+  localStorage[key] = WY.common.stringify(data);
 };
 WY.getLocalStorage = function(key){
   var v = localStorage[key];
-  return v && JSON.parse(v);
+  return v && WY.common.parse(v);
 };

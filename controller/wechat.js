@@ -17,7 +17,7 @@ router.get('/entrance', function(req, res, next) {
           nickname   :query.nickname,
           headImg    :query.headimgurl,
           deviceType:'H5',
-          sType:'WEIXIN',
+          sType:'weixin',
           uid:req.session.unionid,
         };
         useRequest.send(req , res , {

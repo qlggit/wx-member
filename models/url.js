@@ -20,17 +20,26 @@ module.exports = {
     user:{
         edit:apiUrl + '/api/user/v_1/updateByPrimaryKey',
     },
+    my:{
+        seat:apiUrl + '/api/seat/v_1/myOrderList',
+    },
     seatOrder:{
         add:apiUrl + '/api/seat/v_1/orderSeat',
         again:apiUrl + '/api/seat/v_1/orderTableSeat',
         list:apiUrl + '/api/seat/v_1/orderList',
+        info:apiUrl + '/api/seat/v_1/orderInfo',
         detail:apiUrl + '/api/seat/v_1/orderDetailList',
     },
     seatInfo:{
         list:apiUrl + '/api/seat/v_1/listSeat',
-        backImg:apiUrl + '/api/seat/v_1/getSeatPicInfo',
-        addBack:apiUrl + '/api/seat/v_1/getSeatPicInfo',
+        backImg:apiUrl + '/api/seat/v_1/lisSeatPic',
+        addBack:apiUrl + '/api/seat/v_1/uploadSeatPic',
         add:apiUrl + '/api/seat/v_1/addSeat',
+        edit:apiUrl + '/api/seat/v_1/editSeat',
+        lock:apiUrl + '/api/seat/v_1/editSeat',
+        lockList:apiUrl + '/api/seat/v_1/editSeat',
+        money:apiUrl + '/api/seat/v_1/editSeat',
+        moneyList:apiUrl + '/api/seat/v_1/editSeat',
     },
     file:{
         upload:threeUrl + '/upload',

@@ -44,7 +44,7 @@
             </div>
           </div>
         </div>
-      <div class="buy-btn text-center back-24 color-white fz-36 position-absolute right-0 top-0" v-router-link="'/merchant/pay'" >确定支付</div>
+      <div class="buy-btn text-center back-24 color-white fz-36 position-absolute right-0 top-0" @click="doBuy" >确定购买</div>
     </div>
   </div>
 </template>

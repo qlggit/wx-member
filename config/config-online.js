@@ -1,9 +1,11 @@
 //admin 1234yqs_admin
 module.exports = {
-    uploadPath:'build/upload',
-    apiUrl:'http://172.19.56.131',
+    apiUrl:'http://47.100.20.78:8012',
+    threeUrl:'http://47.100.20.78:8080',
+  wechatLoginUrl:'http://47.100.20.78:3002/wechat/entrance/test3001',
+  wechatJssdkUrl:'http://47.100.20.78:3002/wechat/jssdk/test3001',
     "log4js":{
-        "customBaseDir" :"../logs/pc-boss",
+        "customBaseDir" :"../logs/wx-member/",
         "customDefaultAtt" :{
             "type": "dateFile",
             "absolute": true,
@@ -23,7 +25,7 @@ module.exports = {
     dbOptions:{
         host:'127.0.0.1',
         port:'27017',
-        dbname:'pc'
+        dbname:'wxmember'
     }
 };
 

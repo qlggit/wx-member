@@ -4,7 +4,6 @@ router.get('/', useValidate.hasLogin, function(req, res, next) {
     res.useRender('index');
 });
 router.get('/in', function(req, res, next) {
-  console.log(req.session);
     if(req.session.userInfo && req.session.userInfo.userId){
         return res.redirect('/');
     }

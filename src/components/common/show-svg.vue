@@ -1,5 +1,5 @@
 <template>
-  <div v-if="imgInit" class="width-100-100 height-100-100 overflow-hidden back-transparent">
+  <div v-if="imgInit" class="width-100-100 height-100-100 overflow-hidden back-transparent cursor-pointer">
       <svg class="width-100-100 height-100-100 show-svg"
            style="background-size:100% 100%;"
            :style="{
@@ -58,7 +58,7 @@
           this.makeSvgData();
         }
       },
-      seatData:function(v , o){
+      'seatData.itemList':function(v , o){
         if(this.svgInitCount >= 2){
           this.makeSvgData();
         }

@@ -1,5 +1,5 @@
 var login = function(req , res , next){
-  req.session.adminToken = {
+  req.session.threeToken = {
     backUrl:req.query.backUrl,
     userId:req.query.userId,
     token:req.query.token
@@ -11,7 +11,7 @@ var login = function(req , res , next){
   }
 };
 login.check = function(req , res , next){
-  if(req.session.adminToken){
+  if(req.session.threeToken){
     next();
   }
   else{

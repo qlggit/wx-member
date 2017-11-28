@@ -1,6 +1,5 @@
 module.exports = function(req , res , next){
     var redirectUrl;
-    console.log(req.session);
     if(req.session.userInfo){
         return next();
     }

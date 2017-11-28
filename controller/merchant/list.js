@@ -8,8 +8,6 @@ router.get('/banner',function(req, res, next) {
       bannerTypeCode:req.query.bannerTypeCode,
       clinetLoc:'WX',
     },
-    method:'POST',
-    notBody:1,
     done:function(data){
       res.useSend(data);
     }

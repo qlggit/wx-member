@@ -12,3 +12,12 @@ WY.loading = function(sts){
 WY.share = function(){
   WY.trigger('share');
 };
+WY.confirm = function(options){
+  if(!options || typeof options !== 'object'){
+    options = {
+      content:options,
+    };
+  }
+  if(options.showAble === undefined)options.showAble = 1;
+  WY.trigger('confirm' , options);
+};

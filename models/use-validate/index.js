@@ -13,7 +13,7 @@ module.exports = {
     },
     imgCodeValidate:require('./code-validate.js'),
     hasLogin:require('./has-login.js'),
-    adminLogin:require('./admin-login.js'),
+    threeLogin:require('./three-login.js'),
     bossToken:require('./boss-token.js'),
     checkOperator:require('./check-operator'),
 };

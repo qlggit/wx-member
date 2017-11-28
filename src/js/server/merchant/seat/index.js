@@ -1,28 +1,29 @@
-import canvasData from '../../../ui/canvas-data';
+import dateChoose from '@/components/common/date-choose.vue';
 export default{
   name:'admin-seat-create',
+  components:{
+    dateChoose
+  },
   data() {
     return {
+      showThisWindow:0,
+      menuIndex:0,
+      menuList:[{name:'详情'},{name:'锁定',type:'lock'},{name:'资费','type':'money'}],
       userInfo:'',
       showAble:0,
       hasBackImg:0,
-      colorList:[255,197,85,0],
-      autoBackList:[
-        {
-          name:'背景图',
-          code:'back',
-          img:'http://ozczd6usr.bkt.clouddn.com/FrzoN1p-3lHax-nl9f8THrp_Dzh-',
-        },
-        {
-          name:'效果图',
-          code:'main',
-          img:'http://ozczd6usr.bkt.clouddn.com/FpT6AmkAsYw4UIeXW0Yk83L0amQ3',
-        }
-      ],
       backImg:'',
       seatData:'',
       selectSeat:'',
-      hasAutoSeatData:'',
+      nowDate:'',
+      dateVisible:'',
+      lockList:[],
+      moneyList:[],
+      chooseDateData:'',
+      autoDate:'',
+      chooseDateType:0,
+      chooseStartDate:'',
+      chooseEndDate:'',
     }
   },
   beforeDestroy:function(){
@@ -30,65 +31,79 @@ export default{
   },
   created:function(){
     var that = this;
+    this.chooseStartDate = this.chooseEndDate = this.autoDate = this.nowDate = WY.common.parseDate(new Date , 'Y-m-d');
+    this.chooseDateData = {startDate:this.nowDate,selectDate:this.nowDate,title:'请选择日期'};
     WY.oneReady('user-info',function(o){
       that.userInfo = o;
     } , this);
     this.searchBack();
   },
   methods:{
-    doSubmit:function(){
+    doSubmit:function(type){
       if(!this.selectSeat){
         WY.toast('请先选择一个座位');
         return false;
       }
-      var that = this , data , sendData;
-      if(that.hasAutoSeatData){
+      var that = this  , sendData;
         sendData = WY.common.copyProp(this.selectSeat,{
           locCount:'',
           lowCostAmount :'',
           seatName  :'',
           yukeSupplierSeatId:'',
         });
-      }
-        else{
-        data = [];
-        this.seatData.itemList.forEach(function(a){
-          var o = WY.common.copyProp(a.svgData,{
-            locCount:'',
-            lowCostAmount :'',
-            seatName  :'',
-            seatShape   :'',
-            seatType    :'',
-            seatX     :'',
-            seatY      :'',
-          });
-          o.supplierId = WY.hrefData.supplierId;
-          data.push(o);
-        });
-        sendData = {
-          jsonStr:JSON.stringify(data)
-        };
-      }
-        WY.post('/server/admin/seat/'+(that.hasAutoSeatData?'edit':'add') ,sendData,function(a){
-          if(a.code == 0 &&!that.hasAutoSeatData){
-            that.hasAutoSeatData = 1;
-          }
+        WY.post('/server/merchant/seat/edit',sendData,function(a){
           WY.toast(a.message);
         })
+    },
+    doSearch:function(){
+      var that = this;
+      WY.get('/order/seat/list',{
+        supplierId:WY.hrefData.supplierId,
+        startDate:this.selectDate,
+        endDate :this.selectDate,
+        pageNum:1,
+        pageSize:200,
+      } , function(a){
+        var seatOrderList = that.seatOrderList = a.data.list;
+        if(seatOrderList && seatOrderList.length)that.seatData.itemList.forEach(function(a){
+          var svgData = a.svgData;
+          var thisList = seatOrderList.filter(function(a){
+            return a.seatId == svgData.seatId;
+          });
+          if(thisList.length){
+            svgData.isSelected = 1;
+            svgData.allGroup = thisList.length;
+            thisList.every(function(a){
+              if(a.orderType === 'normal'){
+                svgData.tableAble = a.tableStatus === 'y';
+                svgData.userId = a.userId;
+              }
+              if(WY.session.isOwner(a.userId)){
+                svgData.hasMe = 1;
+                if(a.orderType === 'normal'){
+                  svgData.isMe = 1;
+                }
+                return false;
+              }
+              return true;
+            })
+          }
+        })
+      });
     },
     doShowBack:function(sts){
       var count = 0;
       var that = this;
-      that.seatData = '';
       this.backImg.forEach(function(a){
         var img = new Image;
         img.src = a.img;
         count++;
         img.onload = function(){
           count--;
+          console.log(count);
           if(count === 0){
             that.hasBackImg = 1;
-            if(!sts)that.doSetSvg(img.width,img.height);
+            console.log('hasBackImg',that.hasBackImg);
           }
         }
       });
@@ -105,7 +120,7 @@ export default{
               img:b.filePath
             };
           });
-          that.doShowBack(a.data[1] && a.data[1].length);
+          that.doShowBack();
           if(a.data[1] && a.data[1].length){
             var itemList = a.data[1].map(function(a){
               return that.makeItem(a.seatShape - 0,{
@@ -117,10 +132,8 @@ export default{
               backSrc:a.data[0].filter(function(a){return a.supplierFileType==='seat_black'}).pop().filePath,
               itemList:itemList
             };
-            that.hasAutoSeatData = 1;
           }
         }
-
         that.showAble = 1;
       })
     },
@@ -133,27 +146,26 @@ export default{
         return false;
       }
       target.style.stoke = 'red';
+      this.lockList = [];
+      this.moneyList = [];
       this.selectSvg = target;
       this.selectSeat = data;
+      this.showThisWindow = 1;
+      if(this.menuIndex !== 0){
+        this.searchMoneyList(this.menuList[this.menuIndex].type , this.menuIndex);
+      }
     },
-    doSetSvg:function(w , h){
-      var itemList = [];
+    searchMoneyList:function(type , index){
       var that = this;
-      var canvasObj = new canvasData({
-        img:this.backImg.filter(function(a){return a.code === 'main'}).pop().img,
-        width:w,
-        height:h,
-        colorList:this.colorList,
-        border:function(color,offset){
-          itemList.push(that.makeItem(color,offset));
-        },
-        done:function(){
-          that.seatData = {
-            backSrc:that.backImg.filter(function(a){return a.code === 'back'}).pop().img,
-            itemList:itemList
-          }
-        }
-      });
+      this.menuIndex = index;
+      if(that[type + 'List'].length)return false;
+      WY.get('/server/merchant/seat/'+type+'/list',{
+        supplierId:WY.hrefData.supplierId,
+        seatId:this.selectSeat.seatId,
+        startDate:this.nowDate,
+      },function(a){
+        that[type + 'List'] = a.data && a.data.list;
+      })
     },
     makeItem:function(color , offset , autoData){
       var data = {svgData:autoData || {}};
@@ -191,42 +203,19 @@ export default{
       svgData.supplierId = WY.hrefData.supplierId;
       return data;
     },
-    fileChange:function(e){
-      var fileEle = e.target;
-      if(fileEle.value){
-        var data = {
-          file:fileEle.files[0]
-        };
-        var index = e.target.dataset.index;
-        var that = this;
-        WY.postFile('/file/api' , data , function(a){
-          if(a.status === true){
-            that.autoBackList[index].img = a.data.path;
-          }else{
-            WY.toast('上传失败');
-          }
-        });
-      }
+    onValuesChange:function(v){
+      this[this.selectDateType] = v.join('-');
     },
-    doSubmitImg:function(){
-      if(this.autoBackList.every(function(a){
-        if(!a.img){
-          WY.toast('请上传'+a.name);
-        }
-          return !!a.img;
-        })){
-        var that = this;
-        var data = {
-          blackPath:this.autoBackList.filter(function(a){return a.code ==='back'}).pop().img,
-          perPath:this.autoBackList.filter(function(a){return a.code ==='main'}).pop().img,
-          supplierId:WY.hrefData.supplierId,
-        };
-        WY.post('/server/admin/seat/fileAdd' , data , function(a){
-          if(a.code == 0){
-            that.backImg = that.autoBackList;
-            that.doShowBack();
-          }
-        })
+    doSelectDate:function(type , v){
+      this.chooseDateData.selectDate = this[type];
+      this.selectDateType = type;
+      this.dateVisible = 1;
+    }
+  },
+  watch:{
+    autoDate:function(v , o){
+      if(o){
+        this.doSearch();
       }
     }
   }

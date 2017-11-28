@@ -15,7 +15,7 @@ export default{
       selectedList:'',
       productSelectListAble:0,
       allNumber:0,
-      merchantId:WY.hrefData.merchantId,
+      payUrl:''
     }
   },
   beforeDestroy:function(){
@@ -24,7 +24,6 @@ export default{
   created:function(){
     var that = this;
     this.productList = [];
-    WY.setLocalStorage('merchantId' , WY.hrefData.merchantId);
     this.selectedList = WY.getLocalStorage('selectedList') || [];
     this.maxListHeight = WY.clientHeight -  WY.getScaleSize(100);
     WY.oneReady('user-info',function(o){
@@ -36,6 +35,32 @@ export default{
     this.setAll();
   },
   methods:{
+    doBuy:function(){
+      var goodsLs = [];
+      this.selectedList.forEach(function(a){
+        goodsLs.push({
+          goodsId:a.id,
+          quantity:a.number
+        });
+      });
+      WY.post('/order/add' , {
+        goodsLs:goodsLs,
+        supplierId:WY.hrefData.merchantId,
+        seatId:WY.hrefData.seatId,
+        orderNo:WY.hrefData.seatOrderNo,
+      } , function(a){
+        if(a.code == 0){
+          vueRouter.push(WY.common.addUrlParam('/merchant/pay',{
+            seatOrderNo:WY.hrefData.seatOrderNo,
+            merchantId:WY.hrefData.merchantId,
+            seatId:WY.hrefData.seatId,
+            orderNo:a.data,
+          }));
+        }else{
+          WY.toast(a.message);
+        }
+      })
+    },
     changeNumber:function(data){
       //列表选取
       var that = this;
@@ -110,7 +135,7 @@ export default{
       WY.get('/merchant/product/list',{
         pageNum:this.pageNum++,
         supplierId:WY.hrefData.supplierId,
-        goodsTypeId:1 || this.menuList[this.menuIndex].yukeGoodsTypeId,
+        goodsTypeId:this.menuList[this.menuIndex].yukeGoodsTypeId,
       } , function(data){
         var list = data.data.list;
         list.forEach(function(a){

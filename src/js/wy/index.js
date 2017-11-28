@@ -54,7 +54,6 @@ WY.ready('session-complete' , function(){
 });
 WY.trigger('session');
 WY.trigger('require-complete');
-
 window.requestAnimFrame = (function(){
   return  window.requestAnimationFrame       ||
     window.webkitRequestAnimationFrame ||

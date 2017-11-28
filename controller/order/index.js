@@ -17,19 +17,6 @@ router.get('/info',function(req, res, next) {
     data:{
       orderNo:req.query.orderNo
     },
-    method:'POST',
-    notBody:1,
-    done:function(data){
-      res.useSend(data);
-    }
-  });
-});
-router.get('/seat/list',function(req, res, next) {
-  useRequest.send(req , res , {
-    url:useUrl.seatOrder.list,
-    data:req.query,
-    method:'POST',
-    notBody:1,
     done:function(data){
       res.useSend(data);
     }
@@ -37,4 +24,4 @@ router.get('/seat/list',function(req, res, next) {
 });
 exports.router = router;
 
-exports.__path = '/merchant/order';
+exports.__path = '/order';

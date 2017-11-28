@@ -20,7 +20,7 @@
                 {{placeList[placeIndex].name}}
                 <div class="select-ico"></div>
               </div>
-              <div v-show="morePlaceAble" @click="showMorePlace(0)" class="position-full position-absolute z-index-50 back-black-08 pt-74">
+              <div v-show="morePlaceAble" @click="showMorePlace(0)" class="position-full position-absolute z-index-50 back-black-06 pt-74">
                 <div v-for="(item,index) in placeList" @click.stop="selectPlace(index)"
                      :class="placeIndex===index?'active':''"
                      class="wine-more-list select-head pl-24 pb-20 color-104 fz-30 border-b-233 back-242">

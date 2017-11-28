@@ -40,6 +40,7 @@ WY.common.parse = function(data){
   }
 };
 WY.common.stringify = function(data){
+  if(typeof data !== 'object')return data+'';
   try{
     return JSON.stringify(data) + '';
   }catch (e){

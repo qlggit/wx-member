@@ -7,6 +7,7 @@ require('./home').default(routes);
 require('./merchant').default(routes);
 require('./my').default(routes);
 require('./server-admin').default(routes);
+require('./server-merchant').default(routes);
 export default new Router({
   mode: 'history',
   routes: routes

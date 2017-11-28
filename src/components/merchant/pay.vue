@@ -16,11 +16,11 @@
         </div>
         <div class="pl-24 pr-24 clearfix height-90 fz-30 color-24 pt-30 pb-30">
           <div class="float-left">合计金额：</div>
-          <div class="float-right">${{allPrice}}</div>
+          <div class="float-right">￥{{allPrice}}</div>
         </div>
       </div>
       <div class="mt-66 height-88 pt-30 pb-30 fz-28 pl-24 back-248">
-          <span class="mr-20 color-104">订座信息：</span><span class="color-24">订座地址地址。。</span>
+          <span class="mr-20 color-104">订座信息：</span><span class="color-24">{{address}}</span>
       </div>
       <div class="mt-280 pl-24 pr-24 pb-150">
           <div class="btn back-24 color-white" @click="doBuy">确认支付</div>

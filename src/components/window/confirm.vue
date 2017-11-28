@@ -1,0 +1,42 @@
+<template>
+  <wy-window :window-data="{}" v-if="showAble">
+      <div slot="content" class="border-rad-20 overflow-hidden back-white width-690 margin-auto">
+        <div class="pt-40 pb-40">{{content}}</div>
+        <div class="clearfix text-center">
+          <div class="btn-50 back-233 float-left color-24" @click="doSubmit(0)">{{cancelText}}</div>
+          <div  @click="doSubmit(1)" class="btn-50 back-24 float-right color-white">
+            {{submitText}}
+          </div>
+        </div>
+      </div>
+  </wy-window>
+</template>
+<script>
+  export default {
+    data:function(){
+      return {
+        showAble:false,
+        cancelText:'取消',
+        submitText:'确定',
+        content:'',
+        done:''
+      };
+    },
+    created:function(){
+      var that = this;
+      WY.bind('confirm',function(options){
+        that.showAble = options.showAble;
+        that.content = options.content;
+        that.done = options.done;
+        that.cancelText = options.cancelText || '取消';
+        that.submitText = options.submitText || '确定';
+      });
+    },
+    methods:{
+      doSubmit:function(v){
+        if(this.done && this.done(v) === false) return false;
+        this.showAble = v;
+      }
+    }
+  }
+</script>
