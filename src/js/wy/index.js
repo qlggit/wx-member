@@ -44,6 +44,7 @@ require('./wx.js');
 require('./directive.js');
 require('./filter.js');
 require('./ready.js');
+require('./cache.js');
 require('../ui/index');
 WY.bind('request-start-filter',function(options){
   options.headers = options.headers || {};

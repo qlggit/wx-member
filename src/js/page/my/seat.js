@@ -35,17 +35,20 @@ export default{
             supplierId:a.supplierId,
             seatId:a.seatId,
           });
-          a.noPay = a.orderType === 'normal' && a.payStatus === 'NOT_PAY';
-          a.hasMe = a.noPay || a.payStatus === 'ALREADY_PAY' || a.pzStatus === 'y';
+          a.noPay = a.payStatus !== 'ALREADY_PAY';
+          a.hasMe = a.noPay || a.payStatus === 'ALREADY_PAY' || a.pzStatus === 'pzStatus';
           a.statusName = a.orderType === 'normal'?(a.payStatus !== 'ALREADY_PAY'?'未支付':'已支付'):(
             ({
-              y:'已同意',
-              n:'已拒绝'
-            })[a.pzStatus]||'处理中'
+              end:'已同意',
+              online:'处理中'
+            })[a.pzStatus]
           )
         });
           that.orderList = a.data.list;
       });
     },
+    cancelSeat:function(id){
+      //取消订座
+    }
   }
 }

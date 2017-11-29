@@ -4,7 +4,7 @@ var router = express.Router();
 router.get('/index',useValidate.threeLogin, function(req, res, next) {
     res.useRender('index');
 });
-router.get('/lock/list',useValidate.threeLogin, function(req, res, next) {
+router.get('/lock/list',useValidate.threeLogin.check, function(req, res, next) {
   useRequest.send(req , res , {
     url:useUrl.seatInfo.lockList,
     tokenInfo:req.headers.tokenInfo,
@@ -14,7 +14,7 @@ router.get('/lock/list',useValidate.threeLogin, function(req, res, next) {
     }
   });
 });
-router.get('/money/list',useValidate.threeLogin, function(req, res, next) {
+router.get('/money/list',useValidate.threeLogin.check, function(req, res, next) {
   useRequest.send(req , res , {
     url:useUrl.seatInfo.moneyList,
     tokenInfo:req.headers.tokenInfo,
@@ -42,6 +42,7 @@ router.post('/edit',useValidate.threeLogin.check, function(req, res, next) {
     method:'POST',
     tokenInfo:req.headers.tokenInfo,
     data:req.body,
+    notBody:1,
     done:function(a){
       res.useSend(a);
     }

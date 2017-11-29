@@ -4,7 +4,7 @@
     <div class="pt-20 color-24 fz-32">
       <div class="border-b-199 border-t-199 flex-between pl-24 pr-24 height-128 back-242">
           <div>头像</div>
-          <img :src="userInfo.headImgUrl" class="head-img border-rad-100" alt="">
+          <img :src="userInfo.headImgUrl | imgUrlFilter" class="head-img border-rad-100" alt="">
       </div>
       <div class="border-b-199 border-t-194 flex-between pl-24 pr-24 height-128 back-242 mt-20">
           <div>我的等级</div>
@@ -12,7 +12,7 @@
       </div>
       <div class="border-b-199 flex-between pl-24 pr-24 height-128 back-242">
           <div>绑定手机</div>
-          <div class="color-104">{{userInfo.phone}}</div>
+          <div class="color-104">{{userInfo.userName}}</div>
       </div>
       <div class="border-b-194 border-t-199 flex-between pl-24 pr-24 height-128 back-242 mt-20">
           <div>昵称</div>

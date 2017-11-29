@@ -1,14 +1,18 @@
 .my-header{
-  padding-top:1.03rem;
-  padding-bottom:1.03rem;
-  padding-left:2.34rem;
-  height: 3.3rem;
+  height: 3.06rem;
   border-bottom: 1px solid @color-194;
   .head-img{
-    width: 1.54rem;
-    height: 1.54rem;
-    left: .5rem;
-    top:.88rem;
+    width: 1.84rem;
+    height: 1.84rem;
+  }
+  .lv-ico{
+    width: .53rem;
+    height: .53rem;
+    top:.15rem;
+    right: -.2rem;
+    img{
+      width: 80%;
+    }
   }
   .head-ico{
     width: .34rem;
@@ -20,19 +24,36 @@
     line-height: .22rem;
     height: .22rem;
   }
+  .my-info{
+    bottom: .3rem;
+    height: .48rem;
+    border-bottom-left-radius: .48rem;
+    border-top-left-radius: .48rem;
+    padding:.13rem .1rem .13rem .2rem;
+    img{
+      width: .1rem;
+      height: .17rem;
+    }
+  }
 }
-
+.my-qrcode{
+  height: 1.62rem;
+}
 .my-money{
-  height: 1.7rem;
+  height: 1.9rem;
   padding-top:.52rem;
 }
 .head-bg{
-  height: 5rem;
+  height: 4.68rem;
   .blur-bg{
     .blur(5px);
     opacity: .1;
     background-position: center;
     background-size:cover;
+  }
+  .qrcode-ico{
+    width: .52rem;
+    height: .52rem;
   }
 }
 .my-list{
@@ -44,6 +65,7 @@
   .item{
     padding-top:.1rem;
     border-right: 1px solid @color-194;
+    height: 1.28rem;
     .img{
       width: .68rem;
     }
@@ -51,7 +73,7 @@
       width: .36rem;
       height: .36rem;
       top:-.08rem;
-      left:-.18rem;
+      right:-.18rem;
       line-height:.36rem;
       background: rgb(244,54,38);
     }

@@ -1,5 +1,4 @@
 WY.common = {};
-console.log('wy common end');
 /*
  * 日期格式化
  * */

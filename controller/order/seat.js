@@ -22,6 +22,16 @@ router.get('/info',function(req, res, next) {
     }
   });
 });
+router.get('/myInfo',function(req, res, next) {
+  var data = req.query;
+  useRequest.send(req , res , {
+    url:useUrl.seatOrder.myInfo,
+    data:data,
+    done:function(data){
+      res.useSend(data);
+    }
+  });
+});
 router.post('/add',function(req, res, next) {
   useRequest.send(req , res , {
     url:useUrl.seatOrder.add,

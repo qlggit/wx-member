@@ -48,7 +48,9 @@
                 <div class="  lh-40 height-40">
                   <span class="mr-10" >人数: </span>
                   <span v-if="0">{{seatData.myNumber}}/{{seatData.locCount }}</span>
-                  <wy-number-select v-else @changeNumber="changeNumber" :number-data="{number:seatData.myNumber,minNumber:1}"></wy-number-select>
+                  <wy-number-select v-else
+                                    @changeNumber="changeNumber"
+                                    :number-data="{number:seatData.myNumber,minNumber:1,maxNumber:seatData.locCount-seatData.hadCount}"></wy-number-select>
                 </div>
               </div>
             </div>

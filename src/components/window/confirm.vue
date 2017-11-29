@@ -1,6 +1,9 @@
 <template>
   <wy-window :window-data="{}" v-if="showAble">
       <div slot="content" class="border-rad-20 overflow-hidden back-white width-690 margin-auto">
+        <div class="pt-50">
+          <img src="/images/ico/confirm.png" class="confirm-ico" alt="">
+        </div>
         <div class="pt-40 pb-40">{{content}}</div>
         <div class="clearfix text-center">
           <div class="btn-50 back-233 float-left color-24" @click="doSubmit(0)">{{cancelText}}</div>

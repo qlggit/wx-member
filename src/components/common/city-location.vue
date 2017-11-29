@@ -45,8 +45,6 @@
   </div>
 </template>
 <script>
-  var  cityData = require('../../js/data/city.data');
-  require('../../js/ui/spell');
   export default {
     props:['selectCity'],
     data:function(){
@@ -64,62 +62,33 @@
         searchValue:'',
         selectCity:this.selectCity,
         cityList:'',
-        showSpell:'',
+        showSpell:'A',
         searchList:'',
+        searchTimer:''
       };
     },
     beforeDestroy:function(){
+      WY.oneUnBind(this);
     },
     created:function(){
-        var specCode = ['110000','120000','500000','310000'];
-        var cityAllList = cityData.filter(function(a , i){
-           return specCode.indexOf(a.code) > -1 || (a.code.slice(-2)==='00' && a.code.charAt(3) > 0 && specCode.indexOf(a.code.slice(0,2)+'0000') === -1)
-        });
-        var firstList = [];
-      cityAllList.forEach(function(a){
-          if(a.name.length > 2){
-            if(a.name.slice(-1) === '市')a.name = a.name.slice(0,-1);
-          }
-          if(a.code === '500000'){
-            a.spell = 'Chong Qing';
-          }
-          else a.spell = WY.convertPinyin(a.name);
-          a.spellFirst = a.spell.slice(0,1).toUpperCase();
-          a.spellAll = a.spell.split(/\s+/).map(function(a){
-            return a.slice(0,1).toLowerCase();
-          }).join('');
-          if(firstList.indexOf(a.spellFirst) === -1){
-            firstList.push(a.spellFirst);
-          }
-        });
-        firstList.sort();
-        var sortList = [];
-        firstList.forEach(function(a){
-          var list = cityAllList.filter(function(b){
-            return b.spellFirst === a;
-          });
-          sortList.push({
-            first:a,
-            list:list
-          })
-        });
-        this.cityAllList = cityAllList;
-        this.cityList = sortList;
+      var that = this;
+      WY.oneBind('scroll-top-key',function(v , key){
+        if(key === 'cityMain'){
+          that.showSpell = v;
+        }
+      } , this);
+      WY.getCache('cityData',function(a){
+        that.cityAllList = a.cityAllList;
+        that.cityList = a.cityList;
+      });
     },
     watch:{
       searchValue:function(v){
-        console.log(v);
         if(v){
-          if(/[\w\s]+/.test(v)){
-             this.searchList = this.cityAllList.filter(function(a){
-               v = v.toLowerCase();
-                return a.spell.replace(/\s/g,'').toLowerCase().indexOf(v) > -1 || a.spellAll.indexOf(v) > -1;
-             });
-          }else{
-            this.searchList = this.cityAllList.filter(function(a){
-              return a.name.indexOf(v) > -1;
-            });
-          }
+          clearTimeout(this.searchTimer);
+          this.searchTimer = setTimeout(function(){
+            this.doSearch();
+          } .bind(this),500);
         }else{
           this.searchList = '';
         }
@@ -134,12 +103,26 @@
         WY.trigger('city-location',v);
       },
       toShowSpell:function(e){
-        var spell = e.target.dataset.value;
-        this.showSpell = spell;
-        WY.trigger('scroll-top' , 'cityMain' , spell);
+        var char = e.target.dataset.value;
+        this.showSpell = char;
+        WY.trigger('scroll-top' , 'cityMain' , char);
       },
       changeSpell:function(e){
         this.toShowSpell(e);
+      },
+      doSearch:function(){
+        var v = this.searchValue;
+        if(/[\w\s]+/.test(v)){
+          this.searchList = this.cityAllList.filter(function(a){
+            var reg = new RegExp(v.split('').join('.*')+'.*','i');
+            return reg.test(a.alphabetical)
+              ||  reg.test(a.alphabeticalFirstAlphabet);
+          });
+        }else{
+          this.searchList = this.cityAllList.filter(function(a){
+            return a.name.indexOf(v) > -1;
+          });
+        }
       }
     }
   }

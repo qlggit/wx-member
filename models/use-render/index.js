@@ -10,7 +10,7 @@ module.exports = function(req , res , next){
             message:useCodeEnum[errorCode][1]
         };
         if(message){
-            if(typeof message == 'string'){
+            if(typeof message === 'string'){
                 sendData.message = message;
             }else{
                 useCommon.extendMore(sendData , message);

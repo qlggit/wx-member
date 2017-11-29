@@ -50,11 +50,27 @@ var scrollTopEle = {
 Vue.directive('scroll-top',{
   inserted:function(el , binding){
     scrollTopEle[binding.value] = el;
+    el.scrollKey = binding.value;
     WY.bind('scroll-top',function(key,v){
       var parentEle = scrollTopEle[key];
       var ele  = parentEle.querySelector('[first-spell='+v+']');
       parentEle.scrollTop = ele.offsetTop - parentEle.firstElementChild.offsetTop;
     });
+    el.onscroll = function(e){
+      var that = this;
+      var firstSpell;
+      [].slice.call(that.querySelectorAll('[first-spell]')).every(function(a){
+          if(that.scrollTop - that.firstElementChild.offsetTop + a.offsetTop > 0){
+            firstSpell = a.getAttribute('first-spell');
+            return true;
+          }
+          return false;
+      });
+      WY.trigger('scroll-top-key' , firstSpell || 'A' , that.scrollKey);
+    }
+  },
+  unbind:function(el , binding){
+    delete scrollTopEle[binding.value];
   }
 });
 Vue.directive('book-seat',{
@@ -124,5 +140,17 @@ Vue.directive('scroll-box',{
   ,unbind:function(el){
     el.ontouchmove = null;
     el.ontouchstart = null;
+  }
+});
+Vue.directive('diff-time',{
+  inserted:function(el , binding){
+    var time = binding.value ;
+    var speed = 500;
+    el.diffTimer = setInterval(function(){
+      time -= speed;
+      el.innerHTML = WY.common.sumTime(time);
+    } , speed);
+  },unbind:function(el){
+    clearInterval(el.diffTimer);
   }
 });

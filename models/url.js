@@ -27,7 +27,8 @@ module.exports = {
         add:apiUrl + '/api/seat/v_1/orderSeat',
         again:apiUrl + '/api/seat/v_1/orderTableSeat',
         list:apiUrl + '/api/seat/v_1/orderList',
-        info:apiUrl + '/api/seat/v_1/orderInfo',
+        info:apiUrl + '/api/seat/v_1/info',
+        myInfo:apiUrl + '/api/seat/v_1/orderInfo',
         detail:apiUrl + '/api/seat/v_1/orderDetailList',
     },
     seatInfo:{
@@ -36,8 +37,10 @@ module.exports = {
         addBack:apiUrl + '/api/seat/v_1/uploadSeatPic',
         add:apiUrl + '/api/seat/v_1/addSeat',
         edit:apiUrl + '/api/seat/v_1/editSeat',
+
         lock:apiUrl + '/api/seat/v_1/editSeat',
         lockList:apiUrl + '/api/seat/v_1/editSeat',
+
         money:apiUrl + '/api/seat/v_1/editSeat',
         moneyList:apiUrl + '/api/seat/v_1/editSeat',
     },
@@ -50,6 +53,14 @@ module.exports = {
     },
     order:{
         add:apiUrl + '/api/shopping/v_1/orderGoods',
-        info:apiUrl + '/api/shopping/v_1/orderList',
+        info:apiUrl + '/api/shopping/v_1/orderDetail',
+        listBySeat:apiUrl + '/api/seat/v_1/info',
+    },
+    city:{
+        patent:apiUrl + '/api/area/v_1/list',
+        child:apiUrl + '/api/area/v_1/childList',
+    },
+    pay:{
+        do:apiUrl + '/api/pay/v_1/pay'
     },
 };

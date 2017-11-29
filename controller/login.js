@@ -10,7 +10,7 @@ router.post('/', function(req, res, next) {
         userId:req.body.userId,
       },
       done:function(data){
-        if(data.code == 0){
+        if(data.code === 0){
           useData.setUserInfo(req , res , data , function(){
             res.useSend({
               code:data.code,

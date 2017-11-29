@@ -38,7 +38,10 @@ function putStorage(session){
   localStorage.userId = session.userInfo && session.userInfo.userId || localStorage.userId || '';
 }
 function login(sts){
-  if(sts || !session.userId){
+  if(!session.userId || !session.userId){
+    return wechatLogin();
+  }
+  if(sts){
     loginFlush();
   }else{
     if(!session.unionid){
@@ -64,7 +67,7 @@ function getSession(){
 }
 function loginFlush(){
   WY.post('/login',{userId:session.userId},function(a){
-    if(a.code == 0){
+    if(a.code === 0){
       putStorage(a.data);
       putSession(a.data);
     }else{

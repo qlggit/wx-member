@@ -10,7 +10,8 @@
           <div class="pl-24 pr-24">
             <div class="pt-24 pb-24 clearfix fz-26 color-104 border-b-233">
               <div class="float-left">{{item.placeName}}</div>
-              <div class="float-right">{{item.statusName}}</div>
+              <div v-if="item.diffTime" class="float-right">失效时间:<span v-diff-time="item.diffTime"></span></div>
+              <div v-else class="float-right">{{item.statusName}}</div>
             </div>
           </div>
           <div v-for="smItem in item.wineList" class="pt-20 pb-20 item-list position-relative back-233">
@@ -32,7 +33,7 @@
           </div>
           <div class="pl-24 pr-24 ">
             <div class="text-right pt-20 pb-20 border-b-233 color-24 fz-26">
-              <span><span class="mr-20"></span> <span>￥{{item.amount}}</span></span>
+              <span>付款金额：<span class="mr-20"></span> <span>￥{{item.amount}}</span></span>
             </div>
           </div>
           <div class="pt-24 pb-24 clearfix pr-26">

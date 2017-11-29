@@ -17,8 +17,10 @@ router.get('/data',function(req, res, next) {
   useRequest.send(req , res , {
     url:useUrl.merchant.list,
     data:{
-      supplierTypeCode:req.query.supplierTypeCode,
+      typeCode:req.query.supplierTypeCode,
       pageNum:req.query.pageNum || 0,
+      lat:req.query.lat || 0,
+      lon:req.query.lon || 0,
       pageSize:req.query.pageSize || 10
     },
     done:function(data){

@@ -71,8 +71,6 @@ process.on('error', function (err) {
 	console.error(err);
 });
 var useModel = global.useModel = require('./models');
-
-
 useModel.init(app , function(){
 });
 

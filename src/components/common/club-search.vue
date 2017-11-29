@@ -40,6 +40,7 @@
         hotList:'',
         searchList:'',
         clubSearchHistory:'',
+        searchTimer:'',
       };
     },
     beforeDestroy:function(){
@@ -54,16 +55,12 @@
     },
     watch:{
       searchValue:function(v){
+        this.searchList = '';
         if(v){
-          var that = this;
-          if(this.clubSearchHistory.indexOf(v) === -1)this.clubSearchHistory.push(v);
-          WY.get('/merchant/list/data',{
-
-          } , function(a){
-            that.searchList = a.data.shops;
-          });
-        }else{
-          this.searchList = '';
+          clearTimeout(this.searchTimer);
+          this.searchTimer = setTimeout((function(){
+            this.doSearch();
+          }).bind(this),300);
         }
       },
       clubSearchHistory:function(){
@@ -79,6 +76,20 @@
       },
       closeThis:function(){
         WY.trigger('club-search',0);
+      },
+      doSearch:function(){
+        var that = this;
+        var v = this.searchValue;
+        if(this.clubSearchHistory.indexOf(v) === -1){
+          this.clubSearchHistory.shift();
+          this.clubSearchHistory.push(v);
+        }
+        WY.get('/merchant/list/data',{
+          supplierName:v,
+          pageSize:5,
+        } , function(a){
+          if(a.data)that.searchList = a.data.shops;
+        });
       }
     }
   }
