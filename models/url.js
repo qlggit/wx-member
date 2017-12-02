@@ -22,10 +22,11 @@ module.exports = {
     },
     my:{
         seat:apiUrl + '/api/seat/v_1/myOrderList',
+        order:apiUrl + '/api/shopping/v_1/orderList',
     },
     seatOrder:{
         add:apiUrl + '/api/seat/v_1/orderSeat',
-        again:apiUrl + '/api/seat/v_1/orderTableSeat',
+        pz:apiUrl + '/api/seat/v_1/reqPz',
         list:apiUrl + '/api/seat/v_1/orderList',
         info:apiUrl + '/api/seat/v_1/info',
         myInfo:apiUrl + '/api/seat/v_1/orderInfo',
@@ -54,7 +55,7 @@ module.exports = {
     order:{
         add:apiUrl + '/api/shopping/v_1/orderGoods',
         info:apiUrl + '/api/shopping/v_1/orderDetail',
-        listBySeat:apiUrl + '/api/seat/v_1/info',
+        infoBySeat:apiUrl + '/api/shopping/v_1/orderGoodsInfo',
     },
     city:{
         patent:apiUrl + '/api/area/v_1/list',

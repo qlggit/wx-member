@@ -17,8 +17,6 @@ router.get('/info',function(req, res, next) {
     data:{
       orderNo:req.query.orderNo
     },
-    method:'POST',
-    notBody:1,
     done:function(data){
       res.useSend(data);
     }

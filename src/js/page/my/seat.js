@@ -37,12 +37,11 @@ export default{
           });
           a.noPay = a.payStatus !== 'ALREADY_PAY';
           a.hasMe = a.noPay || a.payStatus === 'ALREADY_PAY' || a.pzStatus === 'pzStatus';
-          a.statusName = a.orderType === 'normal'?(a.payStatus !== 'ALREADY_PAY'?'未支付':'已支付'):(
-            ({
-              end:'已同意',
-              online:'处理中'
-            })[a.pzStatus]
-          )
+          if(a.payStatus === 'ALREADY_PAY'){
+            a.statusName = '已支付'
+          }else{
+            a.statusName = '未支付';
+          }
         });
           that.orderList = a.data.list;
       });

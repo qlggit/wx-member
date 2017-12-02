@@ -40,6 +40,7 @@ export default{
       toBuyWine:1,
       hrefSeatOrderId:'',
       seatOrderList:'',
+      basePath:'',
     }
   },
   beforeDestroy:function(){
@@ -48,14 +49,16 @@ export default{
   created:function(){
     localStorage.selectedList = '';
     var that = this;
+    this.isServer = location.href.indexOf('server') > 0;
+    this.basePath = this.isServer ? '/server/app' : '/merchant';
     this.selectDate = WY.common.parseDate(new Date,'Y-m-d');
-    WY.oneReady('user-info',function(o){
-        WY.get('/merchant/detail/info',{
-          supplierId:WY.hrefData.merchantId
-        } , function(data){
-          data = data.data;
-          that.name = data.supplierName;
-        });
+    WY.oneReady(this.isServer?'token-complete':'user-info',function(o){
+      WY.get('/merchant/detail/info',{
+        supplierId:WY.hrefData.merchantId
+      } , function(data){
+        data = data.data;
+        that.name = data.supplierName;
+      });
     } , this);
     this.doSearch();
   },
@@ -108,6 +111,7 @@ export default{
           y:d.seatY ,
           seatStatus :d.seatStatus ,
           seatId:d.yukeSupplierSeatId,
+          orderNo:d.orderNo,
           seatShape:d.seatShape,
           seatName:d.seatName ,
           lowCostAmount:d.lowCostAmount ,
@@ -159,43 +163,36 @@ export default{
             svgData.isSelected = 1;
             svgData.allGroup = thisList.length;
             thisList.every(function(a){
-              if(a.orderType === 'normal'){
-                svgData.tableAble = a.tableStatus === 'y';
-                svgData.userId = a.userId;
-              }
+              svgData.tableAble = a.tableStatus === 'y' && a.pzStatus !== 'end';
+              svgData.userId = a.userId;
+              svgData.orderNo = a.orderNo;
+              //是我的订单
               if(WY.session.isOwner(a.userId)){
                 svgData.hasMe = 1;
-                if(a.orderType === 'normal'){
-                  svgData.isMe = 1;
-                  if(a.payStatus === 'NOT_PAY'){
-                    if(!hasPayConfirm)WY.confirm({
-                      cancelText:'买酒',
-                      submitText:'支付',
-                      content:'您已有未支付的订座订单！',
-                      done:function(v){
-                        vueRouter.push(v?
-                          (
-                            WY.common.addUrlParam('/merchant/product',{
-                              seatId:a.seatId,
-                              seatOrderNo:a.orderNo,
-                              supplierId:a.supplierId,
-                            })
-                          ):(
-                            WY.common.addUrlParam('/merchant/pay',{
-                              payType:'seat',
-                              seatId:a.seatId,
-                              seatOrderNo:a.orderNo,
-                              supplierId:a.supplierId,
-                            })
-                          ))
-                      }
-                    });
-                    hasPayConfirm = 1;
-                  }
-                }else{
-                    if(a.pzStatus === null){
-                      svgData.isTableAppling = 1;
+                svgData.isMe = 1;
+                if(a.payStatus !== 'ALREADY_PAY'){
+                  if(!hasPayConfirm)WY.confirm({
+                    cancelText:'买酒',
+                    submitText:'支付',
+                    content:'您已有未支付的订座订单！',
+                    done:function(v){
+                      vueRouter.push(v?
+                        (
+                          WY.common.addUrlParam(that.basePath+'/product',{
+                            seatId:a.seatId,
+                            seatOrderNo:a.orderNo,
+                            supplierId:a.supplierId,
+                          })
+                        ):(
+                          WY.common.addUrlParam(that.basePath+'/pay',{
+                            seatId:a.seatId,
+                            seatOrderNo:a.orderNo,
+                            supplierId:a.supplierId,
+                          })
+                        ))
                     }
+                  });
+                  hasPayConfirm = 1;
                 }
               }
               return true;
@@ -230,9 +227,10 @@ export default{
     },
     doSubmit:function(){
       var seatData = this.seatData;
+      //正在申请中
       if(seatData.isTableAppling)return false;
       if(seatData.hasMe){
-        vueRouter.push( WY.common.addUrlParam('/merchant/product',{
+        vueRouter.push( WY.common.addUrlParam(this.basePath+'/product',{
           seatId:seatData.seatId,
           seatOrderNo:seatData.orderNo,
           supplierId:seatData.supplierId,
@@ -248,19 +246,20 @@ export default{
         orderNum:this.seatData.myNumber,
         orderType:this.seatData.isSelected?'table':'normal',
         seatId:this.seatData.seatId,
+        orderNo:this.seatData.orderNo,
         tableStatus:this.seatData.tableAble?'y':'n',
         shippingWine:this.toBuyWine - 0,
         supplierId:WY.hrefData.supplierId,
       };
-      WY.post('/order/seat/add',data , function(a){
-        if(a.code == 0){
+      var that = this;
+      WY.post('/order/seat/'+(data.orderType === 'table'?'pz':'add'),data , function(a){
+        if(a.code === 0){
           if(data.orderType === 'table'){
             WY.toast('拼桌申请成功，请等待通过');
           }
           else {
             if(!data.shippingWine){
-              vueRouter.push( WY.common.addUrlParam('/merchant/pay',{
-                payType:'seat',
+              vueRouter.push( WY.common.addUrlParam(that.basePath + '/pay',{
                 seatOrderNo:a.data,
                 supplierId:data.supplierId,
                 seatId:data.seatId,

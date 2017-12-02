@@ -42,11 +42,13 @@ router.post('/add',function(req, res, next) {
     }
   });
 });
-router.post('/again',function(req, res, next) {
+router.post('/pz',function(req, res, next) {
+  req.body.reqUserId = req.session.userInfo.userId;
   useRequest.send(req , res , {
-    url:useUrl.seatOrder.again,
+    url:useUrl.seatOrder.pz,
     data:req.body,
     method:'POST',
+    notBody:1,
     done:function(data){
       res.useSend(data);
     }

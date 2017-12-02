@@ -8,7 +8,7 @@ export default{
     return {
       showThisWindow:0,
       menuIndex:0,
-      menuList:[{name:'详情'},{name:'锁定',type:'lock'},{name:'资费','type':'money'}],
+      menuList:[{name:'详情'},{name:'锁定',type:'lock'},{name:'资费','type':'money'},{name:'订桌','type':'book'}],
       userInfo:'',
       showAble:0,
       hasBackImg:0,
@@ -19,11 +19,15 @@ export default{
       dateVisible:'',
       lockList:[],
       moneyList:[],
+      bookList:[],
       chooseDateData:'',
       autoDate:'',
       chooseDateType:0,
       chooseStartDate:'',
       chooseEndDate:'',
+      bookDate:'',
+      bookNum:1,
+      bookPhone:'',
     }
   },
   beforeDestroy:function(){
@@ -31,7 +35,7 @@ export default{
   },
   created:function(){
     var that = this;
-    this.chooseStartDate = this.chooseEndDate = this.autoDate = this.nowDate = WY.common.parseDate(new Date , 'Y-m-d');
+    this.chooseStartDate = this.chooseEndDate = this.bookDate = this.autoDate = this.nowDate = WY.common.parseDate(new Date , 'Y-m-d');
     this.chooseDateData = {startDate:this.nowDate,selectDate:this.nowDate,title:'请选择日期'};
     WY.oneReady('user-info',function(o){
       that.userInfo = o;
@@ -148,6 +152,7 @@ export default{
       target.style.stoke = 'red';
       this.lockList = [];
       this.moneyList = [];
+      this.bookList = [];
       this.selectSvg = target;
       this.selectSeat = data;
       this.showThisWindow = 1;
@@ -155,7 +160,7 @@ export default{
         this.searchMoneyList(this.menuList[this.menuIndex].type , this.menuIndex);
       }
     },
-    searchMoneyList:function(type , index){
+    searchOneList:function(type , index){
       var that = this;
       this.menuIndex = index;
       if(that[type + 'List'].length)return false;
@@ -164,7 +169,7 @@ export default{
         seatId:this.selectSeat.seatId,
         startDate:this.nowDate,
       },function(a){
-        that[type + 'List'] = a.data && a.data.list;
+        that[type + 'List'] = a.data && a.data.list || a.data;
       })
     },
     makeItem:function(color , offset , autoData){

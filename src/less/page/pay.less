@@ -1,29 +1,39 @@
 .pay-content{
   .pay-item{
+    &.sm{
+      height: .94rem;
+    }
     height: 1.62rem;
     padding-top:.28rem;
     padding-bottom:.28rem;
-    padding-left:1.64rem;
+    padding-left:1.34rem;
     position: relative;
     font-size:.28rem;
     color: @color-24;
     line-height:1.06rem;
-    border-bottom: 1px solid @color-233;
     .img{
       position: absolute;
       width: 1.06rem;
       height: 1.06rem;
       top:.28rem;
-      left: .24rem;
+      left: -.06rem;
     }
     .text{
-      width: 2.85rem;
+      width: 2.8rem;
     }
     .num{
-      padding-left: .4rem;
+      width: 1.40rem;
     }
     .price{
+      width: 1.40rem;
       text-align: right;
     }
+    .title{
+      padding-left:.1rem;
+      border-left: 2px solid @color-24;
+    }
+  }
+  .notice{
+    height: .74rem;
   }
 }

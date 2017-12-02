@@ -1,16 +1,16 @@
 <template>
   <div class="pt-20 pb-20">
     <div class="flex-center width-50 margin-auto mb-10">
-      <label @click="chooseDateType=0" class="mr-100 flex-left">
+      <label @click="chooseDateType=0" class="mr-100 flex-left cursor-pointer">
         <span class="checkbox mr-10" :class="chooseDateType==0?'active':''" ></span>
         <span class="choose-text">今天</span>
       </label>
-      <label @click="chooseDateType=1" class="flex-left">
+      <label @click="chooseDateType=1" class="flex-left cursor-pointer">
         <span class="checkbox mr-10" :class="chooseDateType==1?'active':''" ></span>
         <span class="choose-text">明天</span>
       </label>
     </div>
-    <div class="flex-left width-50-100 margin-auto" >
+    <div class="flex-left width-50-100 margin-auto cursor-pointer" >
       <span @click="chooseDateType=2" class="checkbox mr-10" :class="chooseDateType==2?'active':''" ></span>
       <span @click="chooseDateType=2" class="choose-text mr-10">区间</span>
       <div class="fz-28 mr-10 choose-text flex-left" @click="doSelectDate('chooseStartDate')">

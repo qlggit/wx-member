@@ -22,7 +22,7 @@
         <div class="menu-list flex-center pt-40">
           <div v-for="(item,index) in menuList"
                class="item cursor-pointer"
-               @click="searchMoneyList(item.type , index)"
+               @click="searchOneList(item.type , index)"
                :class="menuIndex==index?'active':''"
           >{{item.name}}</div>
         </div>
@@ -67,6 +67,41 @@
           <div class="width-50-100 margin-auto flex-center">
             <div class="btn btn-sm back-24 color-white btn-50 cursor-pointer" @click="doSubmit">更新当前座位</div>
             <div class="btn btn-sm back-24 color-white btn-50 cursor-pointer mr-20" @click="doSubmit">更新全场</div>
+          </div>
+        </div>
+        <div v-show="menuIndex==3">
+          <div class="pt-10 pb-20">预订列表</div>
+          <div class="max-h-300 overflow-scroll-y">
+              <div class="flex-center">
+                <div>预订时间</div>
+                <div>最低消费</div>
+                <div>支付状态</div>
+                <div>人数</div>
+                <div>用户</div>
+              </div>
+              <div v-for="item in bookList" class="flex-center">
+                  <div>{{item.bookTime | dateFilter}}</div>
+                  <div>{{item.lowCostAmount}}</div>
+                  <div>{{item.payStatus}}</div>
+                  <div>{{item.orderNum}}</div>
+                  <div>{{item.userId}}</div>
+              </div>
+          </div>
+          <div class="fz-28 color-104 pt-10" @click="doSelectDate('bookDate')">
+            <span class="mr-10">预订日期：</span>
+            <span class="color-24 mr-08">{{bookDate}}</span>
+            <img src="/images/ico/down.png" class="width-22 height-14" alt="">
+          </div>
+          <div class="flex-center pt-20 pb-20">
+            <label for="bookNum">人数</label>
+            <input type="text" class="back-248" id="bookNum" v-model="bookNum">
+          </div>
+          <div class="flex-center pt-20 pb-20">
+            <label for="bookNum">手机号</label>
+            <input type="text" class="back-248" id="bookPhone" v-model="bookPhone">
+          </div>
+          <div class="width-50-100 margin-auto flex-center">
+            <div class="btn btn-sm back-24 color-white btn-50 cursor-pointer mr-20" @click="doSubmit">订桌</div>
           </div>
         </div>
         <div class="width-50-100 margin-auto pt-20 pb-40">

@@ -1,11 +1,11 @@
 var login = function(req , res , next){
   req.session.threeToken = {
     backUrl:req.query.backUrl,
+  };
+  req.session.tokenModel = {
     userId:req.query.userId,
     token:req.query.token
   };
-  console.log('three-login login');
-  console.log(req.session);
   if(req.query.token){
     useSession.save(req , res , next);
   }else{
@@ -13,8 +13,6 @@ var login = function(req , res , next){
   }
 };
 login.check = function(req , res , next){
-  console.log('three-login check');
-  console.log(req.session);
   if(req.session.threeToken){
     next();
   }

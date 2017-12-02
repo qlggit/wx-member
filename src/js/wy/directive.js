@@ -13,7 +13,10 @@ Vue.directive('back',{
     var url = binding.value;
     el.onclick = function(event){
       event.stopPropagation();
-      if(url){
+      if(/^\w\:/.test(url)){
+        location.href = url;
+      }
+      else if(url){
         vueRouter.push(url);
       }else{
         vueRouter.go(-1);

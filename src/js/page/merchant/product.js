@@ -15,7 +15,9 @@ export default{
       selectedList:'',
       productSelectListAble:0,
       allNumber:0,
-      payUrl:''
+      autoInitCount:0,
+      payUrl:'',
+      basePath:''
     }
   },
   beforeDestroy:function(){
@@ -23,18 +25,54 @@ export default{
   },
   created:function(){
     var that = this;
+    this.isServer = location.href.indexOf('server') > 0;
+    this.basePath = this.isServer ? '/server/app' : '/merchant';
     this.productList = [];
     this.selectedList = WY.getLocalStorage('selectedList') || [];
     this.maxListHeight = WY.clientHeight -  WY.getScaleSize(100);
-    WY.oneReady('user-info',function(o){
+    WY.oneReady(this.isServer?'token-complete':'user-info',function(o){
         WY.get('/merchant/product/category' , function(data){
           that.menuList = data.data;
+          that.autoInitCount ++;
           that.doSearch();
         });
     } , this);
-    this.setAll();
+
+    this.searchOrder();
   },
   methods:{
+    searchOrder:function(){
+      if(!this.selectedList || this.selectedList.length === 0 && WY.hrefData.seatOrderNo){
+        var that = this;
+        WY.get('/order/infoBySeat',{
+          seatOrderNo:WY.hrefData.seatOrderNo,
+        } , function(a){
+          if(a.code === 0 && a.data.payStatus !== 'ALREADY_PAY'){
+            var data = a.data;
+            that.orderNo = data.orderNo;
+            that.selectedList = data.detailLs.map(function(a){
+              return {
+                id:a.goodsId,
+                name:a.goodsName,
+                number:a.quantity,
+                price:a.unitPrice,
+              };
+            });
+            that.autoInitCount++;
+            that.setAll();
+            that.doSearch();
+          }else{
+            that.autoInitCount++;
+            that.setAll();
+            that.doSearch();
+          }
+        })
+      }else {
+        this.autoInitCount++;
+        this.setAll();
+        this.doSearch();
+      }
+    },
     doBuy:function(){
       var goodsLs = [];
       this.selectedList.forEach(function(a){
@@ -43,14 +81,20 @@ export default{
           quantity:a.number
         });
       });
+      if(!this.selectedList.length){
+        WY.toast('请先选择要买的商品!');
+        return false;
+      }
+      var that = this;
       WY.post('/order/add' , {
         goodsLs:goodsLs,
         supplierId:WY.hrefData.merchantId,
         seatId:WY.hrefData.seatId,
-        orderNo:WY.hrefData.seatOrderNo,
+        seatOrderNo :WY.hrefData.seatOrderNo,
       } , function(a){
-        if(a.code == 0){
-          vueRouter.push(WY.common.addUrlParam('/merchant/pay',{
+        if(a.code === 0){
+          WY.setLocalStorage('selectedList',[]);
+          vueRouter.push(WY.common.addUrlParam(that.basePath+'/pay',{
             seatOrderNo:WY.hrefData.seatOrderNo,
             merchantId:WY.hrefData.merchantId,
             seatId:WY.hrefData.seatId,
@@ -132,7 +176,7 @@ export default{
     },
     doSearch:function(){
       var that = this;
-      WY.get('/merchant/product/list',{
+      if(this.autoInitCount > 1)WY.get('/merchant/product/list',{
         pageNum:this.pageNum++,
         supplierId:WY.hrefData.supplierId,
         goodsTypeId:this.menuList[this.menuIndex].yukeGoodsTypeId,

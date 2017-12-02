@@ -30,6 +30,7 @@ window.WY = {};
   }
 })();
 require('./base.js');
+require('./prop.js');
 require('./handler.js');
 require('./vue.js');
 require('./router.js');

@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" class="overflow-scroll">
     <router-view></router-view>
     <wy-toast></wy-toast>
     <wy-loading></wy-loading>

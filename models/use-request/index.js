@@ -10,7 +10,7 @@ module.exports = {
         }
         var method = options.method || 'GET';
         var headers = options.headers || {};
-        var tokenModel = req.session.tokenModel;
+        var tokenModel = req.session.tokenModel ;
         headers.tokenInfo = options.tokenInfo || (tokenModel && [tokenModel.userId,tokenModel.token].join('_') || '');
         var __ = {
             url:options.url,

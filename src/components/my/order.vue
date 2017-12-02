@@ -32,15 +32,23 @@
             <img src="/images/ico/down.png" class="ml-10 width-22 height-14" alt="">
           </div>
           <div class="pl-24 pr-24 ">
-            <div class="text-right pt-20 pb-20 border-b-233 color-24 fz-26">
-              <span>付款金额：<span class="mr-20"></span> <span>￥{{item.amount}}</span></span>
+            <div class="pt-20 pb-20 border-b-233 color-24 fz-26 flex-between">
+              <span v-if="item.deuceMoney">抵扣金额：<span class="mr-20"></span> <span>￥{{item.deuceMoney}}</span></span>
+              <span v-else>&nbsp;</span>
+              <span>付款金额：<span class="mr-20"></span> <span>￥{{item.amount - (item.deuceMoney || 0)}}</span></span>
             </div>
           </div>
-          <div class="pt-24 pb-24 clearfix pr-26">
-            <div class="float-right">
-              <div class="btn btn-lt back-24 color-white" v-router-link="'/merchant/product'">继续购买</div>
+          <div class="pt-24 pb-24 flex-right pr-26 width-auto">
+              <div
+                   class="btn btn-lt back-24 btn-auto color-white mr-20 "
+                   v-router-link="'/merchant/product?seatId='+item.seatId+'&seatOrderNo='+item.seatOrderNo">继续购买</div>
+              <div v-if="item.payStatus !== 'ALREADY_PAY'"
+                   class="btn btn-lt back-24 btn-auto color-white mr-20"
+                   v-router-link="'/merchant/pay?seatId='+item.seatId+'&seatOrderNo='+item.seatOrderNo+'&orderNo='+item.orderNo">去支付</div>
+              <div v-if="item.payStatus !== 'ALREADY_PAY'"
+                   class="btn btn-lt back-24 btn-auto color-white"
+                   @click="cancelOrder(item.orderNo)">取消订单</div>
             </div>
-          </div>
         </div>
       </div>
     </div>

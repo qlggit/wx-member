@@ -19,14 +19,14 @@
               <div class="width-200">￥{{item.costAmount?item.costAmount:0}}</div>
             </div>
           </div>
-          <div class="pt-24 pb-24 clearfix pr-26">
+          <div class="pt-24 pb-24 flex-right width-auto pr-26">
                 <div v-if="item.noPay"
-                     class="btn btn-lt btn-auto back-24 color-white float-right mr-20"
+                     class="btn btn-lt btn-auto back-24 color-white  mr-20"
                      v-router-link="item.payUrl">去支付</div>
                 <div v-if="item.noPay"
-                     class="btn btn-lt btn-auto back-24 color-white float-right mr-20"
+                     class="btn btn-lt btn-auto back-24 color-white  mr-20"
                      @click="cancelSeat(item.seatId)">取消订座</div>
-                <div v-if="item.hasMe" class="btn btn-lt back-24 btn-auto color-white float-right" v-router-link="item.productUrl">继续下单</div>
+                <div v-if="item.hasMe" class="btn btn-lt back-24 btn-auto color-white " v-router-link="item.productUrl">继续下单</div>
           </div>
         </div>
       </div>

@@ -64,7 +64,7 @@
             <div class="btn-50 back-233 float-left color-24" @click="showConfirmWindow(0)">换桌</div>
             <div  @click="doSubmit" class="btn-50 back-24 float-right color-white">
               {{
-                  seatData.isTableAppling?'申请中':(seatData.hasMe?'买酒':(seatData.isSelected?'拼桌':'订座'))
+                  seatData.isTableAppling?'申请中':(seatData.hasMe?'买酒':(seatData.isSelected?'拼桌':'订桌'))
               }}
             </div>
           </div>

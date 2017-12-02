@@ -7,7 +7,6 @@ router.get('/index',useValidate.threeLogin, function(req, res, next) {
 router.get('/lock/list',useValidate.threeLogin.check, function(req, res, next) {
   useRequest.send(req , res , {
     url:useUrl.seatInfo.lockList,
-    tokenInfo:req.headers.tokenInfo,
     data:req.query,
     done:function(a){
       res.useSend(a);
@@ -17,7 +16,6 @@ router.get('/lock/list',useValidate.threeLogin.check, function(req, res, next) {
 router.get('/money/list',useValidate.threeLogin.check, function(req, res, next) {
   useRequest.send(req , res , {
     url:useUrl.seatInfo.moneyList,
-    tokenInfo:req.headers.tokenInfo,
     data:req.query,
     done:function(a){
       res.useSend(a);
@@ -28,7 +26,25 @@ router.post('/lock',useValidate.threeLogin.check, function(req, res, next) {
   useRequest.send(req , res , {
     url:useUrl.seatInfo.lock,
     method:'POST',
-    tokenInfo:req.headers.tokenInfo,
+    data:req.body,
+    done:function(a){
+      res.useSend(a);
+    }
+  });
+});
+router.get('/book/list',useValidate.threeLogin.check, function(req, res, next) {
+  useRequest.send(req , res , {
+    url:useUrl.seatOrder.info,
+    data:req.query,
+    done:function(a){
+      res.useSend(a);
+    }
+  });
+});
+router.post('/book',useValidate.threeLogin.check, function(req, res, next) {
+  useRequest.send(req , res , {
+    url:useUrl.seatOrder.add,
+    method:'POST',
     data:req.body,
     done:function(a){
       res.useSend(a);
@@ -40,7 +56,6 @@ router.post('/edit',useValidate.threeLogin.check, function(req, res, next) {
   useRequest.send(req , res , {
     url:useUrl.seatInfo.edit,
     method:'POST',
-    tokenInfo:req.headers.tokenInfo,
     data:req.body,
     notBody:1,
     done:function(a){
@@ -52,7 +67,6 @@ router.post('/money',useValidate.threeLogin.check, function(req, res, next) {
   useRequest.send(req , res , {
     url:useUrl.seatInfo.money,
     method:'POST',
-    tokenInfo:req.headers.tokenInfo,
     data:req.body,
     done:function(a){
       res.useSend(a);

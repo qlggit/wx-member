@@ -17,3 +17,6 @@ Vue.filter('moneyFilter', function (value) {
   if(isNaN(value))return 0;
   return (value / 100).toFixed(2);
 });
+Vue.filter('dateFilter', function (value,format) {
+  return WY.common.parseDate(value,format || 'Y-m-d');
+});

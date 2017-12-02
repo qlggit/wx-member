@@ -8,6 +8,8 @@ function putSession(newSession){
   session.debug = localStorage.debug || '';
   session.userInfo = newSession.userInfo;
   session.sanfangs = newSession.sanfangs;
+  session.tokenModel = newSession.tokenModel;
+  session.threeToken = newSession.threeToken;
   if(location.href.indexOf('server/') > 0){
     session.tokenInfo = localStorage.tokenInfo = [WY.hrefData.userId,WY.hrefData.token].join('_') || localStorage.tokenInfo;
     WY.ready('token-complete',session.tokenInfo);
@@ -91,6 +93,9 @@ WY.bind('session',function(){
 });
 session.isOwner = function(userId){
   return userId === session.userId;
+};
+session.getBackUrl = function(){
+  return session.threeToken && session.threeToken.backUrl;
 };
 WY.setLocalStorage = function(key , data){
   localStorage[key] = WY.common.stringify(data);
