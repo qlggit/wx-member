@@ -178,6 +178,7 @@ body {
   padding: 0;
   margin: 0;
   overflow: hidden;
+  font-size: 0;
 }
 div,
 body,
@@ -525,6 +526,9 @@ div::-webkit-scrollbar {
 }
 .lh-0 {
   line-height: 0;
+}
+.lh-1 {
+  line-height: 1;
 }
 .max-h-300 {
   max-height: 3rem;
@@ -1599,16 +1603,13 @@ div::-webkit-scrollbar {
   border-top: 1px solid #cdcdcd;
 }
 .book-window .item-list {
-  height: 1.05rem;
-  padding-top: .22rem;
-  padding-bottom: .2rem;
-}
-.book-window .item {
-  height: .61rem;
+  height: 1.35rem;
+  padding-top: .28rem;
+  padding-bottom: .29rem;
 }
 .book-window .item .img {
-  width: .31rem;
-  height: .31rem;
+  width: .76rem;
+  height: .78rem;
 }
 .book-content {
   padding-bottom: 3.18rem;

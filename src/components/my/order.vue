@@ -19,11 +19,11 @@
             <div class="content ">
               <div class="pt-20 clearfix color-24 fz-30 pr-30">
                 <div class="float-left">{{smItem.name}}</div>
-                <div class="float-right">￥{{smItem.price}}</div>
+                <div class="float-right">￥{{smItem.price | moneyFilter}}</div>
               </div>
               <div class="pt-28 clearfix color-104 fz-30 pr-30">
                 <div class="float-left">{{smItem.remark}}</div>
-                <div class="float-right">￥{{smItem.number}}</div>
+                <div class="float-right">x{{smItem.number}}</div>
               </div>
             </div>
           </div>
@@ -33,9 +33,9 @@
           </div>
           <div class="pl-24 pr-24 ">
             <div class="pt-20 pb-20 border-b-233 color-24 fz-26 flex-between">
-              <span v-if="item.deuceMoney">抵扣金额：<span class="mr-20"></span> <span>￥{{item.deuceMoney}}</span></span>
+              <span v-if="item.deuceMoney">抵扣金额：<span class="mr-20"></span> <span>￥{{item.deuceMoney| moneyFilter}}</span></span>
               <span v-else>&nbsp;</span>
-              <span>付款金额：<span class="mr-20"></span> <span>￥{{item.amount - (item.deuceMoney || 0)}}</span></span>
+              <span>{{item.payStatus==='ALREADY_PAY'?'付款':'商品'}}金额：<span class="mr-20"></span> <span>￥{{(item.amount - (item.deuceMoney || 0))| moneyFilter}}</span></span>
             </div>
           </div>
           <div class="pt-24 pb-24 flex-right pr-26 width-auto">

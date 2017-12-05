@@ -31,6 +31,7 @@ module.exports = {
         info:apiUrl + '/api/seat/v_1/info',
         myInfo:apiUrl + '/api/seat/v_1/orderInfo',
         detail:apiUrl + '/api/seat/v_1/orderDetailList',
+        cancel:apiUrl + '/api/seat/v_1/cancelSeat',
     },
     seatInfo:{
         list:apiUrl + '/api/seat/v_1/listSeat',
@@ -56,6 +57,7 @@ module.exports = {
         add:apiUrl + '/api/shopping/v_1/orderGoods',
         info:apiUrl + '/api/shopping/v_1/orderDetail',
         infoBySeat:apiUrl + '/api/shopping/v_1/orderGoodsInfo',
+        cancel:apiUrl + '/api/shopping/v_1/cancel',
     },
     city:{
         patent:apiUrl + '/api/area/v_1/list',

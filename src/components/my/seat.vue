@@ -14,9 +14,10 @@
               <div v-else class="float-right">{{item.statusName}}</div>
             </div>
             <div class="pt-42 pb-42 fz-28 color-24 flex-left border-b-233">
-              <div class="width-200">{{item.orderType==='normal'?'订座':'拼桌'}}</div>
+              <div class="width-100">{{item.orderTypeName}}</div>
               <div class="width-200">{{item.seatName}}</div>
-              <div class="width-200">￥{{item.costAmount?item.costAmount:0}}</div>
+              <div class="width-200">最低消费{{item.lowCostAmount|moneyFilter}}</div>
+              <div class="width-200">{{item.hasDeductibleAmount?('可抵扣'+(item.deductibleAmount | moneyFilter)):' '}}</div>
             </div>
           </div>
           <div class="pt-24 pb-24 flex-right width-auto pr-26">
@@ -25,7 +26,7 @@
                      v-router-link="item.payUrl">去支付</div>
                 <div v-if="item.noPay"
                      class="btn btn-lt btn-auto back-24 color-white  mr-20"
-                     @click="cancelSeat(item.seatId)">取消订座</div>
+                     @click="cancelSeat(item.orderNo)">取消订座</div>
                 <div v-if="item.hasMe" class="btn btn-lt back-24 btn-auto color-white " v-router-link="item.productUrl">继续下单</div>
           </div>
         </div>

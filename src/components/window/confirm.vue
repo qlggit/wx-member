@@ -4,7 +4,7 @@
         <div class="pt-50">
           <img src="/images/ico/confirm.png" class="confirm-ico" alt="">
         </div>
-        <div class="pt-40 pb-40">{{content}}</div>
+        <div class="pt-40 pb-40 fz-32">{{content}}</div>
         <div class="clearfix text-center">
           <div class="btn-50 back-233 float-left color-24" @click="doSubmit(0)">{{cancelText}}</div>
           <div  @click="doSubmit(1)" class="btn-50 back-24 float-right color-white">
@@ -38,7 +38,7 @@
     methods:{
       doSubmit:function(v){
         if(this.done && this.done(v) === false) return false;
-        this.showAble = v;
+        this.showAble = false;
       }
     }
   }

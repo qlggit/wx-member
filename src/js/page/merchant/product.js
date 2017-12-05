@@ -17,7 +17,9 @@ export default{
       allNumber:0,
       autoInitCount:0,
       payUrl:'',
-      basePath:''
+      basePath:'',
+      isServer:0,
+      orderNo:'',
     }
   },
   beforeDestroy:function(){
@@ -37,7 +39,6 @@ export default{
           that.doSearch();
         });
     } , this);
-
     this.searchOrder();
   },
   methods:{
@@ -81,29 +82,42 @@ export default{
           quantity:a.number
         });
       });
-      if(!this.selectedList.length){
-        WY.toast('请先选择要买的商品!');
-        return false;
-      }
       var that = this;
-      WY.post('/order/add' , {
-        goodsLs:goodsLs,
-        supplierId:WY.hrefData.merchantId,
-        seatId:WY.hrefData.seatId,
-        seatOrderNo :WY.hrefData.seatOrderNo,
-      } , function(a){
-        if(a.code === 0){
-          WY.setLocalStorage('selectedList',[]);
-          vueRouter.push(WY.common.addUrlParam(that.basePath+'/pay',{
-            seatOrderNo:WY.hrefData.seatOrderNo,
-            merchantId:WY.hrefData.merchantId,
+      this.toCancel(function(){
+        if(goodsLs.length){
+          WY.post('/order/add' , {
+            goodsLs:goodsLs,
+            supplierId:WY.hrefData.merchantId,
             seatId:WY.hrefData.seatId,
-            orderNo:a.data,
-          }));
-        }else{
-          WY.toast(a.message);
-        }
-      })
+            seatOrderNo :WY.hrefData.seatOrderNo,
+          } , function(a){
+            if(a.code === 0){
+              that.toPay(a.data);
+            }else{
+              WY.toast(a.message);
+            }
+          })
+        }else that.toPay();
+      });
+    },
+    toCancel:function(call){
+      if(this.orderNo){
+        var that = this;
+        $.post('/order/cancel',{
+          orderNo:this.orderNo
+        },function(){
+          call && call();
+        })
+      }else call && call();
+    },
+    toPay:function(orderNo){
+      WY.setLocalStorage('selectedList',[]);
+      vueRouter.push(WY.common.addUrlParam(this.basePath+'/pay',{
+        seatOrderNo:WY.hrefData.seatOrderNo,
+        merchantId:WY.hrefData.merchantId,
+        seatId:WY.hrefData.seatId,
+        orderNo:orderNo,
+      }));
     },
     changeNumber:function(data){
       //列表选取

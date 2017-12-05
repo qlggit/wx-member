@@ -1,15 +1,12 @@
 <template>
-  <div class="height-100-100 width-100-100 book-content pt-header">
-    <header-component :header-data="{title:name}"></header-component>
-    <wy-show-svg v-if="svgBackImg" :seat-data="{
-      backSrc:svgBackImg,
-      itemList:seatItemList
-    }" @click="svgClick"></wy-show-svg>
-    <div class="position-fixed width-100-100 bottom-0 left-0 z-index-100 book-window pl-24 pr-24">
-      <div class="flex-between item-list border-b-194">
-        <div v-for="item in footerList" class="item text-center"  >
-          <div class="img border-rad-5 margin-auto" :style="{border:'1px solid ' + item.color}"></div>
-          <div class="fz-22 color-24 break-none mt-10">{{item.name}}</div>
+  <div class="height-100-100 width-100-100 book-content"
+  :class="isServer?'':'pt-header'">
+    <header-component v-if="!isServer" :header-data="{title:name}"></header-component>
+    <wy-show-svg v-if="svgBackData" :svg-back-data="svgBackData" @click="svgClick"></wy-show-svg>
+    <div class="position-fixed width-100-100 bottom-0 left-0 z-index-100 book-window">
+      <div class="flex-between item-list border-b-194   pl-24 pr-24">
+        <div v-for="item in footerList" class="item text-center">
+          <img class="img margin-auto" :src="item.img" />
         </div>
       </div>
       <div class="pt-36 pl-20 pr-24 flex-between">
@@ -44,7 +41,7 @@
                 </div>
               </div>
               <div class="flex-between">
-                <div class="lh-40 height-40">最低消费： ￥{{seatData.lowCostAmount}}</div>
+                <div class="lh-40 height-40">最低消费： ￥{{seatData.lowCostAmount | moneyFilter}}</div>
                 <div class="  lh-40 height-40">
                   <span class="mr-10" >人数: </span>
                   <span v-if="0">{{seatData.myNumber}}/{{seatData.locCount }}</span>

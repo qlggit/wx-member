@@ -12,6 +12,7 @@ export default{
       remark:'',
       activity:'',
       showInfo:'',
+      headFile:'',
     }
   },
   beforeDestroy:function(){
@@ -37,6 +38,7 @@ export default{
     } , function(data){
       data = data.data;
       that.lvl = data.supplierStar;
+      that.headFile = data.headFile;
       that.name = data.supplierName;
       that.latitude = data.gpsDimension;
       that.longitude = data.gpsLongitude;

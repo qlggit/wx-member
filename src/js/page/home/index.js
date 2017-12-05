@@ -1,3 +1,4 @@
+
 export default{
   name:'home-index',
   data() {
@@ -19,6 +20,8 @@ export default{
       swiperList:'',
       isLastPage:'',
       pageNum:1,
+      selectedCity:'',
+      selectedCityCode:'',
       clubList:[]
     }
   },
@@ -36,8 +39,40 @@ export default{
         console.log('scroll-bottom');
         that.showMore();
     } , this);
-    this.searchBanner();
-    this.searchList();
+    function getCode(name , call){
+      name = name || '';
+      WY.getCache('cityData',function(a){
+        a.cityAllList.every(function(o){
+          if(name === o.name){
+            call(o.code);
+            return false;
+          }
+          return true;
+        });
+        call(null);
+      });
+    }
+    WY.oneReady('bmap-location' , function(o){
+      var addressComponents = o.addressComponents;
+      if(addressComponents){
+        var name = addressComponents.city.replace(/市$/,'');
+        that.selectedCity = name;
+        getCode(name, function(code){
+          that.selectedCityCityCode = code;
+          that.reset();
+          that.searchBanner();
+          that.searchList();
+        });
+      }
+    } , this);
+    WY.oneBind('city-location',function(val){
+      getCode(val , function(code){
+        that.selectedCityCityCode = code;
+        that.reset();
+        that.searchBanner();
+        that.searchList();
+      });
+    } , this);
   },
   methods:{
     headMenuClick:function(index){
@@ -49,6 +84,7 @@ export default{
     },
     searchBanner:function(){
       var that = this;
+      that.swiperList = [];
       WY.get('/merchant/list/banner',{
         bannerTypeCode:this.bannerTypeCode
       },function(a){
@@ -79,7 +115,7 @@ export default{
       this.clubSearchAble = 1;
     },
     showMore:function(){
-      if(this.isLastPage == false){
+      if(this.isLastPage === false){
         this.searchList();
       }
     }

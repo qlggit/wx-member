@@ -1,7 +1,7 @@
 <template>
   <div class="pt-header pb-footer height-100-100 back-248" v-scroll-box="90">
     <header-component :header-data="{title:title,notBack:1}">
-        <city-select slot="city-select" :city-select-data="{title:'重庆'}"></city-select>
+        <city-select v-if="selectedCity" slot="city-select" :city-select-data="{title:selectedCity}"></city-select>
       <img slot="search" src="/images/search.png" @click="showClubSearch" class="right-ico" alt="">
     </header-component>
     <wy-club-search v-if="clubSearchAble"></wy-club-search>

@@ -1,6 +1,6 @@
 <template>
-  <div class="height-100-100 width-100-100 product-pb pt-header pl-product">
-    <header-component :header-data="{title:name}"></header-component>
+  <div class="height-100-100 width-100-100 product-pb pl-product" :class="isServer?'':'pt-header'">
+    <header-component v-if="!isServer" :header-data="{title:name}"></header-component>
     <div class="product-menu text-center back-242">
         <div class="item" v-for="(item,index) in menuList"
              :class="menuIndex===index?'active':''"
@@ -14,7 +14,7 @@
         <div>
           <div class="fz-30 color-24 mb-20">{{item.name}}</div>
           <div class="fz-24 color-104">{{item.keywords}}</div>
-          <div class="mt-10 fz-34 color-24"><span class="mr-10">￥</span><span>{{item.price}}</span></div>
+          <div class="mt-10 fz-34 color-24"><span class="mr-10">￥</span><span>{{item.price | moneyFilter}}</span></div>
           <wy-number-select :number-data="{number:item.number || 0,type:'auto',dataId:item.id}" @changeNumber="changeNumber"></wy-number-select>
         </div>
       </div>
@@ -26,7 +26,7 @@
             <div class="float-left">【{{item.name}}】</div>
             <div class="float-right">
               <span class="mr-10">￥</span>
-              <span class="mr-20">{{item.price*item.number}}</span>
+              <span class="mr-20">{{item.price*item.number | moneyFilter}}</span>
               <wy-number-select :number-data="{number:item.number,type:'selected',dataId:item.id}" @changeNumber="changeNumber"></wy-number-select>
             </div>
           </div>
@@ -40,7 +40,7 @@
           <div class="ml-48 price lh-1 color-24 fz-36 inline-block text-middle">
             <div class="line">
               <span class="mr-08">￥</span>
-              <span >{{allPrice}}</span>
+              <span >{{allPrice | moneyFilter}}</span>
             </div>
           </div>
         </div>

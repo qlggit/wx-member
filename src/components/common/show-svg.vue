@@ -1,32 +1,32 @@
 <template>
-  <div v-if="imgInit" class="width-100-100 height-100-100 overflow-hidden back-transparent cursor-pointer">
+  <div class="width-100-100 height-100-100 overflow-hidden back-transparent cursor-pointer">
       <svg class="width-100-100 height-100-100 show-svg"
            style="background-size:100% 100%;"
            :style="{
-      width:backWidth+'px',
-      height:backHeight+'px',
-      backgroundImage:'url('+seatData.backSrc+')'
+      width:svgBackData.backWidth+'px',
+      height:svgBackData.backHeight+'px',
+      backgroundImage:'url('+svgBackData.img+')'
       }"
-           :viewBox="[0,0,backWidth,backHeight].join(' ')" ref="showSvg"></svg>
+           :viewBox="[0,0,svgBackData.backWidth,svgBackData.backHeight].join(' ')" ref="showSvg"></svg>
   </div>
 </template>
 <script>
   import seatSvg from '../../js/ui/svg';
   export default {
-    props:['seatData'],
+    props:['svgBackData'],
     data(){
       return {
-        seatData:this.seatData,
-        imgInit:0,
-        backWidth:0,
-        backHeight:0,
+        svgBackData:this.svgBackData,
+        itemList:'',
         svgObj:'',
         svgInitCount:0,
+        isSetReady:0,
       }
     },
     beforeDestroy:function(){
       document.body.removeEventListener('touchstart',this.touchstart);
       document.body.removeEventListener('touchmove',this.touchmove);
+      WY.oneUnBind(this);
     },
     created:function(){
       var lastY;
@@ -43,60 +43,40 @@
       };
       document.body.addEventListener('touchstart', this.touchstart);
       document.body.addEventListener('touchmove',this.touchmove);
-      this.doInit();
-    },
-    mounted:function(){
-      console.log('mounted');
-    },
-    updated:function(){
-      console.log('updated');
-      this.svgInitCount++;
-    },
-    watch:{
-      svgInitCount:function(v){
-        if(v === 2){
-          this.makeSvgData();
-        }
-      },
-      'seatData.itemList':function(v , o){
-        if(this.svgInitCount >= 2){
-          this.makeSvgData();
-        }
-      },
-      'seatData.backSrc':function(v , o){
-        if(o){
-          this.doInit();
-        }
-      }
+      var that = this;
+      WY.oneBind('set-svg-list',function(itemList){
+        that.itemList = itemList;
+        that.makeSvgData();
+      } , this);
     },
     methods:{
-      doInit:function(){
-        var img = new Image;
-        img.src = this.seatData.backSrc;
-        var that = this;
-        img.onload = function(){
-          that.backWidth = img.width;
-          that.backHeight = img.height;
-          that.imgInit = 1;
-          that.svgInitCount++;
-        }
-      },
       makeSvgData:function(){
         var that = this;
         if(!this.svgObj){
           this.svgObj = new seatSvg({
-            width:this.backWidth,
-            height:this.backHeight,
+            width:this.svgBackData.backWidth,
+            height:this.svgBackData.backHeight,
             svg:this.$refs.showSvg,
-            itemList:this.seatData.itemList,
+            itemList:this.itemList,
             click:function(e , type , data){
               that.$emit('click',e , type , data);
             }
           });
         }else{
+          console.log('svg removeItem');
           this.svgObj.removeItem();
-          this.svgObj.setItemList(this.seatData.itemList);
+          this.svgObj.setItemList(this.itemList);
         }
+        this.setReady();
+        WY.trigger('svg-show-complete');
+      },
+      setReady:function(){
+        if(this.isSetReady)return false;
+        this.isSetReady = 1;
+        var that = this;
+        WY.oneBind('set-user-head-img',function(svgData , userInfo){
+          userInfo.done && userInfo.done(that.svgObj.setUserHeadImg(svgData , userInfo), svgData);
+        } , this);
       }
     }
   }

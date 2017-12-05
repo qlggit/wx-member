@@ -3,9 +3,6 @@ WY.ready('token-complete',function(o){
   tokenInfo = o;
 });
 WY.request = function(options){
-  if(location.port !== '3001'){
-    options.url = 'http://127.0.0.1:3001'+options.url;
-  }
   WY.trigger('request-start-filter',options);
   options = Object.assign({
     method:'GET',
@@ -20,8 +17,8 @@ WY.request = function(options){
   function state_Change(){
     if(xmlHttp.readyState >= readyState){
       readyState = xmlHttp.readyState;
-      if (xmlHttp.readyState==4){
-        if(xmlHttp.status == 200){
+      if (xmlHttp.readyState===4){
+        if(xmlHttp.status === 200){
           options.success && options.success(WY.common.parse(xmlHttp.responseText));
           WY.trigger('request-success' , xmlHttp.readyState , readyState)
         }else{
@@ -36,7 +33,7 @@ WY.request = function(options){
           state:xmlHttp.readyState,
           status:xmlHttp.status,
           readyState:readyState
-        } , WY.common.parse(xmlHttp.responseText))
+        } , xmlHttp)
       }
     }else{
       options.error && options.error({
@@ -48,7 +45,7 @@ WY.request = function(options){
         state:xmlHttp.readyState,
         status:0,
         readyState:readyState
-      } , WY.common.parse(xmlHttp.responseText))
+      } ,xmlHttp)
     }
   }
   xmlHttp.onreadystatechange=state_Change;
@@ -60,7 +57,7 @@ WY.request = function(options){
       data.append(key , val);
     }
   }
-  else if(options.method == 'POST'){
+  else if(options.method === 'POST'){
     options.headers['Content-Type']='application/json; charset=utf-8';
     data = WY.common.stringify(options.data);
   }
@@ -91,30 +88,35 @@ WY.request = function(options){
     }
   }
   xmlHttp.send(data);
+  WY.trigger('request-send-filter' , options  , xmlHttp);
   return xmlHttp;
 };
-WY.get = function(url , data , call){
-  if(typeof data == 'function' && !call){
+WY.get = function(url , data , call , options){
+  if(typeof data === 'function'){
+    options = call;
     call = data;
     data = {};
   }
-  return WY.request({
+  options = options || {needAbort:1};
+  return WY.request(Object.assign({
     url:url,
     data:data,
     success:call
-  });
+  },options));
 };
-WY.post = function(url , data , call){
-  if(typeof data == 'function' && !call){
+WY.post = function(url , data , call , options){
+  if(typeof data === 'function'){
+    options = call;
     call = data;
     data = {};
   }
-  return WY.request({
+  options = options || {};
+  return WY.request(Object.assign({
     url:url,
     method:'POST',
     data:data,
     success:call
-  });
+  },options));
 };
 WY.postFile = function(url , data , call , error){
   if(typeof data === 'function' && !call){

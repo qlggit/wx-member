@@ -49,8 +49,9 @@ export default{
           seatName  :'',
           yukeSupplierSeatId:'',
         });
+        sendData.lowCostAmount *= 100;
       }
-        else{
+      else{
         data = [];
         this.seatData.itemList.forEach(function(a){
           var o = WY.common.copyProp(a.svgData,{
@@ -62,6 +63,7 @@ export default{
             seatX     :'',
             seatY      :'',
           });
+          o.lowCostAmount *= 100;
           o.supplierId = WY.hrefData.supplierId;
           data.push(o);
         });
@@ -70,7 +72,7 @@ export default{
         };
       }
         WY.post('/server/admin/seat/'+(that.hasAutoSeatData?'edit':'add') ,sendData,function(a){
-          if(a.code == 0 &&!that.hasAutoSeatData){
+          if(a.code === 0 && !that.hasAutoSeatData){
             that.hasAutoSeatData = 1;
           }
           WY.toast(a.message);
@@ -166,7 +168,7 @@ export default{
           svgData.backImg = '/images/seat/table.png';
           svgData.type = 'room';
           svgData.locCount = svgData.locCount || 8;
-          svgData.lowCostAmount = svgData.lowCostAmount || 1000;
+          svgData.lowCostAmount = svgData.lowCostAmount || 100000;
           svgData.seatName  = svgData.seatName || '座位';
           svgData.seatShape   = color;
           svgData.seatType    = 'seat';
@@ -177,13 +179,14 @@ export default{
           svgData.backImg = '/images/seat/room.png';
           svgData.type = 'table';
           svgData.locCount = svgData.locCount || 15;
-          svgData.lowCostAmount = svgData.lowCostAmount || 2000;
+          svgData.lowCostAmount = svgData.lowCostAmount || 200000;
           svgData.seatName  = svgData.seatName || '包间';
           svgData.seatShape   = color;
           svgData.seatType    = 'room';
           svgData.seatTypeName    = '包间';
           break;
       }
+      svgData.lowCostAmount = svgData.lowCostAmount / 100;
       svgData.x = svgData.seatX  = offset.left;
       svgData.y = svgData.seatY = offset.top;
       svgData.width = offset.width;

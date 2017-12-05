@@ -131,6 +131,21 @@ Vue.directive('sms-send',{
     }
   }
 });
+Vue.directive('scan-code',{
+  update:function(el , binding){
+    var needResult = binding.value;
+    el.onclick = function(event){
+      wx.scanQRCode({
+        needResult: needResult || 0,
+        scanType: ["qrCode","barCode"],
+        success: function (res) {
+
+        }
+      });
+      event.stopPropagation();
+    }
+  }
+});
 
 Vue.directive('scroll-box',{
   inserted:function(el , binding){

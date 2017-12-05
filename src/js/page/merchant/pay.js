@@ -19,13 +19,15 @@ export default{
       deductibleAmount:0,
       hasSearchOrder:'',
       diffAmount:0,
+      isServer:0,
     }
   },
   beforeDestroy:function(){
     WY.oneUnBind(this);
   },
   created:function(){
-    this.basePath = location.href.indexOf('server') > 0 ? '/server/app' : '/merchant';
+      this.isServer = location.href.indexOf('server') > 0;
+      this.basePath = this.isServer ? '/server/app' : '/merchant';
       this.doSearch(WY.hrefData.orderNo?'':WY.hrefData.seatOrderNo);
       if(WY.hrefData.seatOrderNo)this.searchSeatOrder();
   },
@@ -33,15 +35,15 @@ export default{
     doSum:function(){
       if(this.seatData && this.hasSearchOrder){
         if(this.selectedList){
-          this.productPrice = WY.common.sum(this.selectedList,function(a){return (a&&(a.number * a.price) || 0)}).toMoney();
+          this.productPrice = WY.common.sum(this.selectedList,function(a){return (a&&(a.number * a.price) || 0)});
           this.productNumber = WY.common.sum(this.selectedList,function(a){return a&&a.number || 0});
         }
         this.allPrice = this.productPrice;
         if(!this.seatPayStatus && this.productPrice < this.lowCostAmount)this.allPrice = this.lowCostAmount;
-        if(this.deductibleAmount){
+        if(this.deductibleAmount > 0){
           this.diffAmount = Math.min(this.deductibleAmount , this.allPrice);
         }
-        this.payPrice = (this.allPrice - this.diffAmount).toMoney();
+        this.payPrice = (this.allPrice - this.diffAmount);
         console.log('seatPayStatus -- >  ' + this.seatPayStatus);
         console.log('productPrice -- >  '+this.productPrice);
         console.log('lowCostAmount -- >  '+this.lowCostAmount);
@@ -92,7 +94,7 @@ export default{
           that.isOwner = WY.session.isOwner(data.userId);
           that.seatPayStatus = data.payStatus === 'ALREADY_PAY';
           if(data.deductibleAmount)that.deductibleAmount = data.deductibleAmount;
-          if(1 || that.isOwner && !that.seatPayStatus && data.lowCostAmount)that.lowCostAmount = data.lowCostAmount;
+          if(!that.seatPayStatus && data.lowCostAmount)that.lowCostAmount = data.lowCostAmount;
           that.doSum();
         });
       }

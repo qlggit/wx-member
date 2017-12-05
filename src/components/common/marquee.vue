@@ -1,7 +1,7 @@
 <template>
   <div class="">
     <canvas :height="height" :width="clientWidth" v-marquee="{
-         list:list,
+          list:list,
           itemWidth:itemWidth,
           itemHeight:itemHeight,
           height:height,
@@ -46,11 +46,14 @@
           var height = value.height;
           var margin = value.margin;
           var fontSize = value.fontSize;
+          if(value.list.length < 4){
+            value.list = value.list.concat(value.list,value.list,value.list).slice(0,4);
+          }
           value.list.forEach(function(a){
             var img = new Image;
-            img.src = a.img;
+            img.src = a.filePath;
             img.onload = function(){
-              img.showTitle = a.name;
+              img.showTitle = a.name || '活动名称';
               marqueeImgObject.push(img);
               if(marqueeImgObject.length ===  value.list.length){
                 canvasAnimate();

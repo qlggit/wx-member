@@ -118,7 +118,6 @@
         for(var i=minDay;i<=maxDay;i++){
           values.push(i);
         }
-        console.log(this.selectDay , minDay , maxDay);
         items[2].index = 0;
         if(this.selectDay >= minDay && this.selectDay <= maxDay){
           items[2].index = values.indexOf(this.selectDay - 0);
@@ -128,14 +127,14 @@
         console.log(items[2].index , this.selectDay);
       },
       onValuesChange:function(v1,v2,v3){
-        if(this.selectYear != v1){
+        if(this.selectYear !== v1 - 0){
           this.yearChange(v1);
         }
-        if(this.selectMonth != v2){
+        if(this.selectMonth !== v2 - 0){
           this.monthChange(v2);
         }
-        if(this.selectDay != v3){
-          this.selectDay = v3 - 0;
+        if(this.selectDay !== v3 - 0){
+          this.selectDay = v3;
         }
       },
       yearChange:function(v){

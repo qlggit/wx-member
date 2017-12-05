@@ -1,7 +1,7 @@
 var cacheData = {};
 WY.getCache = function(key , call){
     if(cacheData[key]){
-      call && call(key);
+      call && call(cacheData[key]);
       return cacheData[key];
     }
     handler[key] && handler[key](call);
@@ -39,6 +39,6 @@ var handler = {
         cityList:sortList,
       };
       call && call(cacheData.cityData);
-    });
+    },{needAbort:0});
   }
 };

@@ -28,7 +28,7 @@
             <div class="color-104 pt-16">二维码</div>
           </div>
           <div class="text-center">
-            <img src="/images/my/sao.png" class="qrcode-ico" alt="">
+            <img src="/images/my/sao.png" class="qrcode-ico" v-scan-code="" alt="">
             <div class="color-104 pt-16">扫一扫</div>
           </div>
         </div>

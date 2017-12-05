@@ -10,7 +10,6 @@ canvasImgData.prototype = {
     canvas.setAttribute('height',options.height);
     var ctx = this.ctx = canvas.getContext('2d');
     var xhr = new XMLHttpRequest();
-    console.log(options.img);
     xhr.open('get', options.img, true);
     xhr.responseType = 'blob';
     var that = this;

@@ -5,18 +5,28 @@ mySvg.create = function(){
 };
 mySvg.prototype = {
   create:function(e , options){
+    console.log('svg create ' , e , options.autoHeight);
     options = options || {};
     var ele = document.createElementNS("http://www.w3.org/2000/svg",e);
     if(options.attr){
       for(var key in options.attr){
+        if(e === 'image'){
+          if(key === 'href'){
+            if(ele.href)ele.href.baseVal = options.attr.href;
+            else ele.href = options.attr.href;
+            continue;
+          }
+        }
         if(options.attr[key])ele.setAttribute(key , options.attr[key]);
       }
-      if(e === 'image' && options.attr.href){
+      //autoHeight用传入大小
+      if(!options.autoHeight && e === 'image' && options.attr.href){
         var img = new Image;
         img.src = options.attr.href;
         img.onload = function(){
           ele.setAttribute('width' , img.width);
           ele.setAttribute('height' , img.height);
+
         }
       }
     }
@@ -49,7 +59,11 @@ function seatSvg(options){
   this.roomG = svgObj.add('g',{});
   this.tableG = svgObj.add('g',{});
   this.chairG = svgObj.add('g',{});
+  this.userInfoG = svgObj.add('g',{});
+  this.patterns = {};
+  this.defs = svgObj.add('defs',{});
   this.allSvgData = [];
+  this.headImgSvg = [];
   this.svg = options.svg;
   this.scale = 1;
   this.minScale = .5;
@@ -90,6 +104,67 @@ seatSvg.prototype = {
         that.allSvgData.push(ele);
       });
     }
+  },
+  makePattern:function(id , userInfo , options){
+    console.log('makePattern');
+    var pattern = this.svgObj.add('pattern',{
+      parent:this.defs,
+      attr:{
+        width:options.w,
+        height:options.h,
+        id:id,
+      }
+    });
+    this.svgObj.add('image',{
+      parent:pattern,
+      autoHeight:1,
+      attr:{
+        width:options.w,
+        height:options.h,
+        'href':userInfo.headImg,
+      }
+    });
+    this.patterns[id] = pattern;
+    return pattern;
+  },
+  setUserHeadImg:function(svgData , userInfo , done){
+    console.log('setUserHeadImg');
+    var id = 'userInfoHeadImg'+userInfo.userId;
+    var cr = 15;
+    svgData.x -= 0;
+    svgData.y -= 0;
+    if(this.patterns[id]){
+
+    }else this.makePattern(id , userInfo , {
+      w:cr*2,
+      h:cr*2,
+    });
+    var backImgSvg = this.svgObj.add('polygon',{
+      parent:this.getParent('userInfo'),
+      attr:{
+        points:[
+          [svgData.x  + cr * 2 - 4 , svgData.y  + cr * 2 + 10].join(),
+          [svgData.x  + cr * 2 - 4 , svgData.y  + cr].join(),
+          [svgData.x  + 10 , svgData.y  + cr + 5].join(),
+        ].join(' '),
+      },
+      style:{
+        'fill':'#181818',
+      }
+    });
+    this.headImgSvg.push(backImgSvg);
+    var headImgSvg = this.svgObj.add('circle',{
+      parent:this.getParent('userInfo'),
+      attr:{
+        cx:svgData.x + cr ,
+        cy:svgData.y + cr ,
+        r:cr,
+        'fill':'url(#'+id+')',
+        stroke:'#181818',
+      }
+    });
+    this.headImgSvg.push(headImgSvg);
+    return headImgSvg;
   },
   init:function(){
     var options = this.options;
@@ -272,19 +347,23 @@ seatSvg.prototype = {
       var index = this.allSvgData.indexOf(item);
       this.allSvgData.splice(index,1);
     }else{
-      removes = this.allSvgData;
+      removes = this.allSvgData.concat(this.headImgSvg);
     }
     removes.forEach(function(a){
         a.parentElement && a.parentElement.removeChild(a);
     });
-    removes.splice(0);
+    if(!item){
+      this.allSvgData.splice(0);
+      this.headImgSvg.splice(0);
+    }
   },
   getParent:function(category){
-    return ({
+    return this[category + 'G'] || ({
       room:this.roomG,
       table:this.tableG,
-      chair:this.chairG
-    })[category];
+      chair:this.chairG,
+      userInfo:this.userInfoG,
+    })[category] ;
   },
   getColor:function(category){
     return ({

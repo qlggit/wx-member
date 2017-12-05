@@ -12,6 +12,16 @@ router.post('/add',function(req, res, next) {
     }
   });
 });
+router.post('/cancel',function(req, res, next) {
+  useRequest.send(req , res , {
+    url:useUrl.order.cancel,
+    data:req.body,
+    method:'POST',
+    done:function(data){
+      res.useSend(data);
+    }
+  });
+});
 router.get('/info',function(req, res, next) {
   useRequest.send(req , res , {
     url:useUrl.order.info,

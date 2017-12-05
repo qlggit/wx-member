@@ -6,6 +6,7 @@ function putSession(newSession){
   session.unionid = localStorage.unionid || '';
   session.apiImgUrl = localStorage.apiImgUrl || '';
   session.debug = localStorage.debug || '';
+  session.hasPing = localStorage.hasPing || '';
   session.userInfo = newSession.userInfo;
   session.sanfangs = newSession.sanfangs;
   session.tokenModel = newSession.tokenModel;
@@ -63,9 +64,10 @@ function getSession(){
   WY.get('/session/get',function(a){
       localStorage.apiImgUrl = a.apiImgUrl;
       localStorage.debug = a.debug ;
+      localStorage.hasPing = a.hasPing ;
       putStorage(a.session);
       putSession(a.session);
-  });
+  },{needAbort:0});
 }
 function loginFlush(){
   WY.post('/login',{userId:session.userId},function(a){
@@ -75,7 +77,7 @@ function loginFlush(){
     }else{
       wechatLogin();
     }
-  })
+  },{needAbort:0})
 }
 WY.bind('request-status-error',function(status){
   if(status === 401){
@@ -92,7 +94,10 @@ WY.bind('session',function(){
   getSession();
 });
 session.isOwner = function(userId){
-  return userId === session.userId;
+  return userId && userId === session.userId || session.userId.split('_')[0] === userId;
+};
+session.isOwnerProp = function(key , val){
+  return val != undefined && val === session[key];
 };
 session.getBackUrl = function(){
   return session.threeToken && session.threeToken.backUrl;

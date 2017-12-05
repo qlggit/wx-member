@@ -22,11 +22,11 @@ export default{
         pageNum:1,
         pageSize:10,
       } , function(a){
-        a.data.list.forEach(function(a){
-          //diffTime
+        that.orderList = a.data.list.filter(function(a){
+          if(a.status === 'cancel')return false;
           a.wineList = a.detailLs;
           a.placeName = a.supplierName;
-          a.statusName = a.payStatus;
+          a.statusName = a.payStatus === 'ALREADY_PAY'?'已支付':'未支付';
           a.amount = a.orderMoney;
           a.wineList.forEach(function(a){
             a.name = a.goodsName;
@@ -40,8 +40,8 @@ export default{
           if(a.wineLength > 2){
             a.showMore = true;
           }
+          return true;
         });
-        that.orderList = a.data.list;
       });
     },
     showMoreWine:function(index){
@@ -49,7 +49,21 @@ export default{
       this.orderList[index].wineList = this.orderList[index].autoList;
     },
     cancelOrder:function(orderNo){
-
+      var that = this;
+      WY.confirm({
+        content:'确定取消当前订单？',
+        done:function(v){
+          if(v)WY.post('/order/seat/cancel' , {
+            orderNo:orderNo,
+          } , function(a){
+            if(a.code === 0){
+              that.doSearch();
+            }else{
+              WY.toast(a.message);
+            }
+          });
+        }
+      })
     }
   }
 }

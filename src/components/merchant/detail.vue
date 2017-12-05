@@ -2,8 +2,8 @@
   <div v-if="name" class="pt-header ">
     <header-component :header-data="{title:name}"></header-component>
     <div class="back-242">
-      <div class="swiper-content pt-20 pb-40">
-        <wy-swiper :swiper-data="{list:headerBanner}"></wy-swiper>
+      <div class="pt-20 pb-40 text-center">
+        <img :src="headFile" class="width-690 swiper-img margin-auto" alt="">
       </div>
       <div class="position-relative pl-24 pr-24 pb-40">
         <div class="merchant-title color-24"><span>{{name}}</span><wy-star :star-count="lvl"></wy-star></div>
@@ -20,11 +20,11 @@
       <div class="fz-28 color-24 mb-20">环境展示</div>
       <div class="overflow-scroll-x">
         <div :style="{width:showInfo.length * 3.28+'rem',height:2.8+'rem'}">
-          <img v-for="item in showInfo" :src="item.img" style="width:3.20rem;height:2.80rem;margin-right: .08rem;" alt="">
+          <img v-for="item in showInfo" :src="item.filePath" style="width:3.20rem;height:2.80rem;margin-right: .08rem;" alt="">
         </div>
       </div>
     </div>
-     <wy-buy-button :buy-data="{merchantId:merchantId}"></wy-buy-button>
+     <wy-buy-button :buy-data="{merchantId:merchantId,notBuy:1}"></wy-buy-button>
   </div>
 </template>
 <script>

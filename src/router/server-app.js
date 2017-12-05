@@ -19,8 +19,8 @@ export default function(routes){
     component: pay
   });
   routes.push({
-    path: '/server/app/complete',
-    name: 'server-app-complete',
+    path: '/server/app/pay-complete',
+    name: 'server-app-pay-complete',
     component: complete
   });
 }

@@ -1,6 +1,7 @@
 //admin 1234yqs_admin
 module.exports = {
     "port":3001,
+  debug:1,
     uploadPath:'build/upload',
     // apiUrl:'http://192.168.1.245:4200',
     apiUrl:'http://192.168.1.117:8012',

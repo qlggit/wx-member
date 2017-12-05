@@ -18,9 +18,15 @@ router.beforeEach(function(to , from , next){
   if(WY.routerChange && WY.routerChange(to , from) === false){
     return false;
   }
+  var beforeHref = location.href;
   next();
+  WY.trigger('router-change-after',{
+    beforeHref:beforeHref,
+    afterHref:location.href
+  });
 });
-/* eslint-disable no-new */
+router.afterEach(function(to , from ){
+});
 new Vue({
   el: '#app',
   router,

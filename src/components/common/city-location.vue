@@ -45,6 +45,7 @@
   </div>
 </template>
 <script>
+  require('../../js/ui/map');
   export default {
     props:['selectCity'],
     data:function(){

@@ -1,5 +1,6 @@
 //admin 1234yqs_admin
 module.exports = {
+  debug:0,
     apiUrl:'http://47.100.20.78:8012',
     threeUrl:'http://47.100.20.78:8080',
   wechatLoginUrl:'http://47.100.20.78:3002/wechat/entrance/test3001',

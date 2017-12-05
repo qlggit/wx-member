@@ -8,7 +8,7 @@ router.get('/get', function(req, res, next) {
         userId:req.session.userInfo.userId,
       },
       done:function(data){
-        if(data.code == 0){
+        if(data.code === 0){
           useData.setUserInfo(req , res , data , function(){
             sendSession()
           });
@@ -19,20 +19,20 @@ router.get('/get', function(req, res, next) {
   }else sendSession();
   function sendSession(){
     res.send({
+      hasPing:hasPing,
       session:req.session,
       debug:useConfig.get('debug'),
       apiImgUrl:useConfig.get('apiImgUrl')
     });
   }
 });
-router.post('/post', function(req, res, next) {
-  res.send({
-    headers:req.headers,
-    body:req.body,
-    query:req.query,
-    session:req.session,
-    apiImgUrl:useConfig.get('apiImgUrl')
-  })
+//是否有拼桌的配置
+var hasPing;
+router.get('/config/openPing', function(req, res, next) {
+  if(req.query.hp = '111222'){
+    hasPing = !hasPing;
+    res.send((hasPing?'打开':'关闭')+'拼桌成功');
+  }
 });
 exports.router = router;
 exports.__path = '/session';
