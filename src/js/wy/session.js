@@ -62,9 +62,9 @@ function getSession(){
   if(hasGetSession)return false;
   hasGetSession = 1;
   WY.get('/session/get',function(a){
-      localStorage.apiImgUrl = a.apiImgUrl;
-      localStorage.debug = a.debug ;
-      localStorage.hasPing = a.hasPing ;
+      localStorage.apiImgUrl = a.apiImgUrl ;
+      localStorage.debug = a.debug  || 0;
+      localStorage.hasPing = a.hasPing || '' ;
       putStorage(a.session);
       putSession(a.session);
   },{needAbort:0});

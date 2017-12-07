@@ -88,7 +88,7 @@ seatSvg.prototype = {
   setData:function(){
     var options = this.options;
     var that = this;
-    if(options.itemList){
+    if(this.svgObj && options.itemList){
       options.itemList.forEach(function(a){
         var ele = that[(
           {

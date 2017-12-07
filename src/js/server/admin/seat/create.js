@@ -5,7 +5,6 @@ export default{
     return {
       userInfo:'',
       showAble:0,
-      hasBackImg:0,
       colorList:[255,197,85,0],
       autoBackList:[
         {
@@ -20,8 +19,8 @@ export default{
         }
       ],
       backImg:'',
-      seatData:'',
       selectSeat:'',
+      svgBackData:'',
       hasAutoSeatData:'',
     }
   },
@@ -37,12 +36,12 @@ export default{
   },
   methods:{
     doSubmit:function(){
-      if(!this.selectSeat){
-        WY.toast('请先选择一个座位');
-        return false;
-      }
       var that = this , data , sendData;
       if(that.hasAutoSeatData){
+        if(!this.selectSeat){
+          WY.toast('请先选择一个座位');
+          return false;
+        }
         sendData = WY.common.copyProp(this.selectSeat,{
           locCount:'',
           lowCostAmount :'',
@@ -53,7 +52,7 @@ export default{
       }
       else{
         data = [];
-        this.seatData.itemList.forEach(function(a){
+        this.seatItemList.forEach(function(a){
           var o = WY.common.copyProp(a.svgData,{
             locCount:'',
             lowCostAmount :'',
@@ -73,27 +72,39 @@ export default{
       }
         WY.post('/server/admin/seat/'+(that.hasAutoSeatData?'edit':'add') ,sendData,function(a){
           if(a.code === 0 && !that.hasAutoSeatData){
-            that.hasAutoSeatData = 1;
+            location.reload();
           }
           WY.toast(a.message);
         })
     },
-    doShowBack:function(sts){
+    doShowBack:function(sts , call){
       var count = 0;
       var that = this;
-      that.seatData = '';
       this.backImg.forEach(function(a){
         var img = new Image;
         img.src = a.img;
         count++;
         img.onload = function(){
           count--;
+          if(a.code === 'back'){
+            that.svgBackData = {
+              img:that.backImg.filter(function(a){return a.code === 'back'}).pop().img,
+              backWidth:img.width,
+              backHeight:img.height,
+            };
+          }
           if(count === 0){
-            that.hasBackImg = 1;
             if(!sts)that.doSetSvg(img.width,img.height);
+            setTimeout(function(){
+              call && call();
+            },100);
           }
         }
       });
+    },
+    setBackImg:function(list , sts , call){
+      this.backImg = list;
+      this.doShowBack(sts , call);
     },
     searchBack:function(){
       var that = this;
@@ -101,28 +112,29 @@ export default{
         {supplierId:WY.hrefData.supplierId}
         ,function(a){
         if(a.data[0] && a.data[0].length){
-          that.backImg = a.data[0].map(function(b,i){
+          that.setBackImg(a.data[0].map(function(b,i){
             return {
               code:b.supplierFileType === 'seat_per'?'main':'back',
               img:b.filePath
             };
+          }) , a.data[1] && a.data[1].length , function(){
+            if(a.data[1] && a.data[1].length){
+              var itemList = a.data[1].map(function(a){
+                return that.makeItem(a.seatShape - 0,{
+                  left:a.seatX - 0,
+                  top:a.seatY - 0
+                } , a);
+              });
+              that.seatItemList = itemList;
+              setTimeout(function(){
+                WY.ready('set-svg-list',itemList);
+              },100);
+              that.hasAutoSeatData = 1;
+            }
+            that.showAble = 1;
           });
-          that.doShowBack(a.data[1] && a.data[1].length);
-          if(a.data[1] && a.data[1].length){
-            var itemList = a.data[1].map(function(a){
-              return that.makeItem(a.seatShape - 0,{
-                left:a.seatX - 0,
-                top:a.seatY - 0
-              } , a);
-            });
-            that.seatData = {
-              backSrc:a.data[0].filter(function(a){return a.supplierFileType==='seat_black'}).pop().filePath,
-              itemList:itemList
-            };
-            that.hasAutoSeatData = 1;
-          }
+          return
         }
-
         that.showAble = 1;
       })
     },
@@ -150,10 +162,10 @@ export default{
           itemList.push(that.makeItem(color,offset));
         },
         done:function(){
-          that.seatData = {
-            backSrc:that.backImg.filter(function(a){return a.code === 'back'}).pop().img,
-            itemList:itemList
-          }
+          that.seatItemList = itemList;
+          setTimeout(function(){
+            WY.ready('set-svg-list',itemList);
+          },100);
         }
       });
     },
@@ -165,7 +177,7 @@ export default{
         case 197:
         case 85:
           data.type = 'room';
-          svgData.backImg = '/images/seat/table.png';
+          svgData.backImg = '/images/seat/table-'+color+'-able.png';
           svgData.type = 'room';
           svgData.locCount = svgData.locCount || 8;
           svgData.lowCostAmount = svgData.lowCostAmount || 100000;
@@ -176,7 +188,7 @@ export default{
           break;
         case 0:
           data.type = 'table';
-          svgData.backImg = '/images/seat/room.png';
+          svgData.backImg = '/images/seat/room-'+color+'-able.png';
           svgData.type = 'table';
           svgData.locCount = svgData.locCount || 15;
           svgData.lowCostAmount = svgData.lowCostAmount || 200000;
@@ -225,9 +237,8 @@ export default{
           supplierId:WY.hrefData.supplierId,
         };
         WY.post('/server/admin/seat/fileAdd' , data , function(a){
-          if(a.code == 0){
-            that.backImg = that.autoBackList;
-            that.doShowBack();
+          if(a.code === 0){
+            that.setBackImg(that.autoBackList , 0);
           }
         })
       }

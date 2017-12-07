@@ -44,7 +44,7 @@
       document.body.addEventListener('touchstart', this.touchstart);
       document.body.addEventListener('touchmove',this.touchmove);
       var that = this;
-      WY.oneBind('set-svg-list',function(itemList){
+      WY.oneReady('set-svg-list',function(itemList){
         that.itemList = itemList;
         that.makeSvgData();
       } , this);

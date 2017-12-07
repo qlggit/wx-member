@@ -14,8 +14,7 @@
           <div class="pt-10 pb-20">订座人数:</div>
         </fieldset>
       </div>
-      <wy-show-svg v-if="seatData" :seat-data="seatData" @click="svgClick">
-      </wy-show-svg>
+      <wy-show-svg v-if="svgBackData" :svg-back-data="svgBackData" @click="svgClick"></wy-show-svg>
     </div>
     <wy-window :window-data="{}" v-if="showThisWindow">
       <div slot="content" class="width-1200 margin-auto border-rad-20 back-white fz-28 pt-50 pb-50">

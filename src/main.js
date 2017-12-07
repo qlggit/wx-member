@@ -19,11 +19,22 @@ router.beforeEach(function(to , from , next){
     return false;
   }
   var beforeHref = location.href;
-  next();
-  WY.trigger('router-change-after',{
-    beforeHref:beforeHref,
-    afterHref:location.href
-  });
+  if(from.path.indexOf('pay-complete') > -1){
+    WY.trigger('bridge-setup' , {
+      type:'PayComplete'
+    },doNext);
+  }
+  else{
+    doNext();
+  }
+  function doNext(){
+    next();
+    WY.trigger('router-change-after',{
+      beforeHref:beforeHref,
+      afterHref:location.href
+    });
+  }
+
 });
 router.afterEach(function(to , from ){
 });

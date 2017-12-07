@@ -14,10 +14,10 @@
               <div v-else class="float-right">{{item.statusName}}</div>
             </div>
             <div class="pt-42 pb-42 fz-28 color-24 flex-left border-b-233">
-              <div class="width-100">{{item.orderTypeName}}</div>
-              <div class="width-200">{{item.seatName}}</div>
-              <div class="width-200">最低消费{{item.lowCostAmount|moneyFilter}}</div>
-              <div class="width-200">{{item.hasDeductibleAmount?('可抵扣'+(item.deductibleAmount | moneyFilter)):' '}}</div>
+              <div class="width-100 break-none">{{item.orderTypeName}}</div>
+              <div class="width-200 break-none">{{item.seatName}}</div>
+              <div class="width-200 break-none">低消{{item.lowCostAmount|moneyFilter}}</div>
+              <div class="width-200 break-none text-right">{{item.hasDeductibleAmount?('可抵'+(item.deductibleAmount.turnMoney())):' '}}</div>
             </div>
           </div>
           <div class="pt-24 pb-24 flex-right width-auto pr-26">

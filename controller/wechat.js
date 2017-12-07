@@ -3,36 +3,40 @@ var router = express.Router();
 router.get('/entrance', function(req, res, next) {
     req.session.openId = req.query.openid;
     req.session.unionid = req.query.unionid || req.query.openid;
+    console.log('entrance');
+    console.log('spreadUserId' , req.session.spreadUserId);
+    if(req.session.userInfo && req.session.userInfo.userId){
+      return res.useRedirect('/' );
+    }
     var query = req.query;
-    /*
-    * unionid:req.session.unionid,
-    * sex   :query.sex,
-    * province   :query.province,
-    * city   :query.city,
-    * country   :query.country,
-    * */
-  useSession.save(req , res , function(){
-        var sendData = {
-          openId :query.openid,
-          nickname   :query.nickname,
-          headImg    :query.headimgurl,
-          deviceType:'H5',
-          sType:'weixin',
-          uid:req.session.unionid,
-        };
-        useRequest.send(req , res , {
-          url:useUrl.login.login,
-          data:sendData,
-          method:'POST',
-          done:function(data){
-            if(data.code == 0){
-              useData.setUserInfo(req , res , data , function(){
-                res.useRedirect(req.session.callback || '/');
-              })
-            }else res.useSend('授权登录失败');
-          }
-        });
-  });
+    useSession.save(req , res , function(){
+          var sendData = {
+            openId :query.openid,
+            nickname   :query.nickname,
+            headImg    :query.headimgurl,
+            deviceType:'H5',
+            sType:'weixin',
+            uid:req.session.unionid,
+          };
+          useRequest.send(req , res , {
+            url:useUrl.login.login,
+            data:sendData,
+            method:'POST',
+            done:function(data){
+              if(data.code === 0){
+                useData.setUserInfo(req , res , data , function(){
+                  res.useRedirect(req.session.callback || '/');
+                })
+              }else res.useSend('授权登录失败');
+            }
+          });
+    });
+});
+router.get('/spread/:userId', function(req, res, next) {
+    req.session.spreadUserId = req.params.userId;
+    useSession.save(req , res , function(){
+      res.redirect(useConfig.get('wechatLoginUrl'));
+    });
 });
 router.get('/login', function(req, res, next) {
     if(req.session.userInfo && req.session.userInfo.userId){

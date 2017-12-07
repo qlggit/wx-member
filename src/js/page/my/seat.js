@@ -44,7 +44,7 @@ export default{
             a.statusName = '未支付';
           }
           a.hasMe = a.noPay || a.payStatus === 'ALREADY_PAY' || a.pzStatus === 'pzStatus';
-          a.hasDeductibleAmount = WY.session.isOwner(a.userId);
+          a.hasDeductibleAmount = !a.noPay &&  WY.session.isOwner(a.userId) && a.deductibleAmount > 0;
           if(a.noPay){
             a.diffTime = new Date(a.expireTime) - Date.now();
             if(a.diffTime < 0){

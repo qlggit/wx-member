@@ -13,7 +13,7 @@ export default{
       showAble:0,
       hasBackImg:0,
       backImg:'',
-      seatData:'',
+      seatItemList:'',
       selectSeat:'',
       nowDate:'',
       dateVisible:'',
@@ -69,7 +69,7 @@ export default{
         pageSize:200,
       } , function(a){
         var seatOrderList = that.seatOrderList = a.data.list;
-        if(seatOrderList && seatOrderList.length)that.seatData.itemList.forEach(function(a){
+        if(seatOrderList && seatOrderList.length)that.seatItemList.forEach(function(a){
           var svgData = a.svgData;
           var thisList = seatOrderList.filter(function(a){
             return a.seatId == svgData.seatId;
@@ -95,7 +95,7 @@ export default{
         })
       });
     },
-    doShowBack:function(sts){
+    doShowBack:function(call){
       var count = 0;
       var that = this;
       this.backImg.forEach(function(a){
@@ -105,9 +105,17 @@ export default{
         img.onload = function(){
           count--;
           console.log(count);
+          if(a.code === 'back'){
+            that.svgBackData = {
+              img:a.img,
+              backWidth:img.width,
+              backHeight:img.height,
+            }
+          }
           if(count === 0){
             that.hasBackImg = 1;
             console.log('hasBackImg',that.hasBackImg);
+            call && call();
           }
         }
       });
@@ -124,21 +132,22 @@ export default{
               img:b.filePath
             };
           });
-          that.doShowBack();
-          if(a.data[1] && a.data[1].length){
-            var itemList = a.data[1].map(function(a){
-              return that.makeItem(a.seatShape - 0,{
-                left:a.seatX - 0,
-                top:a.seatY - 0
-              } , a);
-            });
-            that.seatData = {
-              backSrc:a.data[0].filter(function(a){return a.supplierFileType==='seat_black'}).pop().filePath,
-              itemList:itemList
-            };
-          }
+          that.doShowBack(function(){
+            if(a.data[1] && a.data[1].length){
+              var itemList = a.data[1].map(function(a){
+                return that.makeItem(a.seatShape - 0,{
+                  left:a.seatX - 0,
+                  top:a.seatY - 0
+                } , a);
+              });
+              that.seatItemList = itemList;
+              setTimeout(function(){
+                WY.ready('set-svg-list',itemList);
+              },100);
+            }
+            that.showAble = 1;
+          });
         }
-        that.showAble = 1;
       })
     },
     svgClick:function(e , type , data){
@@ -180,7 +189,7 @@ export default{
         case 197:
         case 85:
           data.type = 'room';
-          svgData.backImg = '/images/seat/table.png';
+          svgData.backImg = '/images/seat/table-'+color+'-able.png';
           svgData.type = 'room';
           svgData.locCount = svgData.locCount || 8;
           svgData.lowCostAmount = svgData.lowCostAmount || 1000;
@@ -191,7 +200,7 @@ export default{
           break;
         case 0:
           data.type = 'table';
-          svgData.backImg = '/images/seat/room.png';
+          svgData.backImg = '/images/seat/room-'+color+'-able.png';
           svgData.type = 'table';
           svgData.locCount = svgData.locCount || 15;
           svgData.lowCostAmount = svgData.lowCostAmount || 2000;

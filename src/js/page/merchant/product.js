@@ -20,6 +20,8 @@ export default{
       basePath:'',
       isServer:0,
       orderNo:'',
+      seatPayStatus:'',
+      oldList:[],
     }
   },
   beforeDestroy:function(){
@@ -30,45 +32,65 @@ export default{
     this.isServer = location.href.indexOf('server') > 0;
     this.basePath = this.isServer ? '/server/app' : '/merchant';
     this.productList = [];
-    this.selectedList = WY.getLocalStorage('selectedList') || [];
     this.maxListHeight = WY.clientHeight -  WY.getScaleSize(100);
     WY.oneReady(this.isServer?'token-complete':'user-info',function(o){
+      that.searchOrder();
+      that.searchSeatOrder();
         WY.get('/merchant/product/category' , function(data){
           that.menuList = data.data;
           that.autoInitCount ++;
           that.doSearch();
         });
     } , this);
-    this.searchOrder();
   },
   methods:{
+    searchSeatOrder:function(){
+      var that = this;
+      WY.get('/order/seat/myInfo',{
+        orderNo:WY.hrefData.seatOrderNo
+      },function(a){
+        var data = a.data[0];
+        if(data)that.seatPayStatus = data.payStatus === 'ALREADY_PAY';
+      });
+    },
     searchOrder:function(){
-      if(!this.selectedList || this.selectedList.length === 0 && WY.hrefData.seatOrderNo){
+      if(WY.hrefData.seatOrderNo){
         var that = this;
         WY.get('/order/infoBySeat',{
           seatOrderNo:WY.hrefData.seatOrderNo,
         } , function(a){
-          if(a.code === 0 && a.data.payStatus !== 'ALREADY_PAY'){
-            var data = a.data;
-            that.orderNo = data.orderNo;
-            that.selectedList = data.detailLs.map(function(a){
-              return {
-                id:a.goodsId,
-                name:a.goodsName,
-                number:a.quantity,
-                price:a.unitPrice,
-              };
+          if(a.code === 0 ){
+            var noPayObj = a.data && a.data.find(function(a){
+              return a.payStatus !== 'ALREADY_PAY';
             });
-            that.autoInitCount++;
-            that.setAll();
-            that.doSearch();
+            if(noPayObj){
+              that.orderNo = noPayObj.orderNo;
+              that.selectedList = noPayObj.detailLs.map(function(a){
+                that.oldList.push({
+                  id:a.goodsId,
+                  number:a.quantity,
+                });
+                return {
+                  id:a.goodsId,
+                  name:a.goodsName,
+                  number:a.quantity,
+                  price:a.unitPrice,
+                };
+              });
+              that.autoInitCount++;
+              that.setAll();
+              that.doSearch();
+              return false;
+            }
           }else{
+            that.selectedList = WY.getLocalStorage('selectedList') || [];
             that.autoInitCount++;
             that.setAll();
             that.doSearch();
           }
         })
       }else {
+        this.selectedList = WY.getLocalStorage('selectedList') || [];
         this.autoInitCount++;
         this.setAll();
         this.doSearch();
@@ -83,8 +105,12 @@ export default{
         });
       });
       var that = this;
-      this.toCancel(function(){
-        if(goodsLs.length){
+      if(this.seatPayStatus && !goodsLs.length){
+        WY.toast('请选择要购买的商品！');
+        return false;
+      }
+      this.toCancel(function(sts){
+        if(!sts && goodsLs.length){
           WY.post('/order/add' , {
             goodsLs:goodsLs,
             supplierId:WY.hrefData.merchantId,
@@ -103,7 +129,18 @@ export default{
     toCancel:function(call){
       if(this.orderNo){
         var that = this;
-        $.post('/order/cancel',{
+        if(this.selectedList.length === this.oldList.length){
+          if(this.selectedList.every(function(a){
+            var oldObj = that.oldList.find(function(b){
+              return a.id === b.id;
+            });
+            return oldObj && oldObj.number === a.number;
+            })){
+            //前后相同 不需要取消 也不需要新增
+            return call && call(1);
+          }
+        }
+        WY.post('/order/cancel',{
           orderNo:this.orderNo
         },function(){
           call && call();

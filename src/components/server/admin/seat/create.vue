@@ -1,6 +1,6 @@
 <template>
   <div v-if="showAble" class="height-100-100">
-    <div v-if="hasBackImg" class="pt-seat-header position-relative height-100-100 back-transparent">
+    <div v-if="backImg" class="pt-seat-header position-relative height-100-100 back-transparent">
       <div class="position-absolute left-0 top-0 width-100-100">
         <fieldset class="width-50-100 margin-auto pt-40 fz-30 ">
           <legend>座位详情</legend>
@@ -13,16 +13,13 @@
             <div class="pt-10 pb-20">最低消费:<input v-model="selectSeat.lowCostAmount" /></div>
           </div>
           <div class="width-50-100 margin-auto">
-            <div class="btn btn-sm back-24 color-white" @click="doSubmit">{{hasAutoSeatData?'保存':'新增所有'}}</div>
+            <div class="btn btn-sm back-24 color-white cursor-pointer" @click="doSubmit">{{hasAutoSeatData?'保存':'新增所有'}}</div>
           </div>
         </fieldset>
       </div>
-
-      <wy-show-svg v-if="seatData" :seat-data="seatData" @click="svgClick">
-
-      </wy-show-svg>
+      <wy-show-svg v-if="svgBackData" :svg-back-data="svgBackData" @click="svgClick"></wy-show-svg>
     </div>
-    <div v-else>
+    <div v-if="!backImg">
       <div class="pt-40 width-40-100 margin-auto back-white pl-40 pr-40 pb-50">
           <div v-for="(item,index) in autoBackList" class="flex-between pt-40 pb-40">
              <div class="fz-30">{{item.name}}</div>

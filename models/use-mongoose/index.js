@@ -6,7 +6,7 @@ module.exports = function(dbname){
   var __ = {
     start:function(dbname , call){
       var dbConfig = useConfig.get('dbOptions');
-      if(typeof dbname == 'function'){
+      if(typeof dbname === 'function'){
         call = dbname;
         dbname = '';
       }
@@ -14,13 +14,21 @@ module.exports = function(dbname){
       if(mongooseConnection[dbname])return this.mongoose = mongooseConnection[dbname];
       var mongoose = require('mongoose');
       var uri = 'mongodb://' + (dbConfig.host || 'localhost') + useCommon.unShift(dbConfig.port,':');
-      mongoose.connect(uri + useCommon.unShift(dbname), function(err,data) {
-        console.log('mongodb connect');
-        if(call)call(err);
-      });
       mongoose.connection.on('error', function (err) {
-        if (err)useLog.log('[mongodb连接异常] - ' + err);
+        if (err){
+          useLog.log('[mongodb连接异常] - ' + err);
+          doConnect();
+        }
       });
+      var that = this;
+      function doConnect(){
+        mongoose.connect(uri + useCommon.unShift(dbname), function(err,data) {
+          console.log('mongodb connect');
+          console.log(err);
+          if(call)call(err);
+        });
+      }
+      doConnect();
       this.mongoose = mongooseConnection[dbname] = mongoose;
     },
     create:function(tablename , options){

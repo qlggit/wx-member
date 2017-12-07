@@ -1,7 +1,7 @@
 <template>
   <div class="height-100-100 width-100-100 product-pb pl-product" :class="isServer?'':'pt-header'">
     <header-component v-if="!isServer" :header-data="{title:name}"></header-component>
-    <div class="product-menu text-center back-242">
+    <div class="product-menu text-center back-242" :class="isServer?'':'pt-header'">
         <div class="item" v-for="(item,index) in menuList"
              :class="menuIndex===index?'active':''"
         @click="changeMnuIndex(index,item)">
@@ -10,7 +10,7 @@
     </div>
     <div class="height-100-100 back-transparent overflow-scroll product-main">
       <div class="item mb-10" v-for="item in productList">
-        <img :src="item.img | imgUrlFilter" class="img" alt="">
+        <img :src="item.headImg | imgUrlFilter" class="img" alt="">
         <div>
           <div class="fz-30 color-24 mb-20">{{item.name}}</div>
           <div class="fz-24 color-104">{{item.keywords}}</div>

@@ -20,6 +20,7 @@ export default{
       hasSearchOrder:'',
       diffAmount:0,
       isServer:0,
+      showAble:0,
     }
   },
   beforeDestroy:function(){
@@ -28,8 +29,11 @@ export default{
   created:function(){
       this.isServer = location.href.indexOf('server') > 0;
       this.basePath = this.isServer ? '/server/app' : '/merchant';
-      this.doSearch(WY.hrefData.orderNo?'':WY.hrefData.seatOrderNo);
-      if(WY.hrefData.seatOrderNo)this.searchSeatOrder();
+      var that = this;
+      WY.oneReady(this.isServer?'token-complete':'user-info',function(o){
+        that.doSearch(WY.hrefData.orderNo?'':WY.hrefData.seatOrderNo);
+        if(WY.hrefData.seatOrderNo)that.searchSeatOrder();
+      } , this);
   },
   methods:{
     doSum:function(){
@@ -51,6 +55,7 @@ export default{
         console.log('deductibleAmount -- >  '+this.deductibleAmount);
         console.log('diffAmount -- >  '+this.diffAmount);
         console.log('payPrice -- >  '+this.payPrice);
+        this.showAble = 1;
       }
     },
     doSearch:function(seatOrderNo){
@@ -61,19 +66,29 @@ export default{
         seatOrderNo:seatOrderNo,
       } , function(a){
         that.hasSearchOrder = 1;
-        if(a.code === 0 && a.data.payStatus !== 'ALREADY_PAY'){
-          var data = a.data;
-          that.orderNo = data.orderNo;
-          that.selectedList = data.detailLs.map(function(a){
-            return {
-              name:a.goodsName,
-              number:a.quantity,
-              price:a.unitPrice,
-            };
-          });
-          if(data.seatOrderNo && !WY.hrefData.seatOrderNo){
-            that.searchSeatOrder(data.seatOrderNo);
-            return;
+        if(a.code === 0){
+          var noPayObj;
+          if(Array.isArray(a.data)){
+            noPayObj = a.data && a.data.find(function(a){
+              return a.payStatus !== 'ALREADY_PAY';
+            });
+          }else{
+            noPayObj = a.data.payStatus !== 'ALREADY_PAY' && a.data;
+          }
+          if(noPayObj){
+            that.orderNo = noPayObj.orderNo;
+            that.selectedList = noPayObj.detailLs.map(function(a){
+              return {
+                name:a.goodsName,
+                number:a.quantity,
+                price:a.unitPrice,
+                allPrice:a.unitPrice * a.quantity,
+              };
+            });
+            if(noPayObj.seatOrderNo && !WY.hrefData.seatOrderNo){
+              that.searchSeatOrder(noPayObj.seatOrderNo);
+              return;
+            }
           }
         }
         that.doSum();
@@ -81,7 +96,6 @@ export default{
     },
     searchSeatOrder:function(orderNo){
       var seatOrderNo = orderNo || WY.hrefData.seatOrderNo;
-      this.seatOrderNo = seatOrderNo;
       if(seatOrderNo){
         var that = this;
         WY.get('/order/seat/myInfo',{
@@ -95,6 +109,7 @@ export default{
           that.seatPayStatus = data.payStatus === 'ALREADY_PAY';
           if(data.deductibleAmount)that.deductibleAmount = data.deductibleAmount;
           if(!that.seatPayStatus && data.lowCostAmount)that.lowCostAmount = data.lowCostAmount;
+          that.seatOrderNo = seatOrderNo;
           that.doSum();
         });
       }

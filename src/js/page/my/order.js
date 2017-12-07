@@ -20,7 +20,7 @@ export default{
       var that = this;
       WY.get('/my/order/list' , {
         pageNum:1,
-        pageSize:10,
+        pageSize:100,
       } , function(a){
         that.orderList = a.data.list.filter(function(a){
           if(a.status === 'cancel')return false;

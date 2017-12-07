@@ -47,6 +47,7 @@ export default{
     this.basePath = this.isServer ? '/server/app' : '/merchant';
     this.selectDate = WY.common.parseDate(new Date,'Y-m-d');
     WY.oneReady(this.isServer?'token-complete':'user-info',function(o){
+      that.doSearch();
       WY.get('/merchant/detail/info',{
         supplierId:WY.hrefData.merchantId
       } , function(data){
@@ -62,7 +63,6 @@ export default{
     WY.oneBind('svg-show-complete',function(){
       that.setUserInfo();
     } , this);
-    this.doSearch();
   },
   methods:{
     changeNumber:function(data){
@@ -185,7 +185,7 @@ export default{
     },
     doSearch:function(){
       this.seatData = '';
-      WY.trigger('set-svg-list',[]);
+      WY.ready('set-svg-list',[]);
       var itemList = [];
       var that = this;
       WY.get('/merchant/seat/data',{
@@ -253,7 +253,9 @@ export default{
                 }
               }else{
                 svgData.headImg = a.headImg;
-                if(!that.hasPing)svgData.selectAble = false;
+                if(!that.hasPing){
+                  svgData.selectAble = false;
+                }
                 //当前座位的拼桌信息
                 var tableLs = a.tableLs;
                 if(tableLs){
@@ -286,7 +288,7 @@ export default{
         });
         that.setImg(itemList);
         that.seatItemList = itemList;
-        WY.trigger('set-svg-list',itemList);
+        WY.ready('set-svg-list',itemList);
       });
     },
     svgClick:function(e , type , data){
@@ -306,7 +308,7 @@ export default{
     },
     changeTableAble:function(){
       var seatData = this.seatData;
-      if(!seatData.isSelected || seatData.isMe){
+      if(!seatData.isSelected){
         seatData.tableAble = !seatData.tableAble;
       }
     },
@@ -324,7 +326,7 @@ export default{
         vueRouter.push( WY.common.addUrlParam(this.basePath+'/product',{
           seatId:seatData.seatId,
           seatOrderNo:seatData.orderNo,
-          supplierId:seatData.supplierId,
+          supplierId:WY.hrefData.supplierId,
         }));
         return false;
       }
