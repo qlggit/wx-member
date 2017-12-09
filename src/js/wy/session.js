@@ -41,10 +41,10 @@ function putStorage(session){
   localStorage.userId = session.userInfo && session.userInfo.userId || localStorage.userId || '';
 }
 function login(sts){
-  if(!session.userId || !session.userId){
+  if(!session.userId || !session.unionid){
     return wechatLogin();
   }
-  if(sts){
+  if(sts || !session.userInfo){
     loginFlush();
   }else{
     if(!session.unionid){

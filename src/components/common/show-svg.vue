@@ -1,5 +1,5 @@
 <template>
-  <div class="width-100-100 height-100-100 overflow-hidden back-transparent cursor-pointer">
+  <div class="width-100-100 height-100-100 overflow-hidden back-transparent cursor-pointer position-relative" @contextmenu="contextmenu">
       <svg class="width-100-100 height-100-100 show-svg"
            style="background-size:100% 100%;"
            :style="{
@@ -8,6 +8,7 @@
       backgroundImage:'url('+svgBackData.img+')'
       }"
            :viewBox="[0,0,svgBackData.backWidth,svgBackData.backHeight].join(' ')" ref="showSvg"></svg>
+
   </div>
 </template>
 <script>
@@ -63,7 +64,6 @@
             }
           });
         }else{
-          console.log('svg removeItem');
           this.svgObj.removeItem();
           this.svgObj.setItemList(this.itemList);
         }
@@ -75,9 +75,25 @@
         this.isSetReady = 1;
         var that = this;
         WY.oneBind('set-user-head-img',function(svgData , userInfo){
-          userInfo.done && userInfo.done(that.svgObj.setUserHeadImg(svgData , userInfo), svgData);
+          var o = that.svgObj.setUserHeadImg(svgData , userInfo);
+          userInfo.done && userInfo.done(o , svgData);
+        } , this);
+        WY.oneBind('clear-user-head-img',function(svgData , done){
+          var o = that.svgObj.clearUserHeadImg(svgData);
+          done && done(o , svgData);
+        } , this);
+        WY.oneBind('set-svg-selected',function(svgData , done){
+          var o = that.svgObj.setSelected(svgData);
+          done && done(o , svgData);
+        } , this);
+        WY.oneBind('clear-svg-selected',function(svgData , done){
+          that.svgObj.clearSelected(svgData);
+          done && done(svgData);
         } , this);
       }
-    }
+    },
+    contextmenu:function(e){
+      e.preventDefault();
+    },
   }
 </script>

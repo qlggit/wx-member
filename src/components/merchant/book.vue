@@ -10,7 +10,7 @@
         </div>
       </div>
       <div class="pt-36 pl-20 pr-24 flex-between">
-         <div class="fz-28 color-104" @click="doSelectDate">
+         <div class="fz-28 color-104" @click="dateVisible=1">
            <span class="mr-10">预约日期：</span>
            <span class="color-24 mr-08">{{selectDate}}</span>
            <img src="/images/ico/down.png" class="width-22 height-14" alt="">

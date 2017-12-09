@@ -3,6 +3,9 @@ module.exports = {
   setUserInfo:function(req , res , data , call){
     data = data.data || {};
     req.session.tokenModel = data.tokenModel || req.session.tokenModel;
+    if(req.session.tokenModel){
+      req.session.tokenModel.realId = req.session.tokenModel.userId.split('_')[0];
+    }
     req.session.sanfangs = data.sanfangs && data.sanfangs.filter(function(a){return a.sType === 'WEIXIN'}).pop() || req.session.sanfangs;
     delete data.tokenModel;
     delete data.sanfangs;

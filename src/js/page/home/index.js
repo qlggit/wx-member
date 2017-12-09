@@ -29,6 +29,7 @@ export default{
     WY.oneUnBind(this);
   },
   created:function(){
+    WY.autoVueObj = this;
     var that = this;
     WY.oneReady('user-info',function(o){
     } , this);
@@ -86,6 +87,7 @@ export default{
       var that = this;
       that.swiperList = [];
       WY.get('/merchant/list/banner',{
+        clinetLoc:'WX',
         bannerTypeCode:this.bannerTypeCode
       },function(a){
         a.data.forEach(function(a){

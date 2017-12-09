@@ -28,7 +28,7 @@ module.exports = {
         "levels":{ "logDebug": "DEBUG", "logInfo": "DEBUG", "logWarn": "DEBUG", "logErr": "DEBUG"}
     },
     dbOptions:{
-        host:'192.168.1.245',
+        host:'120.27.213.0',
         port:'27017',
         dbname:'wxmember'
     }

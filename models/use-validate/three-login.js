@@ -2,8 +2,10 @@ var login = function(req , res , next){
   req.session.threeToken = {
     backUrl:req.query.backUrl,
   };
+  var userId = req.query.userId || '';
   req.session.tokenModel = {
-    userId:req.query.userId,
+    userId:userId,
+    realIdId:userId.split('_')[0],
     token:req.query.token
   };
   if(req.query.token){

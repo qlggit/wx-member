@@ -4,7 +4,7 @@ function mySvg(svg , svgData){
 mySvg.create = function(){
 };
 mySvg.prototype = {
-  create:function(e , options){
+  create:function(e , options , svgData){
     console.log('svg create ' , e , options.autoHeight);
     options = options || {};
     var ele = document.createElementNS("http://www.w3.org/2000/svg",e);
@@ -24,6 +24,8 @@ mySvg.prototype = {
         var img = new Image;
         img.src = options.attr.href;
         img.onload = function(){
+          svgData.width = img.width;
+          svgData.height = img.height;
           ele.setAttribute('width' , img.width);
           ele.setAttribute('height' , img.height);
 
@@ -40,8 +42,8 @@ mySvg.prototype = {
     }
     return ele;
   },
-  add:function(e,options){
-    var ele = this.create(e,options);
+  add:function(e,options,svgData){
+    var ele = this.create(e,options,svgData);
     ele.svgOptions = options;
     this.push(ele , options.parent);
     return ele;
@@ -56,13 +58,15 @@ mySvg.prototype = {
 function seatSvg(options){
   this.options = options;
   var svgObj = this.svgObj = new mySvg(options.svg);
+  this.pathG = svgObj.add('g',{});
   this.roomG = svgObj.add('g',{});
   this.tableG = svgObj.add('g',{});
   this.chairG = svgObj.add('g',{});
   this.userInfoG = svgObj.add('g',{});
   this.patterns = {};
+  this.selectedPolygon = [];
   this.defs = svgObj.add('defs',{});
-  this.allSvgData = [];
+  this.allItemData = [];
   this.headImgSvg = [];
   this.svg = options.svg;
   this.scale = 1;
@@ -101,18 +105,17 @@ seatSvg.prototype = {
           options.click && options.click(e ,a.type, a.svgData);
           e.stopPropagation && e.stopPropagation();
         };
-        that.allSvgData.push(ele);
+        that.allItemData.push(ele);
       });
     }
   },
-  makePattern:function(id , userInfo , options){
-    console.log('makePattern');
+  makePattern:function(patternId , userInfo , options){
     var pattern = this.svgObj.add('pattern',{
       parent:this.defs,
       attr:{
         width:options.w,
         height:options.h,
-        id:id,
+        id:patternId,
       }
     });
     this.svgObj.add('image',{
@@ -124,11 +127,68 @@ seatSvg.prototype = {
         'href':userInfo.headImg,
       }
     });
-    this.patterns[id] = pattern;
+    this.patterns[patternId] = pattern;
     return pattern;
   },
-  setUserHeadImg:function(svgData , userInfo , done){
-    console.log('setUserHeadImg');
+  setSelected:function(svgData ){
+    var obj = this.svgObj.add('path',{
+      parent:this.getParent('path'),
+      attr:{
+        d:[
+          'M'+[svgData.x  , svgData.y ].join(' '),
+          'L'+[svgData.x  , svgData.y  + svgData.height].join(' '),
+          'L'+[svgData.x + svgData.width  , svgData.y  + svgData.height].join(' '),
+          'L'+[svgData.x + svgData.width  , svgData.y ].join(' '),
+          'L'+[svgData.x  , svgData.y ].join(' '),
+          'Z'
+        ].join(' '),
+      },
+      style:{
+        'stroke':'red',
+        'fill':'white',
+      }
+    });
+    obj.selectedPolygonSeatId = svgData.seatId;
+    this.selectedPolygon.push(obj);
+    return obj;
+  },
+  clearSelected:function(svgData){
+    if(svgData){
+      var selectedPolygon = this.selectedPolygon;
+      selectedPolygon.every(function(a , i){
+        if(a.selectedPolygonSeatId === svgData.seatId){
+          a.parentElement && a.parentElement.removeChild(a);
+          selectedPolygon.splice(i , 1);
+          return false;
+        }
+        return true;
+      });
+      return false;
+    }
+    this.selectedPolygon.forEach(function(a){
+      a.parentElement && a.parentElement.removeChild(a);
+    });
+    this.selectedPolygon = [];
+  },
+  clearUserHeadImg:function(svgData){
+    var removes,headImgSvg=this.headImgSvg;
+    if(svgData){
+      removes = this.headImgSvg.filter(function(a , i){
+        return a.dataId === 'userInfoHeadImg'+svgData.userId;
+      });
+      removes.forEach(function(a){
+        headImgSvg.every(function(b , i){
+          b.parentElement && b.parentElement.removeChild(b);
+          if(b.dataId === a.dataId){
+            headImgSvg.splice(i , 1);
+          }
+        });
+      });
+      return ;
+    }
+    this.removeList(this.headImgSvg);
+  },
+  setUserHeadImg:function(svgData , userInfo){
     var id = 'userInfoHeadImg'+userInfo.userId;
     var cr = 15;
     svgData.x -= 0;
@@ -152,8 +212,9 @@ seatSvg.prototype = {
         'fill':'#181818',
       }
     });
+    backImgSvg.dataId = id;
     this.headImgSvg.push(backImgSvg);
-    var headImgSvg = this.svgObj.add('circle',{
+    var headImg = this.svgObj.add('circle',{
       parent:this.getParent('userInfo'),
       attr:{
         cx:svgData.x + cr ,
@@ -163,8 +224,9 @@ seatSvg.prototype = {
         stroke:'#181818',
       }
     });
-    this.headImgSvg.push(headImgSvg);
-    return headImgSvg;
+    headImg.dataId = id;
+    this.headImgSvg.push(headImg);
+    return headImg;
   },
   init:function(){
     var options = this.options;
@@ -307,7 +369,7 @@ seatSvg.prototype = {
         y:svgData.y,
         'href':svgData.backImg,
       }
-    });
+    },svgData);
   },
   addTable:function(svgData){
     return this.svgObj.add('image',{
@@ -319,7 +381,7 @@ seatSvg.prototype = {
         y:svgData.y,
         'href':svgData.backImg,
       }
-    });
+    },svgData);
   },
   addChair:function(svgData){
     return this.svgObj.add('image',{
@@ -331,31 +393,25 @@ seatSvg.prototype = {
         y:svgData.y,
         'href':svgData.backImg,
       }
-    });
+    },svgData);
   },
   targetActive:function(){
     this.targetEle.style.stroke = 'red';
   },
   setItemList:function(itemList){
       this.options.itemList = itemList;
-      this.setData();
+      if(this.svg)this.setData();
+  },
+  removeList:function(list){
+    list.forEach(function(a){
+      a.parentElement && a.parentElement.removeChild(a);
+    })
+    list.splice(0);
   },
   removeItem:function(item){
-    var removes;
-    if(item){
-      removes.push(item);
-      var index = this.allSvgData.indexOf(item);
-      this.allSvgData.splice(index,1);
-    }else{
-      removes = this.allSvgData.concat(this.headImgSvg);
-    }
-    removes.forEach(function(a){
-        a.parentElement && a.parentElement.removeChild(a);
-    });
-    if(!item){
-      this.allSvgData.splice(0);
-      this.headImgSvg.splice(0);
-    }
+    this.removeList(this.allItemData);
+    this.removeList(this.headImgSvg);
+    this.removeList(this.selectedPolygon);
   },
   getParent:function(category){
     return this[category + 'G'] || ({

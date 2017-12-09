@@ -40,9 +40,12 @@ export default{
     WY.oneUnBind(this);
   },
   created:function(){
+    WY.autoVueObj = this;
     localStorage.selectedList = '';
-    this.hasPing = WY.session.hasPing;
     var that = this;
+    WY.oneReady('session-complete',function(session){
+      that.hasPing = session.hasPing;
+    } , this);
     this.isServer = location.href.indexOf('server') > 0;
     this.basePath = this.isServer ? '/server/app' : '/merchant';
     this.selectDate = WY.common.parseDate(new Date,'Y-m-d');
@@ -90,12 +93,8 @@ export default{
           WY.toast('当前座位不可预订');
           return false;
         }
-      }else{
       }
       this.showThisWindow = v;
-    },
-    doSelectDate:function(){
-      this.dateVisible = 1;
     },
     makeSvgItem:function(d){
       var type = ({
@@ -122,7 +121,7 @@ export default{
           seatName:d.seatName ,
           lowCostAmount:d.lowCostAmount,
           locCount:d.locCount ,
-          isSelected:0,
+          isSelected:d.seatStatus === 'selected',
           selectAble:d.seatStatus !=='lock',
           isMe:0,
           hasMe:0,
@@ -157,7 +156,7 @@ export default{
       //显示座位上的人头像
       if(this.seatItemList)this.seatItemList.forEach(function(data){
         var svgData = data.svgData;
-        if(svgData.userId && !WY.session.isOwner(svgData.userId))
+        if(svgData.userId && svgData.headImg && !WY.session.isOwner(svgData.userId))
           WY.trigger('set-user-head-img', svgData , {
             userId:svgData.userId,
             headImg:svgData.headImg,
@@ -185,111 +184,137 @@ export default{
     },
     doSearch:function(){
       this.seatData = '';
-      WY.ready('set-svg-list',[]);
       var itemList = [];
       var that = this;
       WY.get('/merchant/seat/data',{
         supplierId:WY.hrefData.supplierId,
+        queryDate:this.selectDate,
       } , function(a){
         that.makeBackImg(a.data[0].filter(function(a){return a.supplierFileType==='seat_black'}).pop().filePath , function(){
           a.data[1].forEach(function(d){
             itemList.push(that.makeSvgItem(d));
           });
-          that.searchOrder(itemList);
+          that.autoItemList = itemList;
+          that.searchStatusList();
         });
       });
     },
-    searchOrder:function(itemList){
+    reset:function(){
+      WY.ready('set-svg-list',[]);
+      var seatItemList = this.seatItemList = [];
+      this.autoItemList.forEach(function(a){
+        seatItemList.push({
+          type:a.type,
+          svgData:Object.assign({},a.svgData),
+        })
+      });
+    },
+    //查询锁定 最低消费 及线下订桌列表
+    searchStatusList:function(){
+      this.reset();
+      var itemList = this.seatItemList;
       var that = this;
-      WY.get('/order/seat/list',{
+      WY.get('/merchant/seat/statusData',{
         supplierId:WY.hrefData.supplierId,
-        startDate:this.selectDate,
-        endDate :this.selectDate,
-        pageNum:1,
-        pageSize:200,
-      } , function(a){
-        var seatOrderList = that.seatOrderList = a.data.list;
-        var hasPayConfirm;
-        if(seatOrderList && seatOrderList.length)itemList.forEach(function(a){
-          var svgData = a.svgData;
-          //找到座位的相关订单
-          var thisList = seatOrderList.filter(function(a){
-            return a.seatId == svgData.seatId;
-          });
-          if(thisList.length){
-            svgData.isSelected = 1;
-            svgData.allGroup = 1;
-            thisList.every(function(a){
-              svgData.tableAble = a.tableStatus === 'y' && a.pzStatus !== 'end';
-              svgData.userId = a.userId;
-              svgData.orderNo = a.orderNo;
-              //是我的订单
-              if(WY.session.isOwner(a.userId)){
-                svgData.hasMe = 1;
-                svgData.isMe = 1;
-                if(a.payStatus !== 'ALREADY_PAY'){
-                  if(!hasPayConfirm)WY.confirm({
-                    cancelText:'买酒',
-                    submitText:'支付',
-                    content:'您已有未支付的订座订单！',
-                    done:function(v){
-                      vueRouter.push(v?
-                        (
-                          WY.common.addUrlParam(that.basePath+'/pay',{
-                            seatId:a.seatId,
-                            seatOrderNo:a.orderNo,
-                            supplierId:a.supplierId,
-                          })
-                        ):(
-                          WY.common.addUrlParam(that.basePath+'/product',{
-                            seatId:a.seatId,
-                            seatOrderNo:a.orderNo,
-                            supplierId:a.supplierId,
-                          })
-                        ))
+        startDate:this.selectDate.startTime(),
+        endDate:this.selectDate.endTime(),
+      },function(a){
+        var data = a.data;
+        data.forEach(function(statusList , i){
+          if(statusList){
+            statusList.forEach(function(statusOne){
+              if(statusOne){
+                var itemOne = itemList.find(function(a){
+                  return a.svgData.seatId === statusOne.seatId;
+                });
+                if(!itemOne)return;
+                itemOne = itemOne.svgData;
+                if(i === 0){
+                  //座位订单
+                  that.deSeatOrder(statusOne , itemOne);
+                }
+                else if(i === 1){
+                  //锁定
+                  itemOne.selectAble = false;
+                }
+                else if(i === 2){
+                  //最低消费
+                  itemOne.lowCostAmount = statusOne.lowCostAmount;
+                }else if(i === 3){
+                  //线下订桌
+                  itemOne.selectAble = false;
+                }else{
+                  //拼桌
+                  if(o.isAgree ==='y'){
+                    itemOne.allGroup++;
+                  }
+                  //有我的申请
+                  if(WY.session.isOwner(statusOne.userId)){
+                    if(o.isAgree ==='y'){
+                      itemOne.hasMe = 1;
                     }
-                  });
-                  hasPayConfirm = 1;
-                }
-              }else{
-                svgData.headImg = a.headImg;
-                if(!that.hasPing){
-                  svgData.selectAble = false;
-                }
-                //当前座位的拼桌信息
-                var tableLs = a.tableLs;
-                if(tableLs){
-                  if(!tableLs.every(function(o , i){
-                      //有我的申请
-                      if(WY.session.isOwner(o.userId)){
-                        if(o.isAgree ==='y'){
-                          svgData.allGroup++;
-                          svgData.hasMe = 1;
-                        }
-                        else if(o.isAgree ==='n'){
-                          //被拒绝
-                          svgData.tableAble = false;
-                        }else{
-                          //正在申请中
-                          svgData.isTableAppling = 1;
-                          svgData.hasMe = 1;
-                        }
-                        return false;
-                      }
-                      return true;
-                    })){
-
+                    else if(o.isAgree ==='n'){
+                      //被拒绝 然后无法选择
+                      itemOne.tableAble = false;
+                    }else{
+                      //正在申请中
+                      itemOne.isTableAppling = 1;
+                      itemOne.hasMe = 1;
+                    }
                   }
                 }
               }
-              return true;
             })
           }
         });
         that.setImg(itemList);
-        that.seatItemList = itemList;
         WY.ready('set-svg-list',itemList);
       });
+    },
+    //解析订座订单信息
+    deSeatOrder:function(orderOne , itemOne){
+      if(orderOne){
+        itemOne.isSelected = 1;
+        itemOne.allGroup ++;
+        itemOne.tableAble = orderOne.payStatus === 'ALREADY_PAY' && orderOne.tableStatus === 'y' && orderOne.pzStatus !== 'end';
+        itemOne.userId = orderOne.userId;
+        itemOne.orderNo = orderOne.orderNo;
+        //是我的订单
+        if(WY.session.isOwner(orderOne.userId)){
+          itemOne.hasMe = 1;
+          itemOne.isMe = 1;
+          if(orderOne.payStatus !== 'ALREADY_PAY'){
+            var that = this;
+            if(!this.hasPayConfirm)WY.confirm({
+              cancelText:'买酒',
+              submitText:'支付',
+              content:'您已有未支付的订座订单！',
+              done:function(v){
+                vueRouter.push(v?
+                  (
+                    WY.common.addUrlParam(that.basePath+'/pay',{
+                      seatId:orderOne.seatId,
+                      seatOrderNo:orderOne.orderNo,
+                      supplierId:orderOne.supplierId,
+                    })
+                  ):(
+                    WY.common.addUrlParam(that.basePath+'/product',{
+                      seatId:orderOne.seatId,
+                      seatOrderNo:orderOne.orderNo,
+                      supplierId:orderOne.supplierId,
+                    })
+                  ))
+              }
+            });
+            this.hasPayConfirm = 1;
+          }
+        }else{
+          itemOne.headImg = orderOne.headImg;
+          if(!this.hasPing){
+            itemOne.selectAble = false;
+          }
+        }
+      }
     },
     svgClick:function(e , type , data){
       if(type === 'svg'){
@@ -302,7 +327,7 @@ export default{
     onValuesChange:function(v){
       var selectDate = v.map(function(a){return a.padStart(2 , '0');}).join('-');
       if(this.selectDate !== selectDate){
-        this.doSearch();
+        this.searchStatusList();
         this.selectDate = selectDate;
       }
     },
@@ -335,7 +360,7 @@ export default{
         return false;
       }
       var data = {
-        bookTime:this.selectDate,
+        bookTime:this.selectDate + ' 20:00:00',
         orderNum:this.seatData.myNumber,
         userNum:this.seatData.myNumber,
         orderType:this.seatData.isSelected?'table':'normal',

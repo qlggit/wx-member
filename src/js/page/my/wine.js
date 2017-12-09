@@ -61,6 +61,7 @@ export default{
     }
   },
   created:function(){
+    WY.autoVueObj = this;
     var that = this;
     this.swiperHeight = WY.clientHeight - WY.getScaleSize(202);
     WY.oneReady('user-info',function(o){

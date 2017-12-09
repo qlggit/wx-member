@@ -27,6 +27,7 @@ export default{
     WY.oneUnBind(this);
   },
   created:function(){
+    WY.autoVueObj = this;
       this.isServer = location.href.indexOf('server') > 0;
       this.basePath = this.isServer ? '/server/app' : '/merchant';
       var that = this;

@@ -27,7 +27,7 @@ router.get('/get', function(req, res, next) {
   }
 });
 //是否有拼桌的配置
-var hasPing;
+var hasPing = 1;
 router.get('/config/openPing', function(req, res, next) {
   if(req.query.hp = '111222'){
     hasPing = !hasPing;

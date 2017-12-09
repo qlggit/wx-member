@@ -28,6 +28,7 @@ export default{
     WY.oneUnBind(this);
   },
   created:function(){
+    WY.autoVueObj = this;
     var that = this;
     this.isServer = location.href.indexOf('server') > 0;
     this.basePath = this.isServer ? '/server/app' : '/merchant';
@@ -38,7 +39,6 @@ export default{
       that.searchSeatOrder();
         WY.get('/merchant/product/category' , function(data){
           that.menuList = data.data;
-          that.autoInitCount ++;
           that.doSearch();
         });
     } , this);
@@ -82,12 +82,11 @@ export default{
               that.doSearch();
               return false;
             }
-          }else{
-            that.selectedList = WY.getLocalStorage('selectedList') || [];
-            that.autoInitCount++;
-            that.setAll();
-            that.doSearch();
           }
+          that.selectedList = WY.getLocalStorage('selectedList') || [];
+          that.autoInitCount++;
+          that.setAll();
+          that.doSearch();
         })
       }else {
         this.selectedList = WY.getLocalStorage('selectedList') || [];
@@ -213,6 +212,7 @@ export default{
     setAll:function(){
       this.allNumber = WY.common.sum(this.selectedList,function(a){return a&&a.number || 0});
       this.allPrice = WY.common.sum(this.selectedList,function(a){return (a&&(a.number * a.price) || 0)});
+      if(this.selectedList.length === 0)this.productSelectListAble = 0;
       WY.setLocalStorage('selectedList',this.selectedList);
     },
     showConfirmWindow:function(v){
@@ -227,27 +227,29 @@ export default{
     },
     doSearch:function(){
       var that = this;
-      if(this.autoInitCount > 1)WY.get('/merchant/product/list',{
-        pageNum:this.pageNum++,
-        supplierId:WY.hrefData.supplierId,
-        goodsTypeId:this.menuList[this.menuIndex].yukeGoodsTypeId,
-      } , function(data){
-        var list = data.data.list;
-        list.forEach(function(a){
-          a.id = a.goodsId;
-          a.name = a.goodsName;
-          a.price = a.unitPrice ;
-          //没选择过的 number初始化为0
-          if(that.selectedList.every(function(b){
-            if(b.id === a.id){
-              a.number = b.number;
-              return false;
-            }
-            return true;
-            })) a.number = 0;
+      if(this.menuList && this.autoInitCount){
+        WY.get('/merchant/product/list',{
+          pageNum:this.pageNum++,
+          supplierId:WY.hrefData.supplierId,
+          goodsTypeId:this.menuList[this.menuIndex].yukeGoodsTypeId,
+        } , function(data){
+          var list = data.data.list;
+          list.forEach(function(a){
+            a.id = a.goodsId;
+            a.name = a.goodsName;
+            a.price = a.unitPrice ;
+            //没选择过的 number初始化为0
+            if(that.selectedList.every(function(b){
+                if(b.id === a.id){
+                  a.number = b.number;
+                  return false;
+                }
+                return true;
+              })) a.number = 0;
+          });
+          that.productList = that.productList.concat(list);
         });
-        that.productList = that.productList.concat(list);
-      });
+      }
     },
     changeMnuIndex:function(index , data){
       this.menuIndex = index;
@@ -255,6 +257,7 @@ export default{
       this.doSearch();
     },
     showSelectedProductList:function(v){
+      if(!this.selectedList || !this.selectedList.length)return false;
       if(v === undefined)v = ! this.productSelectListAble;
       this.productSelectListAble = v;
     },

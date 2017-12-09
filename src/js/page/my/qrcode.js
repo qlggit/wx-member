@@ -24,11 +24,12 @@ export default{
     WY.oneUnBind(this);
   },
   created:function(){
+    WY.autoVueObj = this;
     var that = this;
     this.qrcodeWidth = WY.getScaleSize(402);
     WY.oneReady('user-info',function(o){
       that.userInfo = o;
-      that.qrcodeUrl = 'http://www.baidu.com';
+      that.qrcodeUrl = 'http://wx.yukew.com/spread/'+o.userId.split('_')[0];
     } , this);
   },
   methods:{

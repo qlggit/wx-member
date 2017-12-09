@@ -12,13 +12,13 @@
     </div>
     <div class="flex-left width-50-100 margin-auto cursor-pointer" >
       <span @click="chooseDateType=2" class="checkbox mr-10" :class="chooseDateType==2?'active':''" ></span>
-      <span @click="chooseDateType=2" class="choose-text mr-10">区间</span>
+      <span @click="chooseDateType=2" class="choose-text mr-10">{{dateData.isOne?'时间':'区间'}}</span>
       <div class="fz-28 mr-10 choose-text flex-left" @click="doSelectDate('chooseStartDate')">
         <span class=" mr-08">{{dateData.chooseStartDate}}</span>
         <img src="/images/ico/down.png" class="width-22 height-14" alt="">
       </div>
-      <div class="mr-10">-</div>
-      <div class="fz-28 choose-text flex-left" @click="doSelectDate('chooseEndDate')">
+      <div v-if="!dateData.isOne" class="mr-10">-</div>
+      <div v-if="!dateData.isOne" class="fz-28 choose-text flex-left" @click="doSelectDate('chooseEndDate')">
         <span class=" mr-08">{{dateData.chooseEndDate}}</span>
         <img src="/images/ico/down.png" class="width-22 height-14" alt="">
       </div>

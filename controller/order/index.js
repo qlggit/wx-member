@@ -33,6 +33,15 @@ router.get('/info',function(req, res, next) {
     }
   });
 });
+router.get('/list',function(req, res, next) {
+  useRequest.send(req , res , {
+    url:useUrl.order.list,
+    data:req.query,
+    done:function(data){
+      res.useSend(data);
+    }
+  });
+});
 router.get('/infoBySeat',function(req, res, next) {
   useRequest.send(req , res , {
     url:useUrl.order.infoBySeat,

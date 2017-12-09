@@ -32,6 +32,8 @@ module.exports = {
         myInfo:apiUrl + '/api/seat/v_1/orderInfo',
         detail:apiUrl + '/api/seat/v_1/orderDetailList',
         cancel:apiUrl + '/api/seat/v_1/cancelSeat',
+
+        pzlist:apiUrl + '/api/seat/v_1/pzRecordLs',
     },
     seatInfo:{
         list:apiUrl + '/api/seat/v_1/listSeat',
@@ -40,11 +42,17 @@ module.exports = {
         add:apiUrl + '/api/seat/v_1/addSeat',
         edit:apiUrl + '/api/seat/v_1/editSeat',
 
-        lock:apiUrl + '/api/seat/v_1/editSeat',
-        lockList:apiUrl + '/api/seat/v_1/editSeat',
+        lock:apiUrl + '/api/mgrSeat/v_1/lockSeat',
+        lockCancel:apiUrl + '/api/mgrSeat/v_1/lockCancel',
+        lockList:apiUrl + '/api/mgrSeat/v_1/lowCostList',
 
-        money:apiUrl + '/api/seat/v_1/editSeat',
-        moneyList:apiUrl + '/api/seat/v_1/editSeat',
+        money:apiUrl + '/api/mgrSeat/v_1/setAct',
+        moneyCancel:apiUrl + '/api/mgrSeat/v_1/cancelAct',
+        moneyList:apiUrl + '/api/seat/v_1/actList',
+
+        book:apiUrl + '/api/seat/v_1/book',
+        bookCancel:apiUrl + '/api/mgrSeat/v_1/bookCancel',
+        bookList:apiUrl + '/api/seat/v_1/bookList',
     },
     file:{
         upload:threeUrl + '/upload',
@@ -56,6 +64,7 @@ module.exports = {
     order:{
         add:apiUrl + '/api/shopping/v_1/orderGoods',
         info:apiUrl + '/api/shopping/v_1/orderDetail',
+        list:apiUrl + '/api/shopping/v_1/list',
         infoBySeat:apiUrl + '/api/shopping/v_1/orderGoodsInfo',
         cancel:apiUrl + '/api/shopping/v_1/cancel',
     },

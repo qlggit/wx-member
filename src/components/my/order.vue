@@ -41,7 +41,7 @@
           <div class="pt-24 pb-24 flex-right pr-26 width-auto">
               <div
                    class="btn btn-lt back-24 btn-auto color-white mr-20 "
-                   v-router-link="'/merchant/product?seatId='+item.seatId+'&seatOrderNo='+item.seatOrderNo">继续购买</div>
+                   v-router-link="'/merchant/product?seatId='+item.seatId+'&seatOrderNo='+item.seatOrderNo+'&supplierId='+item.supplierId">继续购买</div>
               <div v-if="item.payStatus !== 'ALREADY_PAY'"
                    class="btn btn-lt back-24 btn-auto color-white mr-20"
                    v-router-link="'/merchant/pay?seatId='+item.seatId+'&seatOrderNo='+item.seatOrderNo+'&orderNo='+item.orderNo">去支付</div>

@@ -9,6 +9,7 @@ export default{
     WY.oneUnBind(this);
   },
   created:function(){
+    WY.autoVueObj = this;
     var that = this;
     WY.oneReady('user-info',function(o){
       that.userInfo = o;

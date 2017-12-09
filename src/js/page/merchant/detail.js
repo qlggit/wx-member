@@ -19,6 +19,7 @@ export default{
     WY.oneUnBind(this);
   },
   created:function(){
+    WY.autoVueObj = this;
     this.merchantId = WY.hrefData.merchantId;
     var that = this;
     WY.oneReady('user-info',function(o){
