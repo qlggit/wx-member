@@ -3,20 +3,19 @@ var router = express.Router();
 router.get('/entrance', function(req, res, next) {
     req.session.openId = req.query.openid;
     req.session.unionid = req.query.unionid || req.query.openid;
-    console.log('entrance');
-    console.log('spreadUserId' , req.session.spreadUserId);
-    if(req.session.userInfo && req.session.userInfo.userId){
-      return res.useRedirect('/' );
-    }
     var query = req.query;
+    req.session.wechatData = req.query;
     useSession.save(req , res , function(){
+         if(req.session.spreadUserId){
+           return res.useRedirect(req.session.callback || '/');
+         }
           var sendData = {
             openId :query.openid,
             nickname   :query.nickname,
             headImg    :query.headimgurl,
-            deviceType:'H5',
+            deviceType:'mp',
             gender :query.gender  || query.sex,
-            stype :'weixin',
+            sType :'weixin',
             uid:req.session.unionid,
           };
           useRequest.send(req , res , {
@@ -33,17 +32,69 @@ router.get('/entrance', function(req, res, next) {
           });
     });
 });
-router.get('/spread/:userId', function(req, res, next) {
-    req.session.spreadUserId = req.params.userId;
+router.get('/entrance/new', function(req, res, next) {
+    req.session.openId = req.query.openid;
+    req.session.unionid = req.query.unionid || req.query.openid;
+    var query = req.query;
+    req.session.wechatData = req.query;
     useSession.save(req , res , function(){
-      res.redirect(useConfig.get('wechatLoginUrl'));
+         if(req.session.spreadUserId){
+           return res.useRedirect(req.session.callback || '/');
+         }
+          var sendData = {
+            openId :query.openid,
+            nickname   :query.nickname,
+            headImg    :query.headimgurl,
+            deviceType:'mp',
+            gender :query.gender  || query.sex,
+            sType :'weixin',
+            uid:req.session.unionid,
+          };
+          useRequest.send(req , res , {
+            url:useUrl.login.login,
+            data:sendData,
+            method:'POST',
+            done:function(data){
+              if(data.code === 0){
+                useData.setUserInfo(req , res , data , function(){
+                  res.useRedirect(req.session.callback || '/');
+                })
+              }else res.useSend('授权登录失败');
+            }
+          });
     });
 });
 router.get('/login', function(req, res, next) {
+   req.session.callback = req.headers.referer || req.session.callback;
+  useSession.save(req , res , function(){
     if(req.session.userInfo && req.session.userInfo.userId){
-        return res.useRedirect('/' );
+      return res.useRedirect('/');
     }
-    res.redirect(useConfig.get('wechatLoginUrl'));
+    var wechatLoginUrl = useConfig.get('wechatLoginUrl');
+    var remoteAddress = req.remoteAddress;
+    if(remoteAddress.indexOf('192') > -1){
+      wechatLoginUrl += '&host=' + useConfig.get('hostname');
+    }
+    console.log(wechatLoginUrl);
+    res.redirect(wechatLoginUrl);
+  });
+
+});
+router.get('/login/h5', function(req, res, next) {
+   req.session.callback = req.headers.referer || req.session.callback;
+  useSession.save(req , res , function(){
+    if(req.session.userInfo && req.session.userInfo.userId){
+      return res.useRedirect('/');
+    }
+    var wechatLoginUrl = useConfig.get('wechatLoginUrl');
+    var remoteAddress = req.remoteAddress;
+    if(remoteAddress.indexOf('192') > -1){
+      wechatLoginUrl += '&host=' + useConfig.get('hostname');
+    }
+    console.log(wechatLoginUrl);
+    res.redirect(wechatLoginUrl);
+  });
+
 });
 router.post('/jssdk', function(req, res, next) {
   useRequest.send(req , res , {

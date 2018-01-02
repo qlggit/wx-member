@@ -78,9 +78,14 @@ Vue.directive('scroll-top',{
 });
 Vue.directive('book-seat',{
   inserted:function(el , binding){
-    var merchantId = binding.value;
+    var data =  binding.value;
+    var merchantId = data.merchantId;
+    var isServer = data.isServer;
     el.onclick = function(event){
       var url = '/merchant/book?merchantId='+merchantId;
+      if(isServer){
+        url = WY.common.addUrlParam('/server/app/book',WY.hrefData)
+      }
       vueRouter.push(url);
       event.stopPropagation();
     }
@@ -117,9 +122,9 @@ Vue.directive('sms-send',{
           sendType:arg,
           phone:phone
         },function(a){
-          if(a.code == 0){
+          if(a.code === 0){
             el.isSmsSending = 1;
-            smsTimer(el , 60 , function(){
+            el.smsTimer = smsTimer(el , 60 , function(){
               el.isSmsSending = 0;
             });
           }else{
@@ -129,6 +134,9 @@ Vue.directive('sms-send',{
       }
       event.stopPropagation();
     }
+  },
+  unbind:function(){
+    el.smsTimer && el.smsTimer.die();
   }
 });
 Vue.directive('scan-code',{
@@ -170,5 +178,10 @@ Vue.directive('diff-time',{
     } , speed);
   },unbind:function(el){
     clearInterval(el.diffTimer);
+  }
+});
+Vue.directive('ele-insert',{
+  inserted:function(el , binding){
+    WY.trigger('ele-insert',el , binding);
   }
 });

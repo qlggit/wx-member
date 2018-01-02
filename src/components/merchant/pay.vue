@@ -4,7 +4,7 @@
     <header-component v-if="!isServer" :header-data="{title:name}"></header-component>
     <div class="pt-20" v-if="showAble">
       <div class="back-242">
-        <div class="fz-30 pt-26 pb-26 pl-24 mt-20 flex-between border-t-233">
+        <div class="fz-30 pt-26 pb-26 pl-24 pr-24 mt-20 flex-between border-t-233">
             <div class="title color-24">订购详情</div>
             <div class="color-104">{{supplierName}}</div>
         </div>
@@ -16,7 +16,7 @@
             <div>{{deductibleAmount?('可抵扣'+deductibleAmount.turnMoney()) :('最低消费'+(seatData.lowCostAmount.turnMoney()))}}</div>
           </div>
           <div v-for="item in selectedList" class="pay-item border-t-233">
-            <img :src="item.img | imgUrlFilter" class="img border-rad-100" alt="">
+            <img :src="item.headImg | imgUrlFilter" class="img border-rad-100" alt="">
             <div class="flex-right">
               <div class="text ">{{item.name}}</div>
               <div class="num ">数量:{{item.number}}</div>

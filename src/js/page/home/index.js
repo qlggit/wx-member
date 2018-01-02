@@ -32,6 +32,7 @@ export default{
     WY.autoVueObj = this;
     var that = this;
     WY.oneReady('user-info',function(o){
+
     } , this);
     WY.oneBind('club-search',function(o){
         that.clubSearchAble = o;
@@ -92,6 +93,7 @@ export default{
       },function(a){
         a.data.forEach(function(a){
           a.img = a.bannerUrl;
+          a.filePath = a.bannerUrl;
         });
         that.swiperList = a.data;
       });

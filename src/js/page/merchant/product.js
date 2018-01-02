@@ -227,11 +227,12 @@ export default{
     },
     doSearch:function(){
       var that = this;
+      if(this.searchXhr){}
       if(this.menuList && this.autoInitCount){
-        WY.get('/merchant/product/list',{
+        this.searchXhr = WY.get('/merchant/product/list',{
           pageNum:this.pageNum++,
           supplierId:WY.hrefData.supplierId,
-          goodsTypeId:this.menuList[this.menuIndex].yukeGoodsTypeId,
+          goodsTypeId:this.menuList[this.menuIndex].yukeGoodsTypeId || this.menuList[this.menuIndex].goodsTypeId,
         } , function(data){
           var list = data.data.list;
           list.forEach(function(a){

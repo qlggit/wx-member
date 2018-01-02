@@ -7,7 +7,7 @@ function putSession(newSession){
   session.apiImgUrl = localStorage.apiImgUrl || '';
   session.debug = localStorage.debug || '';
   session.hasPing = localStorage.hasPing || '';
-  session.userInfo = newSession.userInfo;
+  session.userInfo = newSession.userInfo || newSession;
   session.sanfangs = newSession.sanfangs;
   session.tokenModel = newSession.tokenModel;
   session.threeToken = newSession.threeToken;
@@ -16,21 +16,25 @@ function putSession(newSession){
     WY.ready('token-complete',session.tokenInfo);
     return false;
   }
+  // if(location.href.indexOf('h5') > 0){
+  //   session.wechatData = newSession.wechatData || session.wechatData || WY.common.parse( localStorage.wechatData);
+  //   if(!session.wechatData){
+  //     location.href = '/in/h5?callback=' + encodeURIComponent(location.pathname);
+  //   }
+  //   else WY.ready('h5-user-info',session.wechatData);
+  //   return false;
+  // }
   if(session.sessionId){
     WY.ready('session-complete',session);
-  }else{
-    wechatLogin();
   }
+  if(!session.unionid)wechatLogin();
   if(session.userInfo){
     session.userInfo.headImgUrl = session.userInfo.headImg;
     session.userInfo.nickName = session.userInfo.nickname;
+    session.userInfo.userName = session.userInfo.mobile || session.userInfo.userName;
     WY.ready('user-info',session.userInfo);
-    if(!session.userInfo.userName){
-      if(localStorage.hasEditSex){
-        vueRouter.push('/login/phone');
-      }else{
-        vueRouter.push('/login/info');
-      }
+    if(location.href.indexOf('h5') ===-1 && !session.userInfo.userName){
+      vueRouter.push('/login/phone');
     }
   }
 }
@@ -39,6 +43,7 @@ function putStorage(session){
   localStorage.openId = session.openId || localStorage.openId || '';
   localStorage.unionid = session.unionid || session.openId || localStorage.unionid || '';
   localStorage.userId = session.userInfo && session.userInfo.userId || localStorage.userId || '';
+  localStorage.wechatData = JSON.stringify(session.wechatData);
 }
 function login(sts){
   if(!session.userId || !session.unionid){
@@ -69,8 +74,14 @@ function getSession(){
       putSession(a.session);
   },{needAbort:0});
 }
+var postXhr;
 function loginFlush(){
-  WY.post('/login',{userId:session.userId},function(a){
+  if(postXhr)postXhr.abort();
+  postXhr = WY.post('/login/info',{
+    userId:session.userId,
+    openid:session.openId,
+    unionid:session.unionid,
+  },function(a){
     if(a.code === 0){
       putStorage(a.data);
       putSession(a.data);
@@ -80,6 +91,11 @@ function loginFlush(){
   },{needAbort:0})
 }
 WY.bind('request-status-error',function(status){
+  if(status === 401){
+    login(1);
+  }
+});
+WY.bind('request-complete',function(status){
   if(status === 401){
     login(1);
   }
@@ -101,6 +117,11 @@ session.isOwnerProp = function(key , val){
 };
 session.getBackUrl = function(){
   return session.threeToken && session.threeToken.backUrl;
+};
+session.set = function(session){
+  putStorage(session);
+  putSession(session);
+  WY.ready('user-info',session.userInfo || session);
 };
 WY.setLocalStorage = function(key , data){
   localStorage[key] = WY.common.stringify(data);

@@ -5,7 +5,6 @@ mySvg.create = function(){
 };
 mySvg.prototype = {
   create:function(e , options , svgData){
-    console.log('svg create ' , e , options.autoHeight);
     options = options || {};
     var ele = document.createElementNS("http://www.w3.org/2000/svg",e);
     if(options.attr){
@@ -45,6 +44,7 @@ mySvg.prototype = {
   add:function(e,options,svgData){
     var ele = this.create(e,options,svgData);
     ele.svgOptions = options;
+    ele.svgData = svgData;
     this.push(ele , options.parent);
     return ele;
   },
@@ -70,8 +70,8 @@ function seatSvg(options){
   this.headImgSvg = [];
   this.svg = options.svg;
   this.scale = 1;
-  this.minScale = .5;
-  this.maxScale = 3;
+  this.minScale = .05;
+  this.maxScale = 1;
   this.clientWidth = this.svg.parentElement.clientWidth ;
   this.clientHeight = this.svg.parentElement.clientHeight;
   this.allWidth = this.options.width;
@@ -236,22 +236,23 @@ seatSvg.prototype = {
     var parentEvent = this.svg.parentElement;
     var that = this;
     parentEvent.addEventListener('mousewheel' , function(e){
-      that.setScale(e.deltaY , e.pageX, e.pageY);
+      that.addScale(e.deltaY>0?-.1:.1  , e.pageX, e.pageY);
     } , false);
     parentEvent.addEventListener('dbclick' , function(e){
-      that.setScale(1, e.pageX, e.pageY);
+      that.addScale(.2, e.pageX, e.pageY);
     } , false);
     var isMouseDown,autoX,autoY,marginLeft,marginTop;
     var touchLength;
     this.bind('mousedown touchstart' ,parentEvent,function(e){
       isMouseDown = true;
+      that.cancelScale();
       if(e.targetTouches){
         if(e.targetTouches.length === 2){
           touchLength = that.getTouchLength(e.targetTouches[0],e.targetTouches[1]);
           return false;
         }
         e = e.targetTouches[0];
-        that.addScale(e.pageX,e.pageY);
+        that.addTimer = setInterval(that.addTimerScale.bind(that , e.pageX , e.pageY) , 600);
       }
       autoX = e.pageX ;
       autoY = e.pageY ;
@@ -265,7 +266,7 @@ seatSvg.prototype = {
           if(e.targetTouches.length === 2){
             var newTouchLength = that.getTouchLength(e.targetTouches[0],e.targetTouches[1]);
             var touchCenter = that.getTouchCenter(e.targetTouches);
-            that.setScale(newTouchLength - touchLength , touchCenter.x, touchCenter.y);
+            that.addScale((newTouchLength - touchLength) / touchLength , touchCenter.x, touchCenter.y);
             touchLength = newTouchLength;
             return false;
           }
@@ -321,13 +322,11 @@ seatSvg.prototype = {
     }
     this.svg.style.marginLeft = mt + 'px';
   },
-  addScale:function(x , y){
-    this.doScaleTimer = setTimeout(function(){
-      this.setScale(1 , x , y);
-    }.bind(this),600);
+  addTimerScale:function(x , y){
+      this.addScale(.1 , x , y);
   },
   cancelScale:function(){
-    clearTimeout(this.doScaleTimer);
+    clearTimeout(this.addTimer);
   },
   getTouchCenter:function(e){
     return {
@@ -343,21 +342,21 @@ seatSvg.prototype = {
       ele.addEventListener(a , func , false);
     })
   },
-  setScale:function(sts , x , y){
+  addScale:function(scale , x , y){
     x-= this.parentOffset.left;
     y-= this.parentOffset.top;
-    var autoScale = this.scale;
-    var scale = (this.scale + (sts>0?.1:-.1)).toFixed(1)-0;
+    scale += this.scale;
     if(scale < this.minScale || scale > this.maxScale)return false;
     this.scale = scale;
-    this.allWidth = this.options.width * scale;
-    this.allHeight = this.options.height * scale;
-    var ml =  x - parseFloat(this.svg.style.marginLeft || 0);
-    var mt =  y - parseFloat(this.svg.style.marginTop || 0);
-    this.svg.style.width = this.allWidth + 'px';
-    this.svg.style.height = this.allHeight + 'px';
-    this.svg.style.marginLeft = x - ml * scale / autoScale    + 'px';
-    this.svg.style.marginTop = y - mt * scale / autoScale   + 'px';
+    // this.allWidth = this.options.width * scale;
+    // this.allHeight = this.options.height * scale;
+    // var ml =  x - parseFloat(this.svg.style.marginLeft || 0);
+    // var mt =  y - parseFloat(this.svg.style.marginTop || 0);
+    // this.svg.style.width = this.allWidth + 'px';
+    // this.svg.style.height = this.allHeight + 'px';
+    // this.svg.style.marginLeft = x - ml * scale / this.autoScale    + 'px';
+    // this.svg.style.marginTop = y - mt * scale / this.autoScale   + 'px';
+    this.svg.style.transform = 'scale('+(scale).toFixed(2)+')';
   },
   addRoom:function(svgData){
     return this.svgObj.add('image',{

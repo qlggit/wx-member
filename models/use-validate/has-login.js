@@ -9,6 +9,9 @@ module.exports = function(req , res , next){
             redirectUrl:redirectUrl
         });
     }else{
+      req.session.callback = req.baseUrl + req.url;
+      useSession.save(req , res , function(){
         res.useRedirect(redirectUrl);
+      });
     }
 };

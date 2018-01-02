@@ -83,6 +83,7 @@ export default{
                 name:a.goodsName,
                 number:a.quantity,
                 price:a.unitPrice,
+                headImg:a.headImg,
                 allPrice:a.unitPrice * a.quantity,
               };
             });

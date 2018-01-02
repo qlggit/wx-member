@@ -16,6 +16,8 @@ WY.bind('wx-jssdk',function(){
           'scanQRCode',
           'openLocation',
           'closeWindow',
+          'onMenuShareTimeline',
+          'onMenuShareAppMessage',
         ]
       });
     }
@@ -34,8 +36,11 @@ WY.bind('location-error-wgs84',function(){
 });
 var hasGetLocation;
 wx.ready(function(){
-  if(!hasGetLocation)WY.trigger('get-location');
-  hasGetLocation = 1;
+  WY.ready('user-info' , function(){
+    if(!hasGetLocation)WY.trigger('get-location');
+    hasGetLocation = 1;
+  });
+  WY.ready('wx-ready');
 });
 WY.bind('get-location' , function(){
   //res.latitude , res.longitude

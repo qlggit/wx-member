@@ -18,6 +18,7 @@ WY.oneBind = function(type , func , oneObj){
 };
 WY.oneUnBind = function(oneObj){
   oneObj = oneObj || WY.autoVueObj;
+  WY.autoVueObj = null;
   var vueWyHandler = oneObj.vueWyHandler;
   if(vueWyHandler){
     vueWyHandler.forEach(function(a){
@@ -26,8 +27,9 @@ WY.oneUnBind = function(oneObj){
   }
 };
 
-WY.bind('get-auto-data' , function(key){
-  console.log(WY.autoVueObj && WY.autoVueObj[key]);
+WY.bind('get-auto-data' , function(key , done){
+  var o = WY.autoVueObj && WY.autoVueObj[key];
+  done && done(o);
 });
 var abortXhr = [];
 WY.bind('router-change' , function(){

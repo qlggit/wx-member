@@ -25,13 +25,13 @@
              <div class="fz-30">{{item.name}}</div>
             <img v-if="item.img" :src="item.img" class="width-100 height-100" alt="">
              <div class="width-30-100">
-               <div class="btn btn-sm border-24 position-relative">
+               <div class="btn btn-sm border-24 position-relative cursor-pointer">
                  上传
-                 <input :data-index="index" class="position-full width-40-100 position-absolute opacity-0" type="file" @change="fileChange">
+                 <input :data-index="index" name="filename" class="position-full width-40-100 position-absolute opacity-0" type="file" @change="fileChange">
                </div>
              </div>
           </div>
-          <div class="btn back-24 color-white mt-48" @click="doSubmitImg">提交</div>
+          <div class="btn back-24 color-white mt-48 cursor-pointer" @click="doSubmitImg">提交</div>
       </div>
     </div>
   </div>

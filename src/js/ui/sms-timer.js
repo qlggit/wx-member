@@ -7,16 +7,17 @@ function dateTimer(ele , time , call){
 }
 dateTimer.prototype = {
   timer:function(){
-    console.log(this.allTime);
     this.ele.value = this.allTime + '秒后发送';
-    this.allTime --;
     if(this.allTime <= 0){
-      console.log('timer done');
       this.ele.value = this.oldHtml;
       this.call();
     }else{
-      setTimeout(this.timer.bind(this),1000);
+      this.timeout = setTimeout(this.timer.bind(this),1000);
     }
+    this.allTime --;
+  },
+  die:function(){
+    clearTimeout(this.timeout);
   }
 };
 export  default function(ele , time , call){

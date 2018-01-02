@@ -13,6 +13,7 @@ export default{
       activity:'',
       showInfo:'',
       headFile:'',
+      isServer:0,
     }
   },
   beforeDestroy:function(){
@@ -21,31 +22,26 @@ export default{
   created:function(){
     WY.autoVueObj = this;
     this.merchantId = WY.hrefData.merchantId;
+    this.isServer = location.href.indexOf('server') > 0;
+    this.basePath = this.isServer ? '/server/app' : '/merchant';
     var that = this;
-    WY.oneReady('user-info',function(o){
-
+    WY.oneReady(this.isServer?'token-complete':'user-info',function(o){
+      WY.get('/merchant/detail/info',{
+        supplierId:that.merchantId
+      } , function(data){
+        data = data.data;
+        that.activity = data.actFile;
+        that.showInfo = data.envFile;
+        that.lvl = data.supplierStar;
+        that.headFile = data.headFile;
+        that.name = data.supplierName;
+        that.latitude = data.gpsDimension;
+        that.longitude = data.gpsLongitude;
+        that.address = data.supplierAddr;
+        that.remark = data.companyProfile;
+      });
     } , this);
-    WY.get('/merchant/detail/listAll',{
-      supplierId:this.merchantId
-    } , function(data){
-      data = data.data;
-      that.headerBanner = data[0];
-      that.activity = data[1];
-      that.showInfo = data[2];
 
-    });
-    WY.get('/merchant/detail/info',{
-      supplierId:this.merchantId
-    } , function(data){
-      data = data.data;
-      that.lvl = data.supplierStar;
-      that.headFile = data.headFile;
-      that.name = data.supplierName;
-      that.latitude = data.gpsDimension;
-      that.longitude = data.gpsLongitude;
-      that.address = data.supplierAddr;
-      that.remark = data.companyProfile;
-    });
   },
   methods:{
     headMenuClick:function(index){

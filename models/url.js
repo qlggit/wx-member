@@ -1,5 +1,5 @@
 var apiUrl = useConfig.get('apiUrl') ;
-var threeUrl = useConfig.get('threeUrl') ;
+var h5Api = useConfig.get('h5Api') ;
 module.exports = {
     sms:{
         send:apiUrl + '/api/sms/v_1/send',
@@ -9,7 +9,10 @@ module.exports = {
       login:apiUrl + '/api/user/v_1/login',
       check:apiUrl + '/api/user/v_1/selectSanfangByUuid',
       info:apiUrl + '/api/user/v_1/infoById',
+      infoByUid:apiUrl + '/api/user/v_1/infoByuId',
+      infoByUserId:apiUrl + '/api/user/v_1/infoByuserId',
       build:apiUrl + '/api/user/v_1/bindPhone',
+      bindUser:apiUrl + '/api/user/v_1/bindUser',
     },
     merchant:{
         banner:apiUrl + '/api/banner/v_1/getBannerList',
@@ -44,21 +47,21 @@ module.exports = {
 
         lock:apiUrl + '/api/mgrSeat/v_1/lockSeat',
         lockCancel:apiUrl + '/api/mgrSeat/v_1/lockCancel',
-        lockList:apiUrl + '/api/mgrSeat/v_1/lowCostList',
+        lockList:apiUrl + '/api/mgrSeat/v_1/lockList',
 
-        money:apiUrl + '/api/mgrSeat/v_1/setAct',
-        moneyCancel:apiUrl + '/api/mgrSeat/v_1/cancelAct',
-        moneyList:apiUrl + '/api/seat/v_1/actList',
+        money:apiUrl + '/api/mgrSeat/v_1/setLowcost',
+        moneyCancel:apiUrl + '/api/mgrSeat/v_1/lowcostCancel',
+        moneyList:apiUrl + '/api/mgrSeat/v_1/lowcostList',
 
-        book:apiUrl + '/api/seat/v_1/book',
-        bookCancel:apiUrl + '/api/mgrSeat/v_1/bookCancel',
-        bookList:apiUrl + '/api/seat/v_1/bookList',
+        book:apiUrl + '/mgr/orders/offline/v_1/add',
+        bookCancel:apiUrl + '/mgr/orders/offline/v_1/cancel',
+        bookList:apiUrl + '/mgr/orders/offline/v_1/list',
     },
     file:{
-        upload:threeUrl + '/upload',
+        upload:h5Api + '/file/upload',
     },
     product:{
-        list:apiUrl + '/api/goods/v_1/list',
+        list:apiUrl + '/mgr/goods/v_1/list',
         category:apiUrl + '/api/goods/v_1/listGoodsType',
     },
     order:{
@@ -66,7 +69,7 @@ module.exports = {
         info:apiUrl + '/api/shopping/v_1/orderDetail',
         list:apiUrl + '/api/shopping/v_1/list',
         infoBySeat:apiUrl + '/api/shopping/v_1/orderGoodsInfo',
-        cancel:apiUrl + '/api/shopping/v_1/cancel',
+        cancel:apiUrl + '/api/seat/v_1/cancelSeat',
     },
     city:{
         patent:apiUrl + '/api/area/v_1/list',
@@ -74,5 +77,8 @@ module.exports = {
     },
     pay:{
         do:apiUrl + '/api/pay/v_1/pay'
+    },
+    wine:{
+        merchantList:apiUrl + '/api/wine/v_1/mySuppliers'
     },
 };

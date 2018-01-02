@@ -4,19 +4,9 @@ var router = express.Router();
 router.get('/index',useValidate.threeLogin, function(req, res, next) {
     res.useRender('index');
 });
-router.get('/money/list',useValidate.threeLogin.check, function(req, res, next) {
+router.post('/lockCancel',useValidate.threeLogin.check, function(req, res, next) {
   useRequest.send(req , res , {
-    url:useUrl.seatInfo.moneyList,
-    data:req.query,
-    done:function(a){
-      res.useSend(a);
-    }
-  });
-});
-router.post('/lock',useValidate.threeLogin.check, function(req, res, next) {
-  req.body.lockType = 'part';
-  useRequest.send(req , res , {
-    url:useUrl.seatInfo.lock,
+    url:useUrl.seatInfo.lockCancel,
     method:'POST',
     data:req.body,
     notBody:1,
@@ -25,9 +15,20 @@ router.post('/lock',useValidate.threeLogin.check, function(req, res, next) {
     }
   });
 });
-router.post('/lockCancel',useValidate.threeLogin.check, function(req, res, next) {
+router.post('/moneyCancel',useValidate.threeLogin.check, function(req, res, next) {
   useRequest.send(req , res , {
-    url:useUrl.seatInfo.lockCancel,
+    url:useUrl.seatInfo.moneyCancel,
+    data:req.body,
+    method:'POST',
+    notBody:1,
+    done:function(a){
+      res.useSend(a);
+    }
+  });
+});
+router.post('/bookCancel',useValidate.threeLogin.check, function(req, res, next) {
+  useRequest.send(req , res , {
+    url:useUrl.seatInfo.moneyCancel,
     method:'POST',
     data:req.body,
     notBody:1,
@@ -46,8 +47,43 @@ router.get('/lock/list',useValidate.threeLogin.check, function(req, res, next) {
   });
 });
 router.get('/book/list',useValidate.threeLogin.check, function(req, res, next) {
+  req.query.pageNum = 1;
+  req.query.pageSize = 100;
+  var all = [];
+  all.push(new Promise(function(rev , rej){
+    useRequest.send(req , res , {
+      url:useUrl.seatOrder.info,
+      data:req.query,
+      done:function(a){
+        if(a.code === 0){
+          rev(a.data.list || a.data);
+        }else rej();
+      }
+    });
+  }));
+  all.push(new Promise(function(rev , rej){
+    useRequest.send(req , res , {
+      url:useUrl.seatInfo.bookList,
+      data:req.query,
+      done:function(a){
+        if(a.code === 0){
+          rev(a.data.list || a.data);
+        }else rej();
+      }
+    });
+  }));
+  Promise.all(all).then(function(v){
+    v[0] && v[0].forEach(function(a){
+      a.online = 1;
+    });
+    res.sendSuccess(v[0].concat(v[1]));
+  }).catch(function(){
+    res.useSend({});
+  });
+});
+router.get('/money/list',useValidate.threeLogin.check, function(req, res, next) {
   useRequest.send(req , res , {
-    url:useUrl.seatOrder.info,
+    url:useUrl.seatInfo.moneyList,
     data:req.query,
     done:function(a){
       res.useSend(a);
@@ -56,7 +92,31 @@ router.get('/book/list',useValidate.threeLogin.check, function(req, res, next) {
 });
 router.post('/book',useValidate.threeLogin.check, function(req, res, next) {
   useRequest.send(req , res , {
-    url:useUrl.seatOrder.add,
+    url:useUrl.seatInfo.book,
+    method:'POST',
+    data:req.body,
+    done:function(a){
+      res.useSend(a);
+    }
+  });
+});
+router.post('/lock',useValidate.threeLogin.check, function(req, res, next) {
+  req.body.lockType = 'part';
+  useRequest.send(req , res , {
+    url:useUrl.seatInfo.lock,
+    method:'POST',
+    data:req.body,
+    notBody:1,
+    done:function(a){
+      res.useSend(a);
+    }
+  });
+});
+
+router.post('/money',useValidate.threeLogin.check, function(req, res, next) {
+  req.body.setType = 'part';
+  useRequest.send(req , res , {
+    url:useUrl.seatInfo.money,
     method:'POST',
     data:req.body,
     notBody:1,
@@ -88,17 +148,6 @@ router.post('/edit',useValidate.threeLogin.check, function(req, res, next) {
     res.sendSuccess({});
   }).catch(function(a){
     res.useSend(a);
-  });
-});
-router.post('/money',useValidate.threeLogin.check, function(req, res, next) {
-  useRequest.send(req , res , {
-    url:useUrl.seatInfo.money,
-    method:'POST',
-    data:req.body,
-    notBody:1,
-    done:function(a){
-      res.useSend(a);
-    }
   });
 });
 exports.router = router;

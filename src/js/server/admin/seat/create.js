@@ -5,23 +5,24 @@ export default{
     return {
       userInfo:'',
       showAble:0,
-      colorList:[255,197,85,0],
+      colorList:[255,197,85,0,200,201,140,126,133],
       autoBackList:[
         {
           name:'背景图',
           code:'back',
-          img:'http://ozczd6usr.bkt.clouddn.com/FrzoN1p-3lHax-nl9f8THrp_Dzh-',
+          img:'http://p0bkr7y6k.bkt.clouddn.com/1513760500257-639f3d00-e564-11e7-b17d-016dbf6b8ec4.png',
         },
         {
           name:'效果图',
           code:'main',
-          img:'http://ozczd6usr.bkt.clouddn.com/FpT6AmkAsYw4UIeXW0Yk83L0amQ3',
+          img:'http://p0bkr7y6k.bkt.clouddn.com/1513761136742-df232710-e565-11e7-b17d-016dbf6b8ec4.png',
         }
       ],
       backImg:'',
       selectSeat:'',
       svgBackData:'',
       hasAutoSeatData:'',
+      xyColor:[140]
     }
   },
   beforeDestroy:function(){
@@ -120,7 +121,7 @@ export default{
           }) , a.data[1] && a.data[1].length , function(){
             if(a.data[1] && a.data[1].length){
               var itemList = a.data[1].map(function(a){
-                return that.makeItem(a.seatShape - 0,{
+                return that.makeItem(a.seatShape,{
                   left:a.seatX - 0,
                   top:a.seatY - 0
                 } , a);
@@ -172,10 +173,23 @@ export default{
     makeItem:function(color , offset , autoData){
       var data = {svgData:autoData || {}};
       var svgData = data.svgData;
-      switch (color){
-        case 255:
-        case 197:
-        case 85:
+      if(this.xyColor.indexOf(color - 0) > -1){
+        if(offset.width > offset.height){
+          color+='x';
+        }else{
+          color+='y';
+        }
+      }
+      switch (color+''){
+        case '255':
+        case '197':
+        case '85':
+        case '126':
+        case '200':
+        case '201':
+        case '133':
+        case '140x':
+        case '140y':
           data.type = 'room';
           svgData.backImg = '/images/seat/table-'+color+'-able.png';
           svgData.type = 'room';
@@ -186,7 +200,7 @@ export default{
           svgData.seatType    = 'seat';
           svgData.seatTypeName  = '座位';
           break;
-        case 0:
+        case '0':
           data.type = 'table';
           svgData.backImg = '/images/seat/room-'+color+'-able.png';
           svgData.type = 'table';
@@ -210,13 +224,13 @@ export default{
       var fileEle = e.target;
       if(fileEle.value){
         var data = {
-          file:fileEle.files[0]
+          filename:fileEle.files[0]
         };
         var index = e.target.dataset.index;
         var that = this;
         WY.postFile('/file/api' , data , function(a){
-          if(a.status === true){
-            that.autoBackList[index].img = a.data.path;
+          if(a.code - 0 === 10000 || a.code === 0){
+            that.autoBackList[index].img = a.data.filePath;
           }else{
             WY.toast('上传失败');
           }

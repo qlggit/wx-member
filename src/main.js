@@ -19,14 +19,7 @@ router.beforeEach(function(to , from , next){
     return false;
   }
   var beforeHref = location.href;
-  if(from.path.indexOf('pay-complete') > -1){
-    WY.trigger('bridge-setup' , {
-      type:'PayComplete'
-    },doNext);
-  }
-  else{
-    doNext();
-  }
+  doNext();
   function doNext(){
     next();
     WY.trigger('router-change-after',{
@@ -37,6 +30,7 @@ router.beforeEach(function(to , from , next){
 
 });
 router.afterEach(function(to , from ){
+  WY.trigger('router-after');
 });
 new Vue({
   el: '#app',

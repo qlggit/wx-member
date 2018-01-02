@@ -4,9 +4,9 @@ module.exports = {
         var sendData;
         if(typeof sendData !== 'object'){
           sendData = options.data;
-
         }else{
           sendData = Object.assign({} , options.data);
+          if(!sendData.ip)sendData.ip = req.remoteAddress
         }
         var method = options.method || 'GET';
         var headers = options.headers || {};
@@ -41,9 +41,14 @@ module.exports = {
                     message:'系统繁忙'
                 }
             }
+          console.log(body);
             if(body){
               body.baseCode = body.code;
-              if(body.code == 10000){
+              if(body.code - 0 === 10002){
+                res.status(401).end();
+                return false;
+              }
+              if(body.code - 0 === 10000){
                 body.code = 0;
               }
               if(body.result && !body.data){
@@ -51,7 +56,6 @@ module.exports = {
                 delete body.result;
               }
             }
-            console.log(body);
             options.done(body || {code:1,msg:'系统异常'});
         });
     },

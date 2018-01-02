@@ -34,6 +34,9 @@
         that.cancelText = options.cancelText || '取消';
         that.submitText = options.submitText || '确定';
       });
+      WY.bind('router-after' , function(){
+        that.showAble = false;
+      });
     },
     methods:{
       doSubmit:function(v){

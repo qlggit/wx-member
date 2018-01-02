@@ -33,7 +33,6 @@ require('./base.js');
 require('./prop.js');
 require('./handler.js');
 require('./vue.js');
-require('./router.js');
 require('./jq.js');
 require('./window.js');
 require('./request.js');

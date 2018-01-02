@@ -22,6 +22,7 @@ export default{
       WY.get('/my/order/list' , {
         pageNum:1,
         pageSize:100,
+        startDate:WY.common.parseDate(new Date,'Y-m-d').startTime(),
       } , function(a){
         that.orderList = a.data.list.filter(function(a){
           if(a.status === 'cancel')return false;
@@ -54,15 +55,17 @@ export default{
       WY.confirm({
         content:'确定取消当前订单？',
         done:function(v){
-          if(v)WY.post('/order/seat/cancel' , {
-            orderNo:orderNo,
-          } , function(a){
-            if(a.code === 0){
-              that.doSearch();
-            }else{
-              WY.toast(a.message);
-            }
-          });
+          if(v){
+            WY.post('/order/cancel' , {
+              orderNo:orderNo,
+            } , function(a){
+              if(a.code === 0){
+                that.doSearch();
+              }else{
+                WY.toast(a.message);
+              }
+            });
+          }
         }
       })
     }

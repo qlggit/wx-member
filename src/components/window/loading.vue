@@ -17,6 +17,9 @@
       WY.bind('loading',function(sts){
         that.showAble = sts!==0 && sts !==false;
       });
+      WY.bind('router-after' , function(){
+        that.showAble = false;
+      });
     }
   }
 </script>

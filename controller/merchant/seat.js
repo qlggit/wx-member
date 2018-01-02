@@ -16,9 +16,7 @@ router.get('/data',function(req, res, next) {
     useRequest.send(req , res , {
       url:useUrl.seatInfo.backImg,
       tokenInfo:req.headers.tokenInfo,
-      data:{
-        supplierId:req.query.supplierId
-      },
+      data:req.query,
       done:function(a){
         rev(a.data);
       }
@@ -29,9 +27,7 @@ router.get('/data',function(req, res, next) {
     useRequest.send(req , res , {
       url:useUrl.seatInfo.list,
       tokenInfo:req.headers.tokenInfo,
-      data:{
-        supplierId:req.query.supplierId
-      },
+      data:req.query,
       done:function(a){
         rev(a.data);
       }
@@ -73,7 +69,7 @@ router.get('/statusData',function(req, res, next) {
           pageSize:200,
         },
         done:function(data){
-          rev(data && data.data && data.data.list);
+          rev(data && data.data && (data.data.list || data.data));
         }
       });
     }))

@@ -2,13 +2,14 @@
 module.exports = {
     "port":3001,
   debug:1,
-    uploadPath:'build/upload',
+  showImgUrl:'http://127.0.0.1:3001',
+    uploadPath:'upload',
+    hostname:'192.168.1.119',
     // apiUrl:'http://192.168.1.245:4200',
-    apiUrl:'http://192.168.1.117:8012',
-    threeUrl:'http://47.100.20.78:8080',
-    apiImgUrl:'http://192.168.1.245:8080',
-    wechatLoginUrl:'http://47.100.20.78:3002/wechat/entrance/test?port=3001',
-    wechatJssdkUrl:'http://47.100.20.78:3002/wechat/jssdk/test?prot=3001',
+    apiUrl:'http://192.168.1.122:8012',
+    h5Api:'http://127.0.0.1:3002',
+    wechatLoginUrl:'http://h5.yukew.com/wechat/entrance/test?port=3001',
+    wechatJssdkUrl:'http://h5.yukew.com/wechat/jssdk/test?prot=3001',
     "log4js":{
         "customBaseDir" :"/logs/",
         "customDefaultAtt" :{

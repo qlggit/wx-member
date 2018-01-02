@@ -6,32 +6,12 @@ router.post('/send', function(req, res, next) {
      data:{
        sendType:req.body.sendType || 'BINDING',
        phone:req.body.phone,
-       ip:req.remoteAddress,
+       ip:req.remoteAddress
      },
      method:'POST',
      notBody:1,
-     done:function(){
-       res.send({
-         code:(Math.random()>.5)-0
-       })
-     }
-   })
-});
-router.post('/check', function(req, res, next) {
-   useRequest.send(req , res , {
-     url:useUrl.sms.check,
-     data:{
-       sendType:req.body.sendType || 'BINDING',
-       phone:req.body.phone,
-       sendCode:req.body.smsCode,
-       ip:req.remoteAddress,
-     },
-     method:'POST',
-     notBody:1,
-     done:function(){
-       res.send({
-         code:(Math.random()>.5)-0
-       })
+     done:function(a){
+       res.useSend(a)
      }
    })
 });

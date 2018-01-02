@@ -33,11 +33,11 @@ if(!Object.assign)Object.assign = function(a , b){
   }
 };
 prop(String , 'startTime' , function( time){
-  if(this.length > '0000-00-00'.length)return this + '';
+  if(this.length > 10)return this + '';
   return this + (time || ' 00:00:00');
 });
 prop(String , 'endTime' , function( time){
-  if(this.length > '0000-00-00'.length)return this + '';
+  if(this.length > 10)return this + '';
   return this + (time || ' 23:59:59');
 });
 prop(Array , 'find' , function(func){

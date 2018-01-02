@@ -1,10 +1,12 @@
 //admin 1234yqs_admin
 module.exports = {
-  debug:0,
-    apiUrl:'http://47.100.20.78:8012',
-    threeUrl:'http://47.100.20.78:8080',
-  wechatLoginUrl:'http://47.100.20.78:3002/wechat/entrance/test3001',
-  wechatJssdkUrl:'http://47.100.20.78:3002/wechat/jssdk/test3001',
+    debug:0,
+    showImgUrl:'http://wx.yukew.com',
+    apiUrl:'http://172.19.56.132:4200',
+    h5Api:'http://h5.yukew.com',
+    wechatLoginUrl:'http://h5.yukew.com/wechat/entrance/wxmember',
+    wechatLoginH5Url:'http://h5.yukew.com/wechat/entrance/wxh5',
+    wechatJssdkUrl:'http://h5.yukew.com/wechat/jssdk/wxmember',
     "log4js":{
         "customBaseDir" :"../logs/wx-member/",
         "customDefaultAtt" :{

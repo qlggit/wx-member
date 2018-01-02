@@ -8,11 +8,28 @@ export default{
     return {
       showThisWindow:0,
       menuIndex:0,
+      seatStatusList:[
+        {
+          name:'空位',
+          img:'/images/merchant/book-sts-1.png'
+        },
+        {
+          name:'锁定',
+          img:'/images/merchant/book-sts-2.png'
+        },
+        {
+          name:'拼桌',
+          img:'/images/merchant/book-sts-3.png'
+        },
+        {
+          name:'已订',
+          img:'/images/merchant/book-sts-4.png'
+        }
+      ],
       menuList:[{name:'详情'},{name:'锁定列表',type:'lock'},{name:'最低消费','type':'money'},{name:'订桌列表','type':'book'}],
       userInfo:'',
       showAble:0,
       hasBackImg:0,
-      backImg:'',
       seatItemList:'',
       selectSeat:[],
       nowDate:'',
@@ -34,19 +51,30 @@ export default{
       showOperatorWindow:0,
       operatorType:'',
       infoData:'',
+      countData:{
+        orderNum:0,
+        orderAmount:0,
+      },
       changeData:{
         lowCostAmount:'',
-        orderNum:'',
-        bookPhone:'',
+        customerNum :'',
+        customerPhone :'',
+        customerName:'',
+        remark:'',
       },
-      totalMoney:0
+      totalMoney:0,
+      maxSeatHeight:0,
+      autoItemList:[],
     }
   },
   beforeDestroy:function(){
     WY.oneUnBind(this);
   },
   created:function(){
+    WY.autoVueObj = this;
     var that = this;
+    this.maxSeatHeight = WY.clientHeight - WY.getScaleSize(1040);
+    if(this.maxSeatHeight < 100)this.maxSeatHeight = 100;
     this.chooseStartDate = this.chooseEndDate = this.bookDate = this.autoDate = this.nowDate = WY.common.parseDate(new Date , 'Y-m-d');
     this.chooseDateData = {startDate:this.nowDate,selectDate:this.nowDate,title:'请选择日期'};
     WY.oneReady('user-info',function(o){
@@ -60,17 +88,23 @@ export default{
   },
   methods:{
     showOperator:function(type){
-      this.changeData.orderNum = 1;
-      this.changeData.bookPhone = '';
+      this.menuIndex = 0;
+      this.changeData.customerNum = 1;
+      this.changeData.customerPhone = '';
+      this.changeData.customerName = '';
+      this.changeData.remark = '';
       this.operatorType = type;
       if(type === 'info'){
         this.infoData = {
           seatName:this.selectSeat[0].seatName,
           locCount:this.selectSeat[0].locCount,
           lowCostAmount:this.selectSeat[0].lowCostAmount,
-        }
+        };
         this.showThisWindow = 1;
         return;
+      }
+      if(this.selectSeat.length === 1){
+        this.changeData.lowCostAmount = this.selectSeat[0].lowCostAmount;
       }
       this.operatorTypeName = ({
         book:'订桌',
@@ -87,7 +121,7 @@ export default{
       var that = this  , sendData , url;
       var operatorType = this.operatorType;
       var selectSeat = this.selectSeat;
-      var seatId = this.selectSeat.map(function(a){return a.yukeSupplierSeatId}).join();
+      var seatId = this.selectSeat.map(function(a){return a.seatId}).join();
       var startDate,endDate;
       if(this.chooseDateType === 0){
         startDate = this.nowDate.startTime();
@@ -130,19 +164,25 @@ export default{
           break;
         case 'book':
           url = '/server/merchant/seat/book';
-          sendData = {
-            seatId:seatId,
-            startDate:startDate,
-            endDate:endDate,
-          };
+          sendData = WY.common.copyProp(this.changeData,{
+            customerName :'',
+            customerNum  :'',
+            customerPhone   :'',
+            remark    :'',
+          });
+          sendData.bookTime = this.chooseStartDate.startTime(' 20:00:00');
+          sendData.seatId  = seatId ;
           break;
       }
       sendData.supplierId = WY.hrefData.supplierId;
       WY.post(url , sendData , function(a){
         if(a.code === 0){
+          if(that[operatorType + 'List']){
+            that[operatorType + 'List'] = [];
+          }
           if(operatorType === 'info'){
             if(selectSeat.length === 1){
-              selectSeat.seatName = that.infoData.seatName;
+              selectSeat[0].seatName = that.infoData.seatName;
             }
             selectSeat.forEach(function(a){
               a.locCount = that.infoData.locCount;
@@ -219,13 +259,13 @@ export default{
                 }
                 else if(i === 2){
                   //最低消费
-                  itemOne.lowCostAmount = statusOne.lowCostAmount;
+                  itemOne.lowCostAmount = statusOne.amount;
                 }else if(i === 3){
                   //线下订桌
                   itemOne.isSelected = 1;
                 }else{
                   //拼桌
-                  if(o.isAgree ==='y'){
+                  if(statusOne.isAgree ==='y'){
                     itemOne.allGroup++;
                   }
                 }
@@ -254,16 +294,16 @@ export default{
         var svgData = data.svgData;
         //被锁定的
         if(!svgData.selectAble && !svgData.isSelected){
-          svgData.backImg = svgData.autoBackImg + '-my.png';
+          svgData.backImg += '-selected.png';
         }else if(!svgData.tableAble){
           //不可拼桌的
-          svgData.backImg = svgData.autoBackImg + '-selected.png';
+          svgData.backImg += '-my.png';
         }else if(svgData.isSelected){
           //正在拼桌的
-          svgData.backImg = svgData.autoBackImg + '-ping.png';
+          svgData.backImg += '-ping.png';
         }else{
           //空白的
-          svgData.backImg = svgData.autoBackImg + '-able.png';
+          svgData.backImg += '-able.png';
         }
       })
     },
@@ -283,54 +323,37 @@ export default{
           });
       });
     },
-    doShowBack:function(call){
-      var count = 0;
+    makeBackImg:function(backImg , call){
+      if(this.svgBackData) return call();
+      var img = new Image;
+      img.src = backImg;
       var that = this;
-      this.backImg.forEach(function(a){
-        var img = new Image;
-        img.src = a.img;
-        count++;
-        img.onload = function(){
-          count--;
-          if(a.code === 'back'){
-            that.hasBackImg = 1;
-            that.svgBackData = {
-              img:a.img,
-              backWidth:img.width,
-              backHeight:img.height,
-            }
-          }
-          if(count === 0){
-            call && call();
-          }
-        }
-      });
+      img.onload = function(){
+        that.svgBackData = {
+          img:backImg,
+          backWidth:img.width,
+          backHeight:img.height,
+        };
+        call();
+      }
     },
     searchBack:function(){
       var that = this;
+      WY.ready('set-svg-list',[]);
       WY.get('/merchant/seat/data',
         {
           supplierId:WY.hrefData.supplierId,
+          queryDate:this.autoDate,
         }
         ,function(a){
         if(a.data[0] && a.data[0].length){
-          that.backImg = a.data[0].map(function(b,i){
-            return {
-              code:b.supplierFileType === 'seat_per'?'main':'back',
-              img:b.filePath
-            };
-          });
-          that.doShowBack(function(){
-            if(a.data[1] && a.data[1].length){
-              var itemList = a.data[1].map(function(a){
-                return that.makeItem(a.seatShape - 0,{
-                  left:a.seatX - 0,
-                  top:a.seatY - 0
-                } , a);
-              });
-              that.autoItemList = itemList;
-              that.searchStatusList();
-            }
+          var itemList = [];
+          that.makeBackImg(a.data[0].filter(function(a){return a.supplierFileType==='seat_black'}).pop().filePath , function(){
+            a.data[1].forEach(function(d){
+              itemList.push(that.makeSvgItem(d));
+            });
+            that.autoItemList = itemList;
+            that.searchStatusList();
             that.showAble = 1;
           });
         }
@@ -360,6 +383,7 @@ export default{
       this.selectSeat = newList;
     },
     svgClick:function(e , type , data){
+      console.log(data);
       if(type === 'svg'){
         return false;
       }
@@ -395,48 +419,47 @@ export default{
       WY.get('/server/merchant/seat/'+type+'/list',{
         supplierId:WY.hrefData.supplierId,
         seatId:this.selectSeat[0].seatId,
-        startDate:this.nowDate,
+        startDate:this.nowDate.startTime(),
       },function(a){
         that[type + 'List'] = a.data && a.data.list || a.data;
       })
     },
-    makeItem:function(color , offset , autoData){
-      var data = {svgData:autoData || {}};
-      var svgData = data.svgData;
-      switch (color){
-        case 255:
-        case 197:
-        case 85:
-          data.type = 'room';
-          svgData.autoBackImg = '/images/seat/table-'+color;
-          svgData.type = 'room';
-          svgData.locCount = svgData.locCount || 8;
-          svgData.seatName  = svgData.seatName || '座位';
-          svgData.seatShape   = color;
-          svgData.seatType    = 'seat';
-          svgData.seatTypeName  = '座位';
-          break;
-        case 0:
-          data.type = 'table';
-          svgData.autoBackImg = '/images/seat/room-'+color;
-          svgData.type = 'table';
-          svgData.locCount = svgData.locCount || 15;
-          svgData.seatName  = svgData.seatName || '包间';
-          svgData.seatShape   = color;
-          svgData.seatType    = 'room';
-          svgData.seatTypeName    = '包间';
-          break;
-      }
-      svgData.allGroup = 0;
-      svgData.lowCostAmount /= 100;
-      svgData.seatId = svgData.seatId || svgData.yukeSupplierSeatId;
-      svgData.tableAble = 1;
-      svgData.selectAble = svgData.seatStatus !== 'lock';
-      svgData.x = svgData.seatX  = offset.left - 0;
-      svgData.y = svgData.seatY = offset.top - 0;
-      svgData.width = offset.width - 0;
-      svgData.height = offset.height - 0;
-      svgData.supplierId = WY.hrefData.supplierId;
+    makeSvgItem:function(d){
+      var type = ({
+        seat:'table',
+        room:'room'
+      })[d.seatType];
+      var img = '/images/seat/'+({
+        table:'table',
+        room:'room'
+      })[type] + '-' +  d.seatShape;
+      var data = {
+        type:type,
+        svgData:{
+          backImg:img,
+          headImg:'',
+          type:type,
+          seatType:d.seatType,
+          x:d.seatX - 0,
+          y:d.seatY - 0,
+          seatStatus :d.seatStatus ,
+          seatId:d.yukeSupplierSeatId || a.seatId,
+          orderNo:d.orderNo,
+          seatShape:d.seatShape,
+          seatName:d.seatName ,
+          lowCostAmount:d.lowCostAmount,
+          locCount:d.locCount ,
+          isSelected:d.seatStatus === 'selected',
+          selectAble:d.seatStatus !=='lock',
+          isMe:0,
+          hasMe:0,
+          tableAble:1,
+          hadCount:d.hadCount || 0 ,
+          allGroup:0,
+          myNumber:1,
+          addAble:1,
+        }
+      };
       return data;
     },
     onValuesChange:function(v){
@@ -447,11 +470,29 @@ export default{
       this.selectDateType = type;
       this.dateVisible = 1;
     },
+    delOne:function(type , item){
+      var that = this;
+      WY.post('/server/merchant/seat/'+type+'Cancel',{
+        supplierId:item.supplierId,
+        seatId:item.seatId,
+        ordersOfflineId:item.ordersOfflineId,
+        startDate:WY.common.parseDate(item.setTime,'Y-m-d 00:00:00'),
+        endDate:WY.common.parseDate(item.setTime,'Y-m-d 23:59:59'),
+        setType :'part',
+        lockType :'part',
+      },function(a){
+        WY.toast(a.message);
+        if(a.code === 0){
+          that[type + 'List'] = [];
+          that.searchOneList(type , that.menuIndex);
+        }
+      });
+    }
   },
   watch:{
     autoDate:function(v , o){
       if(o){
-        this.doSearch();
+        this.searchStatusList();
       }
     }
   }

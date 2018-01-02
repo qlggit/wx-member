@@ -74,6 +74,10 @@ module.exports = {
 
             //404处理 找不到的页面返回首页
             app.use(function(req, res){
+              if(!req.session.tokenModel && !/MicroMessenger/.test(req.headers['user-agent'])){
+                res.send('下载页面');
+                return false;
+              }
                 res.useRender('index');
             });
 

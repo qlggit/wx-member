@@ -1,9 +1,15 @@
 var express = require('express');
 var router = express.Router();
-
 router.get('/info', function(req, res, next) {
-  res.send({
-    data:req.session.userInfo
+  var sendData = {
+    userId:req.query.userId,
+  };
+  useRequest.send(req , res , {
+    url:useUrl.login.infoByUserId,
+    data:sendData,
+    done:function(data){
+      res.send(data);
+    }
   });
 });
 exports.router = router;

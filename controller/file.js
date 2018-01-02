@@ -1,17 +1,16 @@
 var express = require('express');
 var router = express.Router();
-router.post('/upload',function(req , res , next){
-    req.fileDate = useCommon.parseDate(new Date , 'Ymd');
-    next();
-},useMulter.file(),function(req, res, next) {
-    console.log(req.file);
-    req.file.showUrl = useMulter.getShowUrl(req.file.filename ,'/'+req.fileDate);
+router.post('/upload',useMulter.file(),function(req, res, next) {
+    req.file.showUrl = useMulter.getShowUrl(req.file.filename);
     res.useSend({
         code:0,
-        file:req.file
+        data:req.file
     });
 });
 router.post('/api',function(req , res , next){
+    req.pipe(useRequest.request(useUrl.file.upload)).pipe(res);
+});
+router.post('/video',function(req , res , next){
     req.pipe(useRequest.request(useUrl.file.upload)).pipe(res);
 });
 exports.router = router;

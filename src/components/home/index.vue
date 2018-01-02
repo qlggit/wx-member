@@ -5,7 +5,7 @@
       <img slot="search" src="/images/search.png" @click="showClubSearch" class="right-ico" alt="">
     </header-component>
     <wy-club-search v-if="clubSearchAble"></wy-club-search>
-    <div class="pt-340 position-relative height-100-100">
+    <div class="pt-430 position-relative height-100-100">
       <div class="width-100-100 position-absolute left-0 top-0">
         <div class="head-type-menu" >
           <div v-for="(item, index) in headMenu"
@@ -20,7 +20,7 @@
       <div class="club-item-content overflow-scroll-y height-100-100" v-scroll-box="340" v-if="clubList">
         <div v-for="item in clubList" class="club-item-list">
           <div class="shadow-bottom-auto" v-merchant-detail="item.supplierId">
-            <img :src="item.img | imgUrlFilter" alt="" class="">
+            <img :src="item.headFile | imgUrlFilter" alt="" class="">
           </div>
           <div class="title">{{item.supplierName}}</div>
           <div class="text clearfix mt-20">

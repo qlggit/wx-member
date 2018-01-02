@@ -9,6 +9,7 @@ router.get('/list',function(req, res, next) {
       pageSize:10,
       supplierId:req.query.supplierId,
       goodsTypeId:req.query.goodsTypeId,
+      status:'up',
     },
     done:function(data){
       res.useSend(data);

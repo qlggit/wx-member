@@ -11,9 +11,12 @@ export default{
     WY.oneUnBind(this);
   },
   created:function(){
+    WY.autoVueObj = this;
     var that = this;
-    WY.oneReady('user-info',function(){
-
+    WY.oneReady('user-info',function(userInfo){
+      if(userInfo && (userInfo.userName || userInfo.mobile)){
+         vueRouter.push('/');
+      }
     } , this);
   },
   methods:{

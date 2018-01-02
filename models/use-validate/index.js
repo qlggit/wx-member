@@ -13,6 +13,7 @@ module.exports = {
     },
     imgCodeValidate:require('./code-validate.js'),
     hasLogin:require('./has-login.js'),
+    hasWechat:require('./has-wechat.js'),
     threeLogin:require('./three-login.js'),
     bossToken:require('./boss-token.js'),
     checkOperator:require('./check-operator'),

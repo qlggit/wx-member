@@ -21,6 +21,9 @@
           that.showAble = false;
         } , 1500);
       });
+      WY.bind('router-after' , function(){
+        that.showAble = false;
+      });
     }
   }
 </script>

@@ -1,11 +1,11 @@
 var express = require('express');
 var router = express.Router();
 router.get('/get', function(req, res, next) {
-  if(req.session.userInfo && !req.session.userInfo.userName){
+  if(req.session.userInfo && !req.session.userInfo.mobile){
     useRequest.send(req , res , {
-      url:useUrl.login.info,
+      url:useUrl.login.infoByUid,
       data:{
-        userId:req.session.userInfo.userId,
+        uId:req.session.unionid,
       },
       done:function(data){
         if(data.code === 0){

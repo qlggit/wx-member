@@ -1,5 +1,5 @@
 <template>
-  <div class="full-window back-black-08"
+  <div class="full-window back-black-05"
   :style="{zIndex:zIndex-1}">
     <div class="display-table full-window"
       :style="{zIndex:zIndex}"

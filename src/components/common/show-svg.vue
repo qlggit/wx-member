@@ -1,14 +1,18 @@
 <template>
-  <div class="width-100-100 height-100-100 overflow-hidden back-transparent cursor-pointer position-relative" @contextmenu="contextmenu">
+  <div class="width-100-100 height-100-100 overflow-hidden back-transparent cursor-pointer position-relative svg-parent-content"
+       @contextmenu="contextmenu">
       <svg class="width-100-100 height-100-100 show-svg"
            style="background-size:100% 100%;"
            :style="{
-      width:svgBackData.backWidth+'px',
-      height:svgBackData.backHeight+'px',
+      width:svgBackData.backWidth*showSale+'px',
+      height:svgBackData.backHeight*showSale+'px',
       backgroundImage:'url('+svgBackData.img+')'
       }"
            :viewBox="[0,0,svgBackData.backWidth,svgBackData.backHeight].join(' ')" ref="showSvg"></svg>
-
+      <div v-if="showContextmenu"
+           class="position-absolute z-index-100"
+        :style="windowData"
+      ></div>
   </div>
 </template>
 <script>
@@ -17,11 +21,14 @@
     props:['svgBackData'],
     data(){
       return {
+        showSale:.5,
         svgBackData:this.svgBackData,
         itemList:'',
         svgObj:'',
         svgInitCount:0,
         isSetReady:0,
+        showContextmenu:0,
+        windowData:''
       }
     },
     beforeDestroy:function(){
@@ -44,6 +51,8 @@
       };
       document.body.addEventListener('touchstart', this.touchstart);
       document.body.addEventListener('touchmove',this.touchmove);
+    },
+    mounted:function(){
       var that = this;
       WY.oneReady('set-svg-list',function(itemList){
         that.itemList = itemList;
@@ -59,6 +68,7 @@
             height:this.svgBackData.backHeight,
             svg:this.$refs.showSvg,
             itemList:this.itemList,
+            scale:this.showSale,
             click:function(e , type , data){
               that.$emit('click',e , type , data);
             }
@@ -90,10 +100,19 @@
           that.svgObj.clearSelected(svgData);
           done && done(svgData);
         } , this);
-      }
-    },
-    contextmenu:function(e){
-      e.preventDefault();
-    },
+      },
+      contextmenu:function(e){
+        var content = $('.svg-parent-content');
+        e.preventDefault();
+        var target = e.target;
+        if(target.svgData){
+          this.windowData = {
+            left:e.pageX - content.offsetLeft,
+            top:e.pageY - content.offsetTop,
+          };
+          this.showContextmenu = 1;
+        }
+      },
+    }
   }
 </script>

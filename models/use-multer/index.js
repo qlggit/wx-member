@@ -12,20 +12,7 @@ module.exports = {
         return multer({
             storage: multer.diskStorage({
                 destination: function (req, file, cb) {
-                    options.path = options.path || req.fileDate || '';
-                    var path;
-                    if(options.path){
-                        if(options.path.indexOf('/') == 0){
-                            path = options.path;
-                        }else{
-                            path = Path.join(rootPath , options.path);
-                        }
-                        fileRender.makeDir(Path.join(path, 'xx.xx'),function(){
-                            cb(null, path);
-                        });
-                    }else{
-                        cb(null, rootPath);
-                    }
+                  cb(null, rootPath);
 
                 },
                 filename: function (req, file, cb) {
@@ -34,13 +21,13 @@ module.exports = {
                     cb(null, filename);
                 }
             })
-        }).single(options.name || 'fileData');
+        }).single(options.name || 'filename');
     },
     getShowUrl:function(filename , path){
-        return useConfig.get('showImgUrl') + (path || '') + '/' + filename;
+        return useConfig.get('showImgUrl') +'/'+useConfig.get('uploadPath')+'/'+ filename;
     },
     init:function(){
-        rootPath = Path.join(__ROOT__ , useConfig.get('uploadPath'));
+        rootPath = Path.join(__ROOT__, publicDir , useConfig.get('uploadPath'));
         fileRender.makeDir(Path.join(rootPath , 'xx.xx'));
     }
 };

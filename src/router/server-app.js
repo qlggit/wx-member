@@ -2,6 +2,7 @@ import book from '@/components/merchant/book'
 import product from '@/components/merchant/product'
 import pay from '@/components/merchant/pay'
 import complete from '@/components/merchant/pay-complete'
+import detail from '@/components/merchant/detail'
 export default function(routes){
   routes.push({
     path: '/server/app/book',
@@ -22,5 +23,10 @@ export default function(routes){
     path: '/server/app/pay-complete',
     name: 'server-app-pay-complete',
     component: complete
+  });
+  routes.push({
+    path: '/server/app/merchant',
+    name: 'server-app-merchant',
+    component: detail
   });
 }

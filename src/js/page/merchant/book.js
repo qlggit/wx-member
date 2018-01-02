@@ -112,8 +112,8 @@ export default{
           headImg:'',
           type:type,
           seatType:d.seatType,
-          x:d.seatX ,
-          y:d.seatY ,
+          x:d.seatX - 0 ,
+          y:d.seatY - 0,
           seatStatus :d.seatStatus ,
           seatId:d.yukeSupplierSeatId,
           orderNo:d.orderNo,
@@ -239,7 +239,7 @@ export default{
                 }
                 else if(i === 2){
                   //最低消费
-                  itemOne.lowCostAmount = statusOne.lowCostAmount;
+                  itemOne.lowCostAmount = statusOne.amount;
                 }else if(i === 3){
                   //线下订桌
                   itemOne.selectAble = false;
@@ -250,10 +250,10 @@ export default{
                   }
                   //有我的申请
                   if(WY.session.isOwner(statusOne.userId)){
-                    if(o.isAgree ==='y'){
+                    if(statusOne.isAgree ==='y'){
                       itemOne.hasMe = 1;
                     }
-                    else if(o.isAgree ==='n'){
+                    else if(statusOne.isAgree ==='n'){
                       //被拒绝 然后无法选择
                       itemOne.tableAble = false;
                     }else{
@@ -274,6 +274,10 @@ export default{
     //解析订座订单信息
     deSeatOrder:function(orderOne , itemOne){
       if(orderOne){
+        //忽略过期的未支付订单
+        if(orderOne.payStatus !== 'ALREADY_PAY'){
+          if(new Date(orderOne.expireTime) < Date.now())return false;
+        }
         itemOne.isSelected = 1;
         itemOne.allGroup ++;
         itemOne.tableAble = orderOne.payStatus === 'ALREADY_PAY' && orderOne.tableStatus === 'y' && orderOne.pzStatus !== 'end';
@@ -327,8 +331,8 @@ export default{
     onValuesChange:function(v){
       var selectDate = v.map(function(a){return a.padStart(2 , '0');}).join('-');
       if(this.selectDate !== selectDate){
-        this.searchStatusList();
         this.selectDate = selectDate;
+        this.searchStatusList();
       }
     },
     changeTableAble:function(){

@@ -47,15 +47,17 @@
           var margin = value.margin;
           var fontSize = value.fontSize;
           if(value.list.length < 4){
-            value.list = value.list.concat(value.list,value.list,value.list).slice(0,4);
+            value.list = value.list.concat(value.list);
           }
+          var onloadCount = 0;
           value.list.forEach(function(a){
             var img = new Image;
-            img.src = a.filePath;
+            img.src = a.filePath || a.faceFile;
+            marqueeImgObject.push(img);
             img.onload = function(){
-              img.showTitle = a.name || '活动名称';
-              marqueeImgObject.push(img);
-              if(marqueeImgObject.length ===  value.list.length){
+              img.showTitle = a.actName || '活动名称';
+              onloadCount++;
+              if(onloadCount.length ===  value.list.length){
                 canvasAnimate();
               }
             }
@@ -88,7 +90,7 @@
                 ctx.fillStyle = '#131313';
                 ctx.font = fontSize + 'px Arial';
                 var fontWidth = ctx.measureText(a.showTitle).width;
-                ctx.fillText(a.showTitle,i * (itemWidth + margin) - startLeft + (itemWidth - fontWidth) / 2,height);
+                ctx.fillText(a.showTitle,i * (itemWidth + margin) - startLeft + (itemWidth - fontWidth) / 2,height - 3);
               }
             });
           }
@@ -121,6 +123,7 @@
             isStopCanvasAnimate = true;
           }
           function canvasAnimate(){
+            console.log('canvasAnimate');
             isStopCanvasAnimate = false;
             drawCanvas();
           }

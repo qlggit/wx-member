@@ -8,15 +8,20 @@ function setupWebViewJavascriptBridge(callback) {
   document.documentElement.appendChild(WVJBIframe);
   setTimeout(function() { document.documentElement.removeChild(WVJBIframe) }, 0)
 }
-
-WY.bind('bridge-setup' , function(options , call){
-  if(WY.CLIENT.wechat){
-    call && call();
+window.appServer = {};
+window.appServer.flush = function(){
+  var href = location.href;
+  var hrefData = WY.common.getHrefData(href);
+  if(hrefData.token){
+    location.href = href;
+  }else{
+    location.href = WY.common.addUrlParam(href , WY.session.tokenModel);
   }
-  else setupWebViewJavascriptBridge(function(bridge) {
-    if(bridge)bridge.callHandler(options.type, options.data || {} , function responseCallback(responseData) {
-
+};
+setupWebViewJavascriptBridge(function(bridge) {
+  if(bridge){
+    bridge.callHandler('appServerFlush', function () {
+      appServer.flush();
     });
-    else call && call();
-  })
+  }
 });

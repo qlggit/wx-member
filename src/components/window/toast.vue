@@ -23,6 +23,9 @@
           options.done && options.done();
         } , options.delay || 1000);
       });
+      WY.bind('router-after' , function(){
+        that.showAble = false;
+      });
     }
   }
 </script>
