@@ -27,6 +27,7 @@ export default{
     WY.oneUnBind(this);
   },
   created:function(){
+    WY.loading(1);
     WY.autoVueObj = this;
       this.isServer = location.href.indexOf('server') > 0;
       this.basePath = this.isServer ? '/server/app' : '/merchant';
@@ -57,6 +58,7 @@ export default{
         console.log('diffAmount -- >  '+this.diffAmount);
         console.log('payPrice -- >  '+this.payPrice);
         this.showAble = 1;
+        WY.loading(0);
       }
     },
     doSearch:function(seatOrderNo){

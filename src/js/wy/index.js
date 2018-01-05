@@ -47,6 +47,7 @@ require('./ready.js');
 require('./cache.js');
 require('./bridge.js');
 require('../ui/index');
+require('./gps.js');
 WY.bind('request-start-filter',function(options){
   options.headers = options.headers || {};
   options.headers.sessionId = options.headers.sessionId || WY.session.sessionId || '';

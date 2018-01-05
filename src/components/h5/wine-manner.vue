@@ -1,7 +1,7 @@
 <template>
   <div class="wine-manner  color-white">
     <div class="body position-relative">
-      <div class="main border-rad-10 mb-44  back-black-07">
+      <div class="main border-rad-10 mb-44  back-black-05">
         <div class="fz-40">测试你醉后是什么样子？</div>
         <div class="mt-10 pt-50">
           <div v-for="(item , index) in question" class="list fz-30">

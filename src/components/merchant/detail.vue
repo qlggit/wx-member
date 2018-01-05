@@ -6,8 +6,13 @@
         <img :src="headFile" class="width-690 swiper-img margin-auto" alt="">
       </div>
       <div class="position-relative pl-24 pr-24 pb-40">
-        <div class="merchant-title color-24"><span>{{name}}</span><wy-star :star-count="lvl"></wy-star></div>
-        <div class="merchant-address color-104 "><span class="mr-20">{{address}}</span><img src="/images/location.png" class="location-ico" alt=""></div>
+        <div class="merchant-title color-24"><span>{{name}}</span><wy-star v-if="0"  :star-count="lvl"></wy-star></div>
+        <div class="merchant-address color-104 " v-open-location="{
+              latitude:latitude,
+              longitude :longitude,
+              name:name,
+              address:address,
+            }"><span class="mr-20">{{address}}</span><img src="/images/location.png" class="location-ico" alt=""></div>
         <div v-if="0" class="btn btn-sm back-24 color-white position-absolute merchant-talk-btn">聊天室</div>
       </div>
     </div>

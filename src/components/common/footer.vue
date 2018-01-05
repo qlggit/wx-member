@@ -4,7 +4,7 @@
          @click="footerClick(index)"
          class="item"
          :class="footerIndex === index?'active':''">
-      <img :src="item.img" class="margin-auto" alt="">
+      <img :src="item.img + (footerIndex === index?'-able':'')+'.png'" class="margin-auto" alt="">
       <div class="text text-center">{{item.name}}</div>
     </div>
   </div>
@@ -18,12 +18,12 @@
           {
             name:'首页',
             url:'/',
-            img:'images/page/footer-home.png'
+            img:'images/page/footer-home'
           },
           {
             name:'我的',
             url:'/my',
-            img:'images/page/footer-my.png'
+            img:'images/page/footer-my'
           }
         ],
       };
@@ -32,10 +32,6 @@
       WY.oneUnBind(this);
     },
     created:function(){
-      var that = this;
-      WY.oneBind('router-change' , function(data){
-        that.setType(data.to.path);
-      } , this);
       this.setType(location.pathname);
     },
     methods:{
@@ -44,11 +40,12 @@
         this.footerList.every(function(a , i){
           if(a.url === path){
             that.footerIndex = i;
+            return false;
           }
+          return true;
         });
       },
       footerClick:function(index){
-        this.footerIndex = index;
         this.$router.push(this.footerList[index].url);
       }
     }

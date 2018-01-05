@@ -1,9 +1,9 @@
 var express = require('express');
 var router = express.Router();
-router.get('/list', useValidate.hasLogin, function(req, res, next) {
+router.get('/merchant', useValidate.hasLogin, function(req, res, next) {
   var data = req.query;
   useRequest.send(req , res , {
-    url:useUrl.my.seat,
+    url:useUrl.wine.merchantList,
     data:data,
     done:function(a){
       res.send(a);
@@ -12,4 +12,4 @@ router.get('/list', useValidate.hasLogin, function(req, res, next) {
 });
 exports.router = router;
 
-exports.__path = '/my/seat';
+exports.__path = '/my/wine';

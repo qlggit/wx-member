@@ -252,7 +252,8 @@ seatSvg.prototype = {
           return false;
         }
         e = e.targetTouches[0];
-        that.addTimer = setInterval(that.addTimerScale.bind(that , e.pageX , e.pageY) , 600);
+        //单个点击不做处理
+        //that.addTimer = setInterval(that.addTimerScale.bind(that , e.pageX , e.pageY) , 600);
       }
       autoX = e.pageX ;
       autoY = e.pageY ;

@@ -11,6 +11,7 @@ export default{
   created:function(){
     WY.autoVueObj = this;
     var that = this;
+    WY.loading(1);
     WY.oneReady('user-info',function(o){
       that.userInfo = o;
       that.doSearch();
@@ -19,11 +20,13 @@ export default{
   methods:{
     doSearch:function(){
       var that = this;
+      WY.loading(1);
       WY.get('/my/seat/list' , {
         pageNum:1,
         pageSize:100,
-        startDate:WY.common.parseDate(new Date , 'Y-m-d'),
+        startDate:WY.common.getStartBookTime(),
       } , function(a){
+        WY.loading(0);
         that.orderList = a.data.list.filter(function(a){
           if(a.status === 'cancel')return false;
           a.payUrl = WY.common.addUrlParam('/merchant/pay',{

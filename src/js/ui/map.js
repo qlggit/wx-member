@@ -7,12 +7,13 @@ function gcjToBd(lat , lon){
   var bd_lat = z * Math.sin(theta) + 0.006;
   return [bd_lat , bd_lon];
 }
+var isLocation;
 WY.ready('wx-location-wgs84',function(res){
-  WY.map(res.latitude , res.longitude);
+  if(!isLocation)WY.map(res.latitude , res.longitude);
+  isLocation = 1;
 });
 WY.map = function(lat , lon , type){
   //var newPoint = gcjToBd(lat , lon);
-  console.log(lat,lon);
   var myGeo = new BMap.Geocoder();
   myGeo.getLocation(new BMap.Point(lat , lon), function(result){
     console.log('BMap getLocation');

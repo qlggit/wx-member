@@ -21,12 +21,12 @@
       </div>
     </div>
     <div v-show="searchList&&searchList.length">
-      <div v-for="item in searchList" v-merchant-detail="item.id" class="search-club-list-item pr-24">
-        <img :src="item.img | imgUrlFilter" class="img" alt="">
+      <div v-for="item in searchList" v-merchant-detail="item.supplierId" class="search-club-list-item pr-24">
+        <img :src="item.headFile | imgUrlFilter" class="img" alt="">
         <div class="content">
-          <div class="title mb-20 fz-30">{{item.name}}</div>
-          <div class="mb-20 lh-0"><span class="fz-28 color-104 mr-20">评分</span><wy-star :star-count="3.5"></wy-star></div>
-          <div class="color-104 break-all fz-28 lh-35">{{item.address}}</div>
+          <div class="title mb-20 fz-30">{{item.supplierName}}</div>
+          <div v-if="0" class="mb-20 lh-0"><span class="fz-28 color-104 mr-20">评分</span><wy-star :star-count="3.5"></wy-star></div>
+          <div class="color-104 break-all fz-28 lh-35">{{item.supplierAddr}}</div>
         </div>
       </div>
     </div>
@@ -88,7 +88,7 @@
           supplierName:v,
           pageSize:5,
         } , function(a){
-          if(a.data)that.searchList = a.data.shops;
+          if(a.data)that.searchList = a.data.list;
         });
       }
     }

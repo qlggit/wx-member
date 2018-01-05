@@ -7,7 +7,7 @@ WY.toast = function(options){
   WY.trigger('toast' , options);
 };
 WY.loading = function(sts){
-  WY.trigger('loading' , sts);
+  WY.ready('loading' , sts);
 };
 WY.share = function(){
   WY.trigger('share');

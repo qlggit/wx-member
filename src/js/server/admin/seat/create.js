@@ -30,6 +30,7 @@ export default{
   },
   created:function(){
     var that = this;
+    WY.loading(1);
     WY.oneReady('user-info',function(o){
       that.userInfo = o;
     } , this);
@@ -37,6 +38,7 @@ export default{
   },
   methods:{
     doSubmit:function(){
+
       var that = this , data , sendData;
       if(that.hasAutoSeatData){
         if(!this.selectSeat){
@@ -71,16 +73,20 @@ export default{
           jsonStr:JSON.stringify(data)
         };
       }
+      WY.loading(1);
         WY.post('/server/admin/seat/'+(that.hasAutoSeatData?'edit':'add') ,sendData,function(a){
+          WY.loading(0);
+          WY.toast(a.message);
           if(a.code === 0 && !that.hasAutoSeatData){
             location.reload();
           }
-          WY.toast(a.message);
+
         })
     },
     doShowBack:function(sts , call){
       var count = 0;
       var that = this;
+      WY.loading(1);
       this.backImg.forEach(function(a){
         var img = new Image;
         img.src = a.img;
@@ -96,6 +102,7 @@ export default{
           }
           if(count === 0){
             if(!sts)that.doSetSvg(img.width,img.height);
+            WY.loading(0);
             setTimeout(function(){
               call && call();
             },100);
@@ -112,6 +119,7 @@ export default{
       WY.get('/merchant/seat/data',
         {supplierId:WY.hrefData.supplierId}
         ,function(a){
+          WY.loading(0);
         if(a.data[0] && a.data[0].length){
           that.setBackImg(a.data[0].map(function(b,i){
             return {

@@ -30,7 +30,7 @@ export default{
         if(data.code === 0){
           that.isMember = 1;
           WY.session.set(data.data);
-          if(data.data.mobile){
+          if(data.data.userInfo && data.data.userInfo.mobile){
             that.title = '欢迎使用娱客';
             that.showText = '您已经是平台用户';
             that.needPhone = false;

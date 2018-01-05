@@ -1,7 +1,7 @@
 //admin 1234yqs_admin
 module.exports = {
     "port":3001,
-  debug:1,
+  debug:0,
   showImgUrl:'http://127.0.0.1:3001',
     uploadPath:'upload',
     hostname:'192.168.1.119',

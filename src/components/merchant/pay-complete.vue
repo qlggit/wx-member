@@ -3,7 +3,7 @@
     <header-component v-if="!isServer" :header-data="{title:name,backUrl:backUrl}"></header-component>
     <div class="pt-220 text-center">
       <img :src="payImg" class="width-284" alt="">
-      <div class="pt-70 color-24 fz-32">{{name}}!</div>
+      <div class="pt-70 color-24 fz-40">{{name}}!</div>
       <div class="pt-70 flex-center ">
 
       </div>

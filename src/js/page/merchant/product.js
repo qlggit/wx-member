@@ -34,6 +34,7 @@ export default{
     this.basePath = this.isServer ? '/server/app' : '/merchant';
     this.productList = [];
     this.maxListHeight = WY.clientHeight -  WY.getScaleSize(100);
+    WY.loading(1);
     WY.oneReady(this.isServer?'token-complete':'user-info',function(o){
       that.searchOrder();
       that.searchSeatOrder();
@@ -234,6 +235,7 @@ export default{
           supplierId:WY.hrefData.supplierId,
           goodsTypeId:this.menuList[this.menuIndex].yukeGoodsTypeId || this.menuList[this.menuIndex].goodsTypeId,
         } , function(data){
+          WY.loading(0);
           var list = data.data.list;
           list.forEach(function(a){
             a.id = a.goodsId;

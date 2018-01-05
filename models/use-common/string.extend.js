@@ -124,5 +124,13 @@ module.exports = function(obj){
             url += /\?/.test(url)?'&':'?';
             return url += param;
         };
+        obj.getStartBookTime = function(){
+            var nowDay = this.parseDate(new Date , 'd');
+            var nowHour = this.parseDate(new Date , 'H');
+            if(nowHour > 12){
+              return this.parseDate(new Date , 'Y-m-d 12:00:00');
+            }
+            return this.parseDate(new Date().setDate(nowDay - 1) , 'Y-m-d 12:00:00');
+        };
     }
 };

@@ -28,7 +28,7 @@ router.post('/moneyCancel',useValidate.threeLogin.check, function(req, res, next
 });
 router.post('/bookCancel',useValidate.threeLogin.check, function(req, res, next) {
   useRequest.send(req , res , {
-    url:useUrl.seatInfo.moneyCancel,
+    url:useUrl.seatInfo.bookCancel,
     method:'POST',
     data:req.body,
     notBody:1,

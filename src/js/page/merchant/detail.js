@@ -20,6 +20,7 @@ export default{
     WY.oneUnBind(this);
   },
   created:function(){
+    WY.loading(1);
     WY.autoVueObj = this;
     this.merchantId = WY.hrefData.merchantId;
     this.isServer = location.href.indexOf('server') > 0;
@@ -29,6 +30,7 @@ export default{
       WY.get('/merchant/detail/info',{
         supplierId:that.merchantId
       } , function(data){
+        WY.loading(0);
         data = data.data;
         that.activity = data.actFile;
         that.showInfo = data.envFile;

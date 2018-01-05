@@ -42,7 +42,7 @@
               </div>
               <div class="flex-between">
                 <div class="lh-40 height-40">最低消费： ￥{{seatData.lowCostAmount | moneyFilter}}</div>
-                <div class="  lh-40 height-40">
+                <div class="  lh-40 height-40 flex-right">
                   <span class="mr-10" >人数: </span>
                   <span v-if="seatData.isTableAppling || seatData.hasMe">{{seatData.myNumber}}/{{seatData.locCount }}</span>
                   <wy-number-select v-else

@@ -1,7 +1,7 @@
 <template>
-  <div class="lh-0 inline-block number-select">
+  <div class="lh-0 flex-between number-select">
       <div v-show="numberData.number>0" class="number-ico diff inline-block text-middle" @click="changeNumber(-1)"></div>
-      <span v-show="numberData.number>0" class="text-middle inline-block fz-34 lh-40  width-40 text-center num">{{numberData.number}}</span>
+      <span class="text-middle inline-block fz-34 lh-40  width-40 text-center num">{{numberData.number||''}}</span>
       <div class="number-ico add inline-block text-middle" @click="changeNumber(1)"></div>
   </div>
 </template>

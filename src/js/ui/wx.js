@@ -26,13 +26,26 @@ WY.bind('wx-jssdk',function(){
 wx.error(function(){
   WY.trigger('location-error');
 });
+WY.openLocation = function(data){
+  var gps = wgs84togcj02(data.longitude-0,data.latitude-0);
+  wx.openLocation({
+    latitude: gps[1], // 纬度，浮点数，范围为90 ~ -90
+    longitude: gps[0], // 经度，浮点数，范围为180 ~ -180。
+    name: data.name, // 位置名
+    address:data.address, // 地址详情说明
+  });
+};
 WY.bind('location-error-wgs84',function(){
-  if(WY.session.debug - 0){
+  if(/127|192/.test(location.href)){
     WY.ready('wx-location-wgs84',{
       longitude:29.56301,
       latitude:106.551557
     });
   }
+});
+WY.bind('location-error' , function(){
+  WY.trigger('location-error-wgs84');
+  WY.trigger('location-error-gcg02');
 });
 var hasGetLocation;
 wx.ready(function(){
@@ -44,25 +57,33 @@ wx.ready(function(){
 });
 WY.bind('get-location' , function(){
   //res.latitude , res.longitude
+  if(localStorage.gcj02Res){
+    WY.ready('wx-location-gcg02', WY.common.parse(localStorage.gcj02Res));
+    return false;
+  }
   wx.getLocation({
     type: 'gcj02',
     success: function (res) {
-      WY.ready('wx-location-gcg02',res);
+      localStorage.gcj02Res = JSON.stringify(res);
+      WY.ready('wx-location-gcg02', res);
     },
     fail:function(){
-      WY.trigger('location-error-gcg02');
       WY.trigger('location-error');
     }
   });
 });
 WY.bind('get-location' , function(){
+  if(localStorage.wgs84Res){
+    WY.ready('wx-location-wgs84', WY.common.parse(localStorage.wgs84Res));
+    return false;
+  }
   wx.getLocation({
     type: 'wgs84',
     success: function (res) {
-      WY.ready('wx-location-wgs84',res);
+      localStorage.wgs84Res = JSON.stringify(res);
+      WY.ready('wx-location-wgs84', res);
     },
     fail:function(){
-      WY.trigger('location-error-wgs84');
       WY.trigger('location-error');
     }
   });

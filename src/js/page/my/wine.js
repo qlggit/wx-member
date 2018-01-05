@@ -11,20 +11,7 @@ export default{
           this.headIndex = swiper.realIndex
         }
       },
-      placeList: [
-        {
-          id:1,
-          name:'A酒吧'
-        },
-        {
-          id:2,
-          name:'B酒吧'
-        },
-        {
-          id:3,
-          name:'C酒吧'
-        },
-      ],
+      placeList: '',
       placeIndex: 0,
       autoPlace:{
         id:4,
@@ -64,12 +51,29 @@ export default{
     WY.autoVueObj = this;
     var that = this;
     this.swiperHeight = WY.clientHeight - WY.getScaleSize(202);
+    WY.loading(1);
     WY.oneReady('user-info',function(o){
       that.userInfo = o;
+      that.searchPlace();
     } , this);
   },
   methods:{
     doSearch:function(){
+    },
+    searchPlace:function(){
+      var that = this;
+      $.get('/my/wine/merchant',{
+        pageNum:1,
+        pageSize:10
+      },function(a){
+        WY.loading(0);
+        that.placeList = a.data.list.map(function(a){
+          return {
+            id:a.supplierId,
+            name:a.supplierName ,
+          }
+        })
+      })
     },
     selectPlace:function(index){
       this.placeIndex = index;

@@ -141,15 +141,15 @@ input:focus {
   margin-right: .06rem;
 }
 .number-ico {
-  width: .4rem;
-  height: .4rem;
+  width: .36rem;
+  height: .36rem;
   background-size: 100% 100%;
 }
 .number-ico.add {
-  background-image: url(/images/page/add.png);
+  background-image: url(/images/ico/plus.png);
 }
 .number-ico.diff {
-  background-image: url(/images/page/diff.png);
+  background-image: url(/images/ico/reduce.png);
 }
 .location-ico {
   width: .18rem;
@@ -951,6 +951,8 @@ div::-webkit-scrollbar {
   padding-bottom: .14rem;
 }
 .page-footer .item {
+  padding-left: .5rem;
+  padding-right: .5rem;
   height: 100%;
   line-height: 0;
   text-align: center;
@@ -1417,11 +1419,8 @@ div::-webkit-scrollbar {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.number-select span {
-  margin-left: -0.06rem;
-}
-.number-select .add {
-  margin-left: -0.06rem;
+.number-select {
+  width: 1.3rem;
 }
 .svg-img {
   background-size: 100% 100%;
@@ -1727,6 +1726,7 @@ div::-webkit-scrollbar {
   border-left: 0.08rem solid #181818;
   color: #181818;
   font-size: .32rem;
+  background: white;
 }
 .product-main .item {
   height: 1.75rem;
@@ -1832,10 +1832,10 @@ div::-webkit-scrollbar {
   width: 2.8rem;
 }
 .pay-content .pay-item .num {
-  width: 1.40rem;
+  width: 1.10rem;
 }
 .pay-content .pay-item .price {
-  width: 1.40rem;
+  width: 1.70rem;
   text-align: right;
 }
 .pay-content .pay-item .title {

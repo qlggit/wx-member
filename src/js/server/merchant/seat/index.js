@@ -11,19 +11,19 @@ export default{
       seatStatusList:[
         {
           name:'空位',
-          img:'/images/merchant/book-sts-1.png'
+          img:'/images/merchant/book-sts-empty.png'
         },
         {
           name:'锁定',
-          img:'/images/merchant/book-sts-2.png'
+          img:'/images/merchant/book-sts-lock.png'
         },
         {
           name:'拼桌',
-          img:'/images/merchant/book-sts-3.png'
+          img:'/images/merchant/book-sts-ping.png'
         },
         {
           name:'已订',
-          img:'/images/merchant/book-sts-4.png'
+          img:'/images/merchant/book-sts-fill.png'
         }
       ],
       menuList:[{name:'详情'},{name:'锁定列表',type:'lock'},{name:'最低消费','type':'money'},{name:'订桌列表','type':'book'}],
@@ -71,6 +71,7 @@ export default{
     WY.oneUnBind(this);
   },
   created:function(){
+    WY.loading(1);
     WY.autoVueObj = this;
     var that = this;
     this.maxSeatHeight = WY.clientHeight - WY.getScaleSize(1040);
@@ -118,6 +119,7 @@ export default{
         WY.toast('请先选择一个座位');
         return false;
       }
+      WY.loading(1);
       var that = this  , sendData , url;
       var operatorType = this.operatorType;
       var selectSeat = this.selectSeat;
@@ -176,6 +178,7 @@ export default{
       }
       sendData.supplierId = WY.hrefData.supplierId;
       WY.post(url , sendData , function(a){
+        WY.loading(0);
         if(a.code === 0){
           if(that[operatorType + 'List']){
             that[operatorType + 'List'] = [];
@@ -273,6 +276,7 @@ export default{
             })
           }
         });
+        WY.loading(0);
         that.setImg(itemList);
         WY.ready('set-svg-list',itemList);
       });
@@ -440,6 +444,7 @@ export default{
           headImg:'',
           type:type,
           seatType:d.seatType,
+          seatTypeName:d.seatType==='seat'?'桌子':'包房',
           x:d.seatX - 0,
           y:d.seatY - 0,
           seatStatus :d.seatStatus ,
@@ -492,6 +497,7 @@ export default{
   watch:{
     autoDate:function(v , o){
       if(o){
+        WY.loading(1);
         this.searchStatusList();
       }
     }

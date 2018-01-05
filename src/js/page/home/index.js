@@ -22,6 +22,7 @@ export default{
       pageNum:1,
       selectedCity:'',
       selectedCityCode:'',
+      point:'',
       clubList:[]
     }
   },
@@ -31,6 +32,7 @@ export default{
   created:function(){
     WY.autoVueObj = this;
     var that = this;
+    WY.loading(1);
     WY.oneReady('user-info',function(o){
 
     } , this);
@@ -44,14 +46,14 @@ export default{
     function getCode(name , call){
       name = name || '';
       WY.getCache('cityData',function(a){
-        a.cityAllList.every(function(o){
-          if(name === o.name){
-            call(o.code);
-            return false;
-          }
-          return true;
-        });
-        call(null);
+        if(a.cityAllList.every(function(o){
+            if(name === o.name){
+              call(o.code);
+              return false;
+            }
+            return true;
+          }))
+          call(null);
       });
     }
     WY.oneReady('bmap-location' , function(o){
@@ -59,13 +61,14 @@ export default{
       if(addressComponents){
         var name = addressComponents.city.replace(/市$/,'');
         that.selectedCity = name;
+        that.point = o.point;
         getCode(name, function(code){
           that.selectedCityCityCode = code;
           that.reset();
           that.searchBanner();
           that.searchList();
         });
-      }
+      }else WY.loading(0);
     } , this);
     WY.oneBind('city-location',function(val){
       getCode(val , function(code){
@@ -99,15 +102,23 @@ export default{
       });
     },
     searchList:function(){
+        WY.loading(1);
         var that = this;
         if(this.isSearch)return false;
         this.isSearch = 1;
         WY.get('/merchant/list/data',{
           supplierTypeCode:this.bannerTypeCode,
+          lon:this.point.lng,
+          lat:this.point.lat,
+          cityCode:this.selectedCityCityCode,
           pageNum:this.pageNum++,
         },function(a){
+          WY.loading(0);
           that.isSearch = 0;
           that.isLastPage = a.data.isLastPage;
+          a.data.list.forEach(function(a){
+            a.distance = a.distance > 1000?((a.distance/1000).toFixed(1)+'km'):(a.distance+'m');
+          });
           that.clubList = that.clubList.concat(a.data.list);
         })
     },

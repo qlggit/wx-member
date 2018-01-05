@@ -1,7 +1,7 @@
 <template>
   <div v-show="showAble" class="display-table wy-loading-window z-index-9999">
     <div>
-      <img src="/images/loading.gif" alt=""/>
+      <canvas v-loading  class="width-20-100"></canvas>
     </div>
   </div>
 </template>
@@ -14,12 +14,13 @@
     },
     created:function(){
       var that = this;
-      WY.bind('loading',function(sts){
+      WY.ready('loading',function(sts){
         that.showAble = sts!==0 && sts !==false;
       });
       WY.bind('router-after' , function(){
         that.showAble = false;
       });
+
     }
   }
 </script>

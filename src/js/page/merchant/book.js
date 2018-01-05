@@ -5,19 +5,19 @@ export default{
       footerList:[
         {
           name:'可选',
-          img:'/images/merchant/book-sts-1.png'
+          img:'/images/merchant/book-sts-able.png'
         },
         {
           name:'我的',
-          img:'/images/merchant/book-sts-2.png'
+          img:'/images/merchant/book-sts-my.png'
         },
         {
           name:'拼桌',
-          img:'/images/merchant/book-sts-3.png'
+          img:'/images/merchant/book-sts-ping.png'
         },
         {
-          name:'已选',
-          img:'/images/merchant/book-sts-4.png'
+          name:'已定',
+          img:'/images/merchant/book-sts-selected.png'
         }
       ],
       showThisWindow:false,
@@ -40,6 +40,7 @@ export default{
     WY.oneUnBind(this);
   },
   created:function(){
+    WY.loading(1);
     WY.autoVueObj = this;
     localStorage.selectedList = '';
     var that = this;
@@ -267,6 +268,7 @@ export default{
             })
           }
         });
+        WY.loading(0);
         that.setImg(itemList);
         WY.ready('set-svg-list',itemList);
       });
@@ -332,6 +334,7 @@ export default{
       var selectDate = v.map(function(a){return a.padStart(2 , '0');}).join('-');
       if(this.selectDate !== selectDate){
         this.selectDate = selectDate;
+        WY.loading(1);
         this.searchStatusList();
       }
     },
