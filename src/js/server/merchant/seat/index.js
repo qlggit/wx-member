@@ -262,7 +262,7 @@ export default{
                 }
                 else if(i === 2){
                   //最低消费
-                  itemOne.lowCostAmount = statusOne.amount;
+                  itemOne.lowCostAmount = statusOne.amount / 100;
                 }else if(i === 3){
                   //线下订桌
                   itemOne.isSelected = 1;
@@ -452,7 +452,7 @@ export default{
           orderNo:d.orderNo,
           seatShape:d.seatShape,
           seatName:d.seatName ,
-          lowCostAmount:d.lowCostAmount,
+          lowCostAmount:d.lowCostAmount / 100,
           locCount:d.locCount ,
           isSelected:d.seatStatus === 'selected',
           selectAble:d.seatStatus !=='lock',

@@ -69,7 +69,7 @@ function seatSvg(options){
   this.allItemData = [];
   this.headImgSvg = [];
   this.svg = options.svg;
-  this.scale = 1;
+  this.scale = options.scale || 1;
   this.minScale = .05;
   this.maxScale = 1;
   this.clientWidth = this.svg.parentElement.clientWidth ;
@@ -190,7 +190,7 @@ seatSvg.prototype = {
   },
   setUserHeadImg:function(svgData , userInfo){
     var id = 'userInfoHeadImg'+userInfo.userId;
-    var cr = 15;
+    var cr = 50;
     svgData.x -= 0;
     svgData.y -= 0;
     if(this.patterns[id]){
@@ -344,6 +344,7 @@ seatSvg.prototype = {
     })
   },
   addScale:function(scale , x , y){
+    return false;
     x-= this.parentOffset.left;
     y-= this.parentOffset.top;
     scale += this.scale;

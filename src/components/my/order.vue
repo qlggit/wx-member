@@ -52,7 +52,7 @@
         </div>
       </div>
     </div>
-    <div v-router-link=""
+    <div v-app-download=""
          class="position-absolute z-index-1 width-100-100 left-0 bottom-0 fz-30 select-head pl-24 pb-20 color-104 border-t-233 text-center">
       更多操作请前往APP查看
     </div>

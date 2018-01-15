@@ -1691,7 +1691,7 @@ div::-webkit-scrollbar {
   left: .24rem;
 }
 .book-window {
-  height: 3.5rem;
+  height: 2.6rem;
   border-top: 1px solid #cdcdcd;
 }
 .book-window .item-list {
@@ -1703,7 +1703,7 @@ div::-webkit-scrollbar {
   height: .78rem;
 }
 .book-content {
-  padding-bottom: 3.18rem;
+  padding-bottom: 2.6rem;
 }
 .product-menu {
   position: absolute;
@@ -1894,7 +1894,7 @@ div::-webkit-scrollbar {
   height: 4.68rem;
 }
 .head-bg .blur-bg {
-  filter: blur(5px);
+  filter: blur(4px);
   opacity: .1;
   background-position: center;
   background-size: cover;

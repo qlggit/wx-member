@@ -75,10 +75,10 @@ module.exports = {
             //404处理 找不到的页面返回首页
             app.use(function(req, res){
               if(!req.session.tokenModel && !/MicroMessenger/.test(req.headers['user-agent'])){
-                res.send('下载页面');
+                res.redirect('/wechat/download');
                 return false;
               }
-                res.useRender('index');
+              res.useRender('index');
             });
 
             var port = process.env.PORT || _this.config.get('port') || 3000;

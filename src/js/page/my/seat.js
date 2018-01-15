@@ -53,6 +53,7 @@ export default{
             a.diffTime = new Date(a.expireTime) - Date.now();
             if(a.diffTime < 0){
               a.statusName = '已过期';
+              return false;
             }
           }
           return true;

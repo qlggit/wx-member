@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+  <meta name=viewport content="width=device-width,minimum-scale=1,maximum-scale=1,user-scalable=no">
+    <title>测试融云</title>
+  <script src="/jquery.min.js"></script>
+  <script src="//cdn.ronghub.com/RongIMLib-2.3.0.min.js"></script>
+
+</head>
+<body>
+<script>
+  $(function(){
+    var allToken = localStorage.allToken;
+    var userKey = localStorage.unionid;
+    var token;
+    if(allToken){
+      allToken = JSON.parse(allToken);
+      token = allToken[userKey];
+    }else allToken = {};
+    var chatRoomId;
+    var chatGroupId = chatRoomId = 11;
+    if(token){
+      start();
+    }
+    else $.get('/test/token',function(a){
+      allToken[userKey] = token = a.data;
+      localStorage.allToken = JSON.stringify(allToken);
+      start();
+    });
+    function start(){
+      RongIMClient.setConnectionStatusListener({
+        onChanged: function (status) {
+          switch (status) {
+            case RongIMLib.ConnectionStatus.CONNECTED:
+              console.log('链接成功');
+              break;
+            case RongIMLib.ConnectionStatus.CONNECTING:
+              console.log('正在链接');
+              break;
+            case RongIMLib.ConnectionStatus.DISCONNECTED:
+              console.log('断开连接');
+              break;
+            case RongIMLib.ConnectionStatus.KICKED_OFFLINE_BY_OTHER_CLIENT:
+              console.log('其他设备登录');
+              break;
+            case RongIMLib.ConnectionStatus.DOMAIN_INCORRECT:
+              console.log('域名不正确');
+              break;
+            case RongIMLib.ConnectionStatus.NETWORK_UNAVAILABLE:
+              console.log('网络不可用');
+              break;
+          }
+        }});
+      RongIMClient.setOnReceiveMessageListener({
+        onReceived: function (message) {
+          console.log(message);
+          switch(message.messageType){
+            case RongIMClient.MessageType.TextMessage:
+              // message.content.content => 消息内容
+              break;
+            case RongIMClient.MessageType.VoiceMessage:
+              // 对声音进行预加载
+              // message.content.content 格式为 AMR 格式的 base64 码
+              break;
+            case RongIMClient.MessageType.ImageMessage:
+              // message.content.content => 图片缩略图 base64。
+              // message.content.imageUri => 原图 URL。
+              break;
+            case RongIMClient.MessageType.DiscussionNotificationMessage:
+              // message.content.extension => 讨论组中的人员。
+              break;
+            case RongIMClient.MessageType.LocationMessage:
+              // message.content.latiude => 纬度。
+              // message.content.longitude => 经度。
+              // message.content.content => 位置图片 base64。
+              break;
+            case RongIMClient.MessageType.RichContentMessage:
+              // message.content.content => 文本消息内容。
+              // message.content.imageUri => 图片 base64。
+              // message.content.url => 原图 URL。
+              break;
+            case RongIMClient.MessageType.InformationNotificationMessage:
+              // do something...
+              break;
+            case RongIMClient.MessageType.ContactNotificationMessage:
+              // do something...
+              break;
+            case RongIMClient.MessageType.ProfileNotificationMessage:
+              // do something...
+              break;
+            case RongIMClient.MessageType.CommandNotificationMessage:
+              // do something...
+              break;
+            case RongIMClient.MessageType.CommandMessage:
+              // do something...
+              break;
+            case RongIMClient.MessageType.UnknownMessage:
+              // do something...
+              break;
+            default:
+            // do something...
+          }
+        }
+      });
+      RongIMLib.RongIMClient.init('bmdehs6pb10es');
+      RongIMClient.connect(token, {
+        onSuccess: function(userId) {
+          console.log("Connect successfully." + userId);
+          ready();
+        },
+        onTokenIncorrect: function() {
+          console.log('token无效');
+        },
+        onError:function(errorCode){
+          var info = '';
+          switch (errorCode) {
+            case RongIMLib.ErrorCode.TIMEOUT:
+              info = '超时';
+              break;
+            case RongIMLib.ErrorCode.UNKNOWN_ERROR:
+              info = '未知错误';
+              break;
+            case RongIMLib.ErrorCode.UNACCEPTABLE_PaROTOCOL_VERSION:
+              info = '不可接受的协议版本';
+              break;
+            case RongIMLib.ErrorCode.IDENTIFIER_REJECTED:
+              info = 'appkey不正确';
+              break;
+            case RongIMLib.ErrorCode.SERVER_UNAVAILABLE:
+              info = '服务器不可用';
+              break;
+          }
+          console.log(errorCode);
+        }
+      });
+      var callback = {
+        onSuccess: function(userId) {
+          console.log("Reconnect successfully." + userId);
+        },
+        onTokenIncorrect: function() {
+          console.log('token无效');
+        },
+        onError:function(errorCode){
+          console.log(errorCode);
+        }
+      };
+      var config = {
+        // 默认 false, true 启用自动重连，启用则为必选参数
+        auto: true,
+        // 重试频率 [100, 1000, 3000, 6000, 10000, 18000] 单位为毫秒，可选
+        url: 'cdn.ronghub.com/RongIMLib-2.2.6.min.js',
+        // 网络嗅探地址 [http(s)://]cdn.ronghub.com/RongIMLib-2.2.6.min.js 可选
+        rate: [100, 1000, 3000, 6000, 10000]
+      };
+      RongIMClient.reconnect(callback, config);
+    }
+    function ready(){
+      RongIMClient.getInstance().joinChatRoom(chatGroupId, 10, {
+        onSuccess: function(a,b) {
+          searchPerson();
+          // 加入聊天室成功。
+        },
+        onError: function(error) {
+          // 加入聊天室失败
+        }
+      });
+      window.onbeforeunload = function(){
+        RongIMClient.getInstance().quitChatRoom(chatGroupId, {
+          onSuccess: function() {
+            // 退出聊天室成功。
+          },
+          onError: function(error) {
+            // 退出聊天室失败。
+          }
+        });
+      }
+    }
+    function searchPerson(){
+      var count = 10; // 获取聊天室人数 （范围 0-20 ）
+      var order = RongIMLib.GetChatRoomType.REVERSE;// 排序方式。
+      RongIMClient.getInstance().getChatRoomInfo(chatGroupId, count, order, {
+        onSuccess: function(chatRoom) {
+          // chatRoom => 聊天室信息。
+          // chatRoom.userInfos => 返回聊天室成员。
+          // chatRoom.userTotalNums => 当前聊天室总人数。
+          console.log(chatRoom);
+        },
+        onError: function(error) {
+          // 获取聊天室信息失败。
+        }
+      });
+    }
+    window.sendMessage = function (){
+      var msg = new RongIMLib.TextMessage({content:"hello RongCloud!",extra:"附加信息"});
+      var conversationtype = RongIMLib.ConversationType.CHATROOM; // 单聊,其他会话选择相应的消息类型即可。
+      var targetId = chatGroupId;
+      RongIMClient.getInstance().sendMessage(conversationtype, targetId, msg, {
+        onSuccess:function(){
+          console.log("Send successfully");
+        },
+        onError: function (errorCode,message) {
+          var info = '';
+          switch (errorCode) {
+            case RongIMLib.ErrorCode.TIMEOUT:
+              info = '超时';
+              break;
+            case RongIMLib.ErrorCode.UNKNOWN_ERROR:
+              info = '未知错误';
+              break;
+            case RongIMLib.ErrorCode.REJECTED_BY_BLACKLIST:
+              info = '在黑名单中，无法向对方发送消息';
+              break;
+            case RongIMLib.ErrorCode.NOT_IN_DISCUSSION:
+              info = '不在讨论组中';
+              break;
+            case RongIMLib.ErrorCode.NOT_IN_GROUP:
+              info = '不在群组中';
+              break;
+            case RongIMLib.ErrorCode.NOT_IN_CHATROOM:
+              info = '不在聊天室中';
+              break;
+            default :
+              info = x;
+              break;
+          }
+          console.log('发送失败:' + info);
+        }
+      });
+    }
+    window.sendOneMessage = function (){
+      var msg = new RongIMLib.TextMessage({content:"hello one!",extra:"xxxx"});
+      var conversationtype = RongIMLib.ConversationType.PRIVATE; // 单聊,其他会话选择相应的消息类型即可。
+      var targetId = '180109114111073';
+      RongIMClient.getInstance().sendMessage(conversationtype, targetId, msg, {
+        onSuccess:function(){
+          console.log("Send successfully");
+        },
+        onError: function (errorCode,message) {
+          console.log('发送失败:' + errorCode,message);
+        }
+      });
+    }
+  });
+  var arr = [];
+  var isSending;
+  function send(data){
+    if(isSending){
+      arr.push();
+    }else{
+      //执行  func是执行的方法
+      isSending = 1;
+      func(data , function(){
+        isSending = 0;
+        //回调
+        var next = arr.shift();
+        if(next)func(next);
+      })
+    }
+  }
+</script>
+</body>
+</html>

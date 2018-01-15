@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 router.get('/entrance', function(req, res, next) {
-    req.session.openId = req.query.openid;
+    req.session.openId = req.session.openid  = req.query.openid;
     req.session.unionid = req.query.unionid || req.query.openid;
     var query = req.query;
     req.session.wechatData = req.query;
@@ -105,6 +105,9 @@ router.post('/jssdk', function(req, res, next) {
       res.useSend(data);
     }
   });
+});
+router.get('/download', function(req, res, next) {
+  res.send('下载页面')
 });
 exports.router = router;
 exports.__path = '/wechat';

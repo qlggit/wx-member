@@ -1,26 +1,35 @@
 var express = require('express');
 var router = express.Router();
 router.get('/get', function(req, res, next) {
-  if(req.session.userInfo && !req.session.userInfo.mobile){
+  if(req.session.wechatData){
+    var wechatData = req.session.wechatData;
+    var sendData = {
+      openId :wechatData.openid,
+      nickname   :wechatData.nickname,
+      headImg    :wechatData.headimgurl,
+      deviceType:'mp',
+      gender :wechatData.gender  || wechatData.sex,
+      sType :'weixin',
+      uid:req.session.unionid,
+    };
     useRequest.send(req , res , {
-      url:useUrl.login.infoByUid,
-      data:{
-        uId:req.session.unionid,
-      },
+      url:useUrl.login.login,
+      data:sendData,
+      method:'POST',
       done:function(data){
         if(data.code === 0){
           useData.setUserInfo(req , res , data , function(){
-            sendSession()
+            sendSession(req.session)
           });
         }
         else sendSession();
       }
     });
-  }else sendSession();
-  function sendSession(){
+  }else sendSession(req.session);
+  function sendSession(session){
     res.send({
       hasPing:hasPing,
-      session:req.session,
+      session:session||{},
       debug:useConfig.get('debug'),
       apiImgUrl:useConfig.get('apiImgUrl')
     });

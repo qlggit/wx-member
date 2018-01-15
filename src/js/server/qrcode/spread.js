@@ -8,7 +8,6 @@ export default{
       needPhone:'',
       showAble:0,
       showText:'',
-      isMember:'',
       spreadUserName:''
     }
   },
@@ -18,30 +17,23 @@ export default{
   created:function(){
     WY.autoVueObj = this;
     var that = this;
-    this.searchInfo();
+    WY.oneReady('token-complete',function(){
+      that.searchInfo(WY.session.userInfo);
+    },this);
   },
   methods:{
-    searchInfo:function(){
-      var that = this;
-      WY.post('/login/uid',{
-        uid:WY.hrefData.uid,
-      } , function(data){
-        that.showAble = 1;
-        if(data.code === 0){
-          that.isMember = 1;
-          WY.session.set(data.data);
-          if(data.data.userInfo && data.data.userInfo.mobile){
-            that.title = '欢迎使用娱客';
-            that.showText = '您已经是平台用户';
-            that.needPhone = false;
-            return false;
-          }
+    searchInfo:function(userInfo){
+      this.showAble = 1;
+        if(userInfo && userInfo.mobile){
+          this.title = '欢迎使用娱客';
+          this.showText = '您已经是平台用户';
+          this.needPhone = false;
+          return false;
         }else{
-          that.searchSpread();
+            this.searchSpread();
         }
-        that.needPhone = true;
-        that.title = '绑定手机';
-      })
+        this.needPhone = true;
+        this.title = '绑定手机';
     },
     searchSpread:function(){
       var that = this;
@@ -67,19 +59,17 @@ export default{
       }
       var that = this;
       var url = '/server/qrcode/spread';
-      if(this.isMember){
-        url = '/login/build';
-      }
       WY.post(url,{
         sendType:'BINDING',
         phone:this.phone,
         smsCode:this.smsCode
       },function(a){
         if(a.code === 0){
+          WY.session.userInfo = a.data;
           WY.session.userInfo.userName = that.phone;
           WY.ready('user-info',WY.session.userInfo);
           if(that.spreadUserName){
-            that.showText = '恭喜你成为' + that.spreadUserName + '客户';
+            that.showText = '恭喜你成为' + that.spreadUserName + '的客户';
           }else{
             that.showText = '恭喜你成为平台用户';
           }

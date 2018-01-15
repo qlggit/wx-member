@@ -2,7 +2,7 @@
   <div class="pb-footer" v-if="userInfo">
     <div class="head-bg position-relative" >
       <div class="blur-bg position-full position-absolute z-index-1" :style="{
-      backgroundImage:'url('+userInfo.headImgUrl | imgUrlFilter+')'
+      'background-image':'url('+userInfo.headImgUrl+')'
     }">
       </div>
       <div class="position-full position-absolute z-index-100">
@@ -28,14 +28,14 @@
             <div class="color-104 pt-16">二维码</div>
           </div>
           <div class="text-center">
-            <img src="/images/my/sao.png" class="qrcode-ico" v-scan-code="" alt="">
+            <img src="/images/my/sao.png" class="qrcode-ico" v-scan-code="1" alt="">
             <div class="color-104 pt-16">扫一扫</div>
           </div>
         </div>
       </div>
     </div>
     <div class="my-money color-24 text-center back-white border-b-194">
-      <div class="fz-40 mb-22">{{userInfo.money | moneyFilter}}</div>
+      <div class="fz-40 mb-22">{{userInfo.balance | moneyFilter}}</div>
       <div class="fz-24 ">余额（元）</div>
     </div>
     <div class="mt-20 my-list clearfix text-center mb-20 color-24 back-white">

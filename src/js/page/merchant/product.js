@@ -62,7 +62,7 @@ export default{
         } , function(a){
           if(a.code === 0 ){
             var noPayObj = a.data && a.data.find(function(a){
-              return a.payStatus !== 'ALREADY_PAY';
+              return a.payStatus !== 'ALREADY_PAY' && WY.session.isOwner(a.userId);
             });
             if(noPayObj){
               that.orderNo = noPayObj.orderNo;

@@ -147,9 +147,22 @@ Vue.directive('scan-code',{
         needResult: needResult || 0,
         scanType: ["qrCode","barCode"],
         success: function (res) {
-
+            if(/http|\//.test(res)){
+               location.href = res;
+            }else{
+               location.href = '/wechat/download';
+            }
         }
       });
+      event.stopPropagation();
+    }
+  }
+});
+Vue.directive('app-download',{
+  inserted:function(el , binding){
+    var downloadUrl = binding.value;
+    el.onclick = function(event){
+       location.href = downloadUrl || '/wechat/download';
       event.stopPropagation();
     }
   }
@@ -164,8 +177,6 @@ Vue.directive('scroll-box',{
     }
   }
   ,unbind:function(el){
-    el.ontouchmove = null;
-    el.ontouchstart = null;
   }
 });
 Vue.directive('diff-time',{

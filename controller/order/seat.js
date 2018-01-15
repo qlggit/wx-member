@@ -41,7 +41,7 @@ router.post('/add',function(req, res, next) {
   });
 });
 router.post('/pz',function(req, res, next) {
-  req.body.reqUserId = req.session.tokenModel.realId || '171117223607220';
+  req.body.reqUserId = req.session.userId ;
   useRequest.send(req , res , {
     url:useUrl.seatOrder.pz,
     data:req.body,

@@ -16,7 +16,10 @@ gulp.task('less',['clean'], function(cb) {
     console.log('less start');
     gulp.src('./'+buildSrc+'/less/*.less')
         .pipe(less())
-        .pipe(gulp.dest('./'+destSrc+'/css'))
+        .pipe(gulp.dest('./'+destSrc+'/css'));
+    gulp.src('./'+buildSrc+'/less/sub/*.less')
+        .pipe(less())
+        .pipe(gulp.dest('./'+destSrc+'/css/sub'))
         .on('end', cb); //编译less
 });
 gulp.task('default',['less'],function() {

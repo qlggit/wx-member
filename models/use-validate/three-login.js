@@ -5,7 +5,6 @@ var login = function(req , res , next){
   var userId = req.query.userId || '';
   req.session.tokenModel = {
     userId:userId,
-    realIdId:userId.split('_')[0],
     token:req.query.token
   };
   if(req.query.token){

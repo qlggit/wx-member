@@ -57,7 +57,7 @@
             img.onload = function(){
               img.showTitle = a.actName || '活动名称';
               onloadCount++;
-              if(onloadCount.length ===  value.list.length){
+              if(onloadCount ===  value.list.length){
                 canvasAnimate();
               }
             }

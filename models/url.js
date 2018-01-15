@@ -22,6 +22,7 @@ module.exports = {
     },
     user:{
         edit:apiUrl + '/api/user/v_1/updateByPrimaryKey',
+      rongToken:apiUrl + '/api/user/v_1/getRongYunToken',
     },
     my:{
         seat:apiUrl + '/api/seat/v_1/myOrderList',
@@ -80,5 +81,12 @@ module.exports = {
     },
     wine:{
         merchantList:apiUrl + '/api/wine/v_1/mySuppliers'
+    },
+    message:{
+        wine:apiUrl + '/api/msg/v_1/myAccessWine',
+        act:apiUrl + '/api/msg/v_1/myAct',
+        pay:apiUrl + '/api/msg/v_1/myPay',
+        pz:apiUrl + '/api/msg/v_1/myPzList',
+        sys:apiUrl + '/api/msg/v_1/sysMsg',
     },
 };

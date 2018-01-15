@@ -62,7 +62,7 @@ export default{
     },
     searchPlace:function(){
       var that = this;
-      $.get('/my/wine/merchant',{
+      WY.get('/my/wine/merchant',{
         pageNum:1,
         pageSize:10
       },function(a){

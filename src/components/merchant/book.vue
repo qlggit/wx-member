@@ -4,7 +4,7 @@
     <header-component v-if="!isServer" :header-data="{title:name}"></header-component>
     <wy-show-svg v-if="svgBackData" :svg-back-data="svgBackData" @click="svgClick"></wy-show-svg>
     <div class="position-fixed width-100-100 bottom-0 left-0 z-index-100 book-window back-white shadow-top-auto">
-      <div class="flex-between item-list border-b-194   pl-24 pr-24">
+      <div class="flex-between item-list border-b-194   pl-24 pr-24 pt-10 pb-20">
         <div v-for="item in footerList" class="item text-center">
           <img class="img margin-auto" :src="item.img" />
         </div>
@@ -19,9 +19,6 @@
           <span class="mr-10">选座：</span>
           <span class="color-24">{{seatData.seatName}}</span>
         </div>
-      </div>
-      <div class="pt-42 pl-20 pr-20">
-         <div class="btn back-24 color-white" @click="goNext">下一步</div>
       </div>
       <wy-date v-if="dateVisible" v-model="dateVisible" @click="onValuesChange"
                :date-data="{startDate:startDate,endDate:endDate,selectDate:selectDate,title:'请选择预约时间'}" ></wy-date>

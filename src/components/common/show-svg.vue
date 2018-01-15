@@ -21,7 +21,7 @@
     props:['svgBackData'],
     data(){
       return {
-        showSale:.5,
+        showSale:.2,
         svgBackData:this.svgBackData,
         itemList:'',
         svgObj:'',
@@ -64,8 +64,8 @@
         var that = this;
         if(!this.svgObj){
           this.svgObj = new seatSvg({
-            width:this.svgBackData.backWidth,
-            height:this.svgBackData.backHeight,
+            width:this.svgBackData.backWidth*this.showSale,
+            height:this.svgBackData.backHeight*this.showSale,
             svg:this.$refs.showSvg,
             itemList:this.itemList,
             scale:this.showSale,

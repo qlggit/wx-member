@@ -29,7 +29,11 @@ export default{
     this.qrcodeWidth = WY.getScaleSize(402);
     WY.oneReady('user-info',function(o){
       that.userInfo = o;
-      that.qrcodeUrl = 'http://wx.yukew.com/spread/'+o.userId.split('_')[0];
+      that.qrcodeUrl = JSON.stringify({
+        data:o.userId.split('_')[0],
+        type:'AddUser',
+        version:1,
+      });
     } , this);
   },
   methods:{

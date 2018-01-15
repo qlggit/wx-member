@@ -73,10 +73,10 @@ export default{
           var noPayObj;
           if(Array.isArray(a.data)){
             noPayObj = a.data && a.data.find(function(a){
-              return a.payStatus !== 'ALREADY_PAY';
+              return a.payStatus !== 'ALREADY_PAY'  && WY.session.isOwner(a.userId);
             });
           }else{
-            noPayObj = a.data.payStatus !== 'ALREADY_PAY' && a.data;
+            noPayObj = a.data.payStatus !== 'ALREADY_PAY' && WY.session.isOwner(a.data.userId) && a.data ;
           }
           if(noPayObj){
             that.orderNo = noPayObj.orderNo;

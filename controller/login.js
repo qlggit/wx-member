@@ -1,33 +1,15 @@
 var express = require('express');
 var router = express.Router();
-var mongo = useMongo();
-var md5 = require('md5');
-
-router.post('/', function(req, res, next) {
-  var sendData = {
-    uId:req.session.unionid,
-  };
-  useRequest.send(req , res , {
-    url:useUrl.login.infoByUid,
-    data:sendData,
-    done:function(data){
-      if(data.code === 0 && data.data.userId){
-        useData.setUserInfo(req , res , data , function(){
-          res.sendSuccess(req.session);
-        })
-      }else res.useSend({
-        message:'登录失败'
-      });
-    }
-  });
-});
 router.post('/info', function(req, res, next) {
-  var query = req.body;
+  var wechatData = req.session.wechatData;
   var sendData = {
-    openId :query.openid,
-    deviceType:'H5',
+    openId :wechatData.openid,
+    nickname   :wechatData.nickname,
+    headImg    :wechatData.headimgurl,
+    deviceType:'mp',
+    gender :wechatData.gender  || wechatData.sex,
     sType :'weixin',
-    uid:query.unionid,
+    uid:req.session.unionid,
   };
   useRequest.send(req , res , {
     url:useUrl.login.login,
@@ -35,24 +17,6 @@ router.post('/info', function(req, res, next) {
     method:'POST',
     done:function(data){
       if(data.code === 0){
-        useData.setUserInfo(req , res , data , function(){
-          res.sendSuccess(req.session);
-        })
-      }else res.useSend({
-        message:'登录失败'
-      });
-    }
-  });
-});
-router.post('/uid', function(req, res, next) {
-  var sendData = {
-    uId:req.body.uid,
-  };
-  useRequest.send(req , res , {
-    url:useUrl.login.infoByUid,
-    data:sendData,
-    done:function(data){
-      if(data.code === 0 && data.data.userId){
         useData.setUserInfo(req , res , data , function(){
           res.sendSuccess(req.session);
         })
@@ -81,6 +45,9 @@ router.post('/build', function(req, res, next) {
           data:{
             phone:req.body.phone,
             userId:userId,
+            sType:'weixin',
+            bindWay:'y',
+            uid:req.session.unionid
           },
           method:'POST',
           notBody:1,

@@ -57,14 +57,14 @@ wx.ready(function(){
 });
 WY.bind('get-location' , function(){
   //res.latitude , res.longitude
-  if(localStorage.gcj02Res){
-    WY.ready('wx-location-gcg02', WY.common.parse(localStorage.gcj02Res));
-    return false;
-  }
+  // if(localStorage.gcj02Res){
+  //   WY.ready('wx-location-gcg02', WY.common.parse(localStorage.gcj02Res));
+  //   return false;
+  // }
   wx.getLocation({
     type: 'gcj02',
     success: function (res) {
-      localStorage.gcj02Res = JSON.stringify(res);
+      // localStorage.gcj02Res = JSON.stringify(res);
       WY.ready('wx-location-gcg02', res);
     },
     fail:function(){
@@ -73,14 +73,14 @@ WY.bind('get-location' , function(){
   });
 });
 WY.bind('get-location' , function(){
-  if(localStorage.wgs84Res){
-    WY.ready('wx-location-wgs84', WY.common.parse(localStorage.wgs84Res));
-    return false;
-  }
+  // if(localStorage.wgs84Res){
+  //   WY.ready('wx-location-wgs84', WY.common.parse(localStorage.wgs84Res));
+  //   return false;
+  // }
   wx.getLocation({
     type: 'wgs84',
     success: function (res) {
-      localStorage.wgs84Res = JSON.stringify(res);
+      // localStorage.wgs84Res = JSON.stringify(res);
       WY.ready('wx-location-wgs84', res);
     },
     fail:function(){

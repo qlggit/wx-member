@@ -2,15 +2,10 @@ var cacheData={};
 module.exports = {
   setUserInfo:function(req , res , data , call){
     data = data.data || {};
-    req.session.tokenModel = data.tokenModel || req.session.tokenModel;
-    if(req.session.tokenModel){
-      req.session.tokenModel.realId = req.session.tokenModel.userId.split('_')[0];
-    }
-    req.session.sanfangs = data.sanfangs && data.sanfangs.filter(function(a){return a.sType === 'WEIXIN'}).pop() || req.session.sanfangs;
-    delete data.tokenModel;
-    delete data.sanfangs;
-    data.userId = req.session.tokenModel && req.session.tokenModel.userId;
+    req.session.tokenModel = data.tokenModel;
+    req.session.sanfangs = data.sanfangs && data.sanfangs.filter(function(a){return a.sType.toUpperCase() === 'WEIXIN'}).pop() || req.session.sanfangs;
     req.session.userInfo = data;
+    req.session.userId = data.userId;
     req.session.openId = req.session.openId || (data.openId || '');
     req.session.unionid = req.session.unionid || (data.uid || '');
     useSession.save(req , res , call);

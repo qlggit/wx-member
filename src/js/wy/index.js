@@ -52,9 +52,6 @@ WY.bind('request-start-filter',function(options){
   options.headers = options.headers || {};
   options.headers.sessionId = options.headers.sessionId || WY.session.sessionId || '';
 });
-WY.ready('session-complete' , function(){
-  WY.trigger('login');
-});
 WY.trigger('session');
 WY.trigger('require-complete');
 window.requestAnimFrame = (function(){

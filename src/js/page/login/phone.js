@@ -37,7 +37,8 @@ export default{
         smsCode:this.smsCode
       },function(a){
         if(a.code == 0){
-          WY.session.userInfo.userName = that.phone;
+          WY.session.userInfo = a.data;
+          WY.ready('user-info');
           vueRouter.push('/');
         }else{
           WY.toast(a.message);

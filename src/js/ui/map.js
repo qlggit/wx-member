@@ -15,7 +15,7 @@ WY.ready('wx-location-wgs84',function(res){
 WY.map = function(lat , lon , type){
   //var newPoint = gcjToBd(lat , lon);
   var myGeo = new BMap.Geocoder();
-  myGeo.getLocation(new BMap.Point(lat , lon), function(result){
+  myGeo.getLocation(new BMap.Point(lon , lat), function(result){
     console.log('BMap getLocation');
     console.log(result);
     WY.ready('bmap-location' , result);

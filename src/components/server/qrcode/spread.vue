@@ -17,8 +17,11 @@
        </div>
      </div>
      <div v-if="needPhone === false" class="pt-70">
-       <div class="pr-20 pt-132 pl-20 color-24">
+       <div class="pr-20 pt-132 pl-20 color-24 fz-32 text-center">
          {{showText}}
+       </div>
+       <div class="pt-40 pl-20 pr-20">
+          <div class="btn color-white back-black" v-app-download="">下载APP</div>
        </div>
        <div class="pt-40 pl-20 pr-20">
           <div class="btn color-white back-black" v-router-link="'/my'">我的主页</div>

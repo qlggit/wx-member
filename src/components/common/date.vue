@@ -1,9 +1,9 @@
 <template>
   <picker v-if="dateVisible" v-model="dateVisible" :data-items="items" @change="onValuesChange">
-    <div class="top-content fz-30 color-24 position-relative flex-between pt-20 pb-20 back-242 pl-20 pr-20" slot="top-content">
-      <div class="btn btn-lt color-999 width-30-100" @click="selectCancel">取消</div>
+    <div class="top-content fz-30 color-24 position-relative flex-between pt-30 pb-30 back-242 pl-20 pr-20" slot="top-content">
+      <div class="btn btn-lt color-999 width-30-100 fz-30" @click="selectCancel">取消</div>
       <div class="width-40-100">{{dateData.title}}</div>
-      <div class="btn btn-lt  back-24 color-white width-30-100" @click="selectValue">确定</div>
+      <div class="btn btn-lt  back-24 color-white width-30-100 fz-30" @click="selectValue">确定</div>
     </div>
   </picker>
 </template>
@@ -18,6 +18,10 @@
       }
     },
     watch:{
+      dateVisible:function(v){
+        console.log('watch dateVisible ' + v);
+        this.$emit('input',!!v);
+      }
     },
     created:function(){
       var startDate = this.dateData.startDate;

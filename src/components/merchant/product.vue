@@ -1,7 +1,7 @@
 <template>
   <div class="height-100-100 width-100-100 product-pb pl-product" :class="isServer?'':'pt-header'">
     <header-component v-if="!isServer" :header-data="{title:name}"></header-component>
-    <div class="product-menu text-center back-white" :class="isServer?'':'pt-header'">
+    <div class="product-menu text-center back-242" :class="isServer?'':'pt-header'">
         <div class="item" v-for="(item,index) in menuList"
              :class="menuIndex===index?'active':''"
         @click="changeMnuIndex(index,item)">

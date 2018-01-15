@@ -17,6 +17,7 @@ router.post('/cancel',function(req, res, next) {
     url:useUrl.order.cancel,
     data:req.body,
     method:'POST',
+    notBody:1,
     done:function(data){
       res.useSend(data);
     }
