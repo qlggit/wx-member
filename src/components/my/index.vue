@@ -39,7 +39,7 @@
       <div class="fz-24 ">余额（元）</div>
     </div>
     <div class="mt-20 my-list clearfix text-center mb-20 color-24 back-white">
-      <div v-for="item in myList" v-router-link="item.url" class="float-left item" :style="{width:100/myList.length+'%'}">
+      <div v-for="item in myList" v-router-link.url="item.url" class="float-left item" :style="{width:100/myList.length+'%'}">
         <div class="position-relative img mb-22 margin-auto lh-0">
           <div v-if="item.number" :class="item.number>10?'fz-22':'fz-24'" class="num border-rad-100 position-absolute color-white">{{item.number}}</div>
           <img :src="item.ico" alt="" class="width-100-100">

@@ -5,24 +5,24 @@ export default{
     return {
       userInfo:'',
       showAble:0,
-      colorList:[255,197,85,0,200,201,140,126,133],
+      colorList:[255,197,85,0,126],
       autoBackList:[
         {
           name:'背景图',
           code:'back',
-          img:'http://p0bkr7y6k.bkt.clouddn.com/1513760500257-639f3d00-e564-11e7-b17d-016dbf6b8ec4.png',
+          img:'http://p0bkr7y6k.bkt.clouddn.com/1516334107170-89affeb0-fccc-11e7-a922-bd4417bc8246.jpg',
         },
         {
           name:'效果图',
           code:'main',
-          img:'http://p0bkr7y6k.bkt.clouddn.com/1513761136742-df232710-e565-11e7-b17d-016dbf6b8ec4.png',
+          img:'http://p0bkr7y6k.bkt.clouddn.com/1516347563386-de372700-fceb-11e7-9c81-1ba07d227e45.jpg',
         }
       ],
       backImg:'',
       selectSeat:'',
       svgBackData:'',
       hasAutoSeatData:'',
-      xyColor:[140]
+      xyColor:[]
     }
   },
   beforeDestroy:function(){
@@ -30,6 +30,7 @@ export default{
   },
   created:function(){
     var that = this;
+    WY.autoVueObj = this;
     WY.loading(1);
     WY.oneReady('user-info',function(o){
       that.userInfo = o;
@@ -193,11 +194,6 @@ export default{
         case '197':
         case '85':
         case '126':
-        case '200':
-        case '201':
-        case '133':
-        case '140x':
-        case '140y':
           data.type = 'room';
           svgData.backImg = '/images/seat/table-'+color+'-able.png';
           svgData.type = 'room';

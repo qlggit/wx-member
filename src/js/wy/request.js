@@ -22,6 +22,7 @@ WY.request = function(options){
           options.success && options.success(WY.common.parse(xmlHttp.responseText));
           WY.trigger('request-success' , xmlHttp.readyState , readyState)
         }else{
+          WY.loading(0);
           options.error && options.error({
             state:xmlHttp.readyState,
             status:xmlHttp.status,

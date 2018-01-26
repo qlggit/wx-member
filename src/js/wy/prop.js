@@ -40,6 +40,9 @@ prop(String , 'endTime' , function( time){
   if(this.length > 10)return this + '';
   return this + (time || ' 23:59:59');
 });
+prop(String , 'turnDate' , function( time){
+  return this.replace(/\-/g,'/')+'';
+});
 prop(Array , 'find' , function(func){
   for(var i=0;i<this.length;i++){
     if(func(this[i] , i) === true)return this[i];

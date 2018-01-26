@@ -9,11 +9,12 @@
         </div>
     </div>
     <div class="height-100-100 back-transparent overflow-scroll product-main">
-      <div class="item mb-10" v-for="item in productList">
+      <div v-if="isIos" class="fz-28 pt-10 pb-20 color-24 text-center">本平台商品与苹果公司无关</div>
+      <div class="item mb-10" v-for="item in productList" @click="showMessage(item)">
         <img :src="item.headImg | imgUrlFilter" class="img" alt="">
         <div>
           <div class="fz-30 color-24 mb-20">{{item.name}}</div>
-          <div class="fz-24 color-104">{{item.keywords}}</div>
+          <div class="fz-24 color-104 write-ellipsis">{{item.descript}}</div>
           <div class="mt-10 fz-34 color-24"><span class="mr-10">￥</span><span>{{item.price | moneyFilter}}</span></div>
           <wy-number-select :number-data="{number:item.number || 0,type:'auto',dataId:item.id}" @changeNumber="changeNumber"></wy-number-select>
         </div>

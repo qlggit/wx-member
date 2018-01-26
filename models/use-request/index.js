@@ -48,6 +48,10 @@ module.exports = {
                 res.status(401).end();
                 return false;
               }
+              if(body.code - 0 === 10004){
+                res.status(402).end();
+                return false;
+              }
               if(body.code - 0 === 10000){
                 body.code = 0;
               }

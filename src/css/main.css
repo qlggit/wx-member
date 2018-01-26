@@ -167,6 +167,10 @@ input:focus {
   width: .4rem;
   height: .4rem;
 }
+.ico-66 {
+  width: .66rem;
+  height: .66rem;
+}
 .ico-right {
   width: .18rem;
   height: .3rem;
@@ -577,6 +581,9 @@ div::-webkit-scrollbar {
 .height-150 {
   height: 1.5rem;
 }
+.lh-32 {
+  line-height: .32rem;
+}
 .lh-35 {
   line-height: .35rem;
 }
@@ -660,6 +667,9 @@ div::-webkit-scrollbar {
 }
 .pt-header {
   padding-top: 0.9rem;
+}
+.pt-header-home {
+  padding-top: 1.6rem;
 }
 .pl-24 {
   padding-left: .24rem;

@@ -190,7 +190,9 @@ export default{
             selectSeat.forEach(function(a){
               a.locCount = that.infoData.locCount;
               a.lowCostAmount = that.infoData.lowCostAmount;
-            })
+            });
+          }else{
+            that.searchStatusList()
           }
         }
         WY.toast(a.message);
@@ -284,12 +286,18 @@ export default{
     //解析订座订单信息
     deSeatOrder:function(orderOne , itemOne){
       if(orderOne){
+        //忽略取消
+        if(orderOne.status === 'cancel'){
+          return false;
+        }
         itemOne.isSelected = 1;
-        itemOne.allGroup ++;
         itemOne.tableAble = orderOne.payStatus === 'ALREADY_PAY' && orderOne.tableStatus === 'y' && orderOne.pzStatus !== 'end';
         itemOne.userId = orderOne.userId;
         itemOne.orderNo = orderOne.orderNo;
-        this.orderNum += orderOne.orderNum;
+        if(orderOne.payStatus === 'ALREADY_PAY'){
+          itemOne.allGroup ++;
+          this.orderNum += orderOne.orderNum;
+        }
         itemOne.headImg = orderOne.headImg;
       }
     },

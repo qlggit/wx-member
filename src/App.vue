@@ -5,5 +5,6 @@
     <wy-loading></wy-loading>
     <wy-share></wy-share>
     <wy-confirm></wy-confirm>
+    <wy-message></wy-message>
   </div>
 </template>

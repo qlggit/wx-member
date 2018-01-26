@@ -19,6 +19,7 @@ export default{
       payUrl:'',
       basePath:'',
       isServer:0,
+      isIos:0,
       orderNo:'',
       seatPayStatus:'',
       oldList:[],
@@ -31,6 +32,7 @@ export default{
     WY.autoVueObj = this;
     var that = this;
     this.isServer = location.href.indexOf('server') > 0;
+    if(this.isServer)this.isIos = WY.hrefData.userId.indexOf('ios')>-1;
     this.basePath = this.isServer ? '/server/app' : '/merchant';
     this.productList = [];
     this.maxListHeight = WY.clientHeight -  WY.getScaleSize(100);
@@ -38,10 +40,10 @@ export default{
     WY.oneReady(this.isServer?'token-complete':'user-info',function(o){
       that.searchOrder();
       that.searchSeatOrder();
-        WY.get('/merchant/product/category' , function(data){
-          that.menuList = data.data;
-          that.doSearch();
-        });
+      WY.get('/merchant/product/category' , function(data){
+        that.menuList = data.data;
+        that.doSearch();
+      });
     } , this);
   },
   methods:{
@@ -109,6 +111,7 @@ export default{
         WY.toast('请选择要购买的商品！');
         return false;
       }
+      WY.loading(1);
       this.toCancel(function(sts){
         if(!sts && goodsLs.length){
           WY.post('/order/add' , {
@@ -117,6 +120,7 @@ export default{
             seatId:WY.hrefData.seatId,
             seatOrderNo :WY.hrefData.seatOrderNo,
           } , function(a){
+            WY.loading(0);
             if(a.code === 0){
               that.toPay(a.data);
             }else{
@@ -154,6 +158,8 @@ export default{
         merchantId:WY.hrefData.merchantId,
         seatId:WY.hrefData.seatId,
         orderNo:orderNo,
+        userId:WY.hrefData.userId,
+        token:WY.hrefData.token,
       }));
     },
     changeNumber:function(data){
@@ -264,5 +270,13 @@ export default{
       if(v === undefined)v = ! this.productSelectListAble;
       this.productSelectListAble = v;
     },
+    showMessage:function(item){
+      if(item.goodsTypeName === '套餐'){
+        WY.message({
+          title:'套餐详情',
+          content:item.descript.replace(/\r|\n/g,'<br>'),
+        })
+      }
+    }
   }
 }

@@ -5,6 +5,7 @@ import loading from '@/components/window/loading.vue'
 import share from '@/components/window/share.vue'
 import window from '@/components/common/window'
 import confirm from '@/components/window/confirm'
+import message from '@/components/window/message'
 
 import footerComponent from '@/components/common/footer.vue'
 import headerComponent from '@/components/common/header.vue'
@@ -47,6 +48,7 @@ Vue.component('wy-toast',toast);
 Vue.component('wy-loading',loading);
 Vue.component('wy-share',share);
 Vue.component('wy-confirm',confirm);
+Vue.component('wy-message',message);
 
 import picker from 'vue-3d-picker';
 Vue.component('picker', picker);

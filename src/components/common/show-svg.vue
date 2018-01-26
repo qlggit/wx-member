@@ -4,8 +4,8 @@
       <svg class="width-100-100 height-100-100 show-svg"
            style="background-size:100% 100%;"
            :style="{
-      width:svgBackData.backWidth*showSale+'px',
-      height:svgBackData.backHeight*showSale+'px',
+      width:svgBackData.backWidth+'px',
+      height:svgBackData.backHeight+'px',
       backgroundImage:'url('+svgBackData.img+')'
       }"
            :viewBox="[0,0,svgBackData.backWidth,svgBackData.backHeight].join(' ')" ref="showSvg"></svg>
@@ -21,7 +21,7 @@
     props:['svgBackData'],
     data(){
       return {
-        showSale:.2,
+        showSale:this.svgBackData.showSale||1,
         svgBackData:this.svgBackData,
         itemList:'',
         svgObj:'',
@@ -64,8 +64,8 @@
         var that = this;
         if(!this.svgObj){
           this.svgObj = new seatSvg({
-            width:this.svgBackData.backWidth*this.showSale,
-            height:this.svgBackData.backHeight*this.showSale,
+            width:this.svgBackData.backWidth,
+            height:this.svgBackData.backHeight,
             svg:this.$refs.showSvg,
             itemList:this.itemList,
             scale:this.showSale,
@@ -77,6 +77,7 @@
           this.svgObj.removeItem();
           this.svgObj.setItemList(this.itemList);
         }
+        this.svgObj.addScale(0);
         this.setReady();
         WY.trigger('svg-show-complete');
       },
@@ -99,6 +100,9 @@
         WY.oneBind('clear-svg-selected',function(svgData , done){
           that.svgObj.clearSelected(svgData);
           done && done(svgData);
+        } , this);
+        WY.oneBind('change-svg-scale',function(num){
+          that.svgObj.addScale(num);
         } , this);
       },
       contextmenu:function(e){

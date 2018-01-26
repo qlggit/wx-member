@@ -16,7 +16,7 @@
         <div v-if="0" class="btn btn-sm back-24 color-white position-absolute merchant-talk-btn">聊天室</div>
       </div>
     </div>
-    <div class="mt-20 pl-24 pr-24 pt-40 pb-40 color-24 fz-30 lh-35 back-242">{{remark}}</div>
+    <div class="mt-20 pl-24 pr-24 pt-40 pb-40 color-24 fz-30 lh-40 back-242">{{remark}}</div>
     <div v-if="activity&&activity.length" class="pt-40 pb-40 pl-24 pr-24 back-242 mt-10">
       <div class="fz-28 color-24 mb-20">酒吧活动</div>
       <wy-marquee :marquee-data="{list:activity,itemWidth:330,itemHeight:430,height:472,margin:24,fontSize:22,color:'#131313',}"></wy-marquee>

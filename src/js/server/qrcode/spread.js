@@ -65,13 +65,11 @@ export default{
         smsCode:this.smsCode
       },function(a){
         if(a.code === 0){
-          WY.session.userInfo = a.data;
-          WY.session.userInfo.userName = that.phone;
-          WY.ready('user-info',WY.session.userInfo);
+          WY.trigger('login-flush');
           if(that.spreadUserName){
-            that.showText = '恭喜你成为' + that.spreadUserName + '的客户';
+            that.showText = '您已接受' + that.spreadUserName + '的邀请';
           }else{
-            that.showText = '恭喜你成为平台用户';
+            that.showText = '你已成为平台用户';
           }
           that.needPhone = false;
         }else{

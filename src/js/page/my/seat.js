@@ -28,7 +28,7 @@ export default{
       } , function(a){
         WY.loading(0);
         that.orderList = a.data.list.filter(function(a){
-          if(a.status === 'cancel')return false;
+          if(a.status === 'cancel' || a.status === 'close')return false;
           a.payUrl = WY.common.addUrlParam('/merchant/pay',{
             payType:'seat',
             seatOrderNo:a.orderNo,
@@ -50,7 +50,7 @@ export default{
           a.hasMe = a.noPay || a.payStatus === 'ALREADY_PAY' || a.pzStatus === 'pzStatus';
           a.hasDeductibleAmount = !a.noPay &&  WY.session.isOwner(a.userId) && a.deductibleAmount > 0;
           if(a.noPay){
-            a.diffTime = new Date(a.expireTime) - Date.now();
+            a.diffTime = new Date(a.expireTime.turnDate()) - Date.now();
             if(a.diffTime < 0){
               a.statusName = '已过期';
               return false;

@@ -70,12 +70,12 @@ function seatSvg(options){
   this.headImgSvg = [];
   this.svg = options.svg;
   this.scale = options.scale || 1;
-  this.minScale = .05;
-  this.maxScale = 1;
+  this.minScale = .1;
+  this.maxScale = 2;
   this.clientWidth = this.svg.parentElement.clientWidth ;
   this.clientHeight = this.svg.parentElement.clientHeight;
-  this.allWidth = this.options.width;
-  this.allHeight = this.options.height;
+  this.allWidth = this.options.width*this.scale;
+  this.allHeight = this.options.height*this.scale;
   this.parentOffset = {
     top:this.svg.parentElement.offsetTop,
     left:this.svg.parentElement.offsetLeft,
@@ -190,7 +190,7 @@ seatSvg.prototype = {
   },
   setUserHeadImg:function(svgData , userInfo){
     var id = 'userInfoHeadImg'+userInfo.userId;
-    var cr = 50;
+    var cr = 10;
     svgData.x -= 0;
     svgData.y -= 0;
     if(this.patterns[id]){
@@ -239,21 +239,19 @@ seatSvg.prototype = {
       that.addScale(e.deltaY>0?-.1:.1  , e.pageX, e.pageY);
     } , false);
     parentEvent.addEventListener('dbclick' , function(e){
-      that.addScale(.2, e.pageX, e.pageY);
+      //that.addScale(.2, e.pageX, e.pageY);
     } , false);
     var isMouseDown,autoX,autoY,marginLeft,marginTop;
     var touchLength;
     this.bind('mousedown touchstart' ,parentEvent,function(e){
       isMouseDown = true;
-      that.cancelScale();
       if(e.targetTouches){
         if(e.targetTouches.length === 2){
-          touchLength = that.getTouchLength(e.targetTouches[0],e.targetTouches[1]);
+          //touchLength = that.getTouchLength(e.targetTouches[0],e.targetTouches[1]);
           return false;
         }
         e = e.targetTouches[0];
         //单个点击不做处理
-        //that.addTimer = setInterval(that.addTimerScale.bind(that , e.pageX , e.pageY) , 600);
       }
       autoX = e.pageX ;
       autoY = e.pageY ;
@@ -261,14 +259,13 @@ seatSvg.prototype = {
       marginTop = parseFloat(that.svg.style.marginTop || 0);
     });
     this.bind('mousemove touchmove' ,parentEvent,function(e){
-      that.cancelScale();
       if(isMouseDown){
         if(e.targetTouches){
           if(e.targetTouches.length === 2){
-            var newTouchLength = that.getTouchLength(e.targetTouches[0],e.targetTouches[1]);
-            var touchCenter = that.getTouchCenter(e.targetTouches);
-            that.addScale((newTouchLength - touchLength) / touchLength , touchCenter.x, touchCenter.y);
-            touchLength = newTouchLength;
+            // var newTouchLength = that.getTouchLength(e.targetTouches[0],e.targetTouches[1]);
+            // var touchCenter = that.getTouchCenter(e.targetTouches);
+            // that.addScale((newTouchLength - touchLength) / touchLength , touchCenter.x, touchCenter.y);
+            // touchLength = newTouchLength;
             return false;
           }
           e = e.targetTouches[0];
@@ -281,7 +278,6 @@ seatSvg.prototype = {
       e.stopPropagation && e.stopPropagation()
     });
     this.bind('mouseup mouseout mouseleave touchend touchcancel' ,parentEvent,function(e){
-      that.cancelScale();
       isMouseDown = 0;
     });
   },
@@ -323,12 +319,6 @@ seatSvg.prototype = {
     }
     this.svg.style.marginLeft = mt + 'px';
   },
-  addTimerScale:function(x , y){
-      this.addScale(.1 , x , y);
-  },
-  cancelScale:function(){
-    clearTimeout(this.addTimer);
-  },
   getTouchCenter:function(e){
     return {
       x:(e[0].pageX+e[1].pageX)/2,
@@ -344,12 +334,13 @@ seatSvg.prototype = {
     })
   },
   addScale:function(scale , x , y){
-    return false;
-    x-= this.parentOffset.left;
-    y-= this.parentOffset.top;
+    // x-= this.parentOffset.left;
+    // y-= this.parentOffset.top;
     scale += this.scale;
     if(scale < this.minScale || scale > this.maxScale)return false;
     this.scale = scale;
+    this.allWidth = this.options.width*this.scale;
+    this.allHeight = this.options.height*this.scale;
     // this.allWidth = this.options.width * scale;
     // this.allHeight = this.options.height * scale;
     // var ml =  x - parseFloat(this.svg.style.marginLeft || 0);
@@ -358,7 +349,10 @@ seatSvg.prototype = {
     // this.svg.style.height = this.allHeight + 'px';
     // this.svg.style.marginLeft = x - ml * scale / this.autoScale    + 'px';
     // this.svg.style.marginTop = y - mt * scale / this.autoScale   + 'px';
-    this.svg.style.transform = 'scale('+(scale).toFixed(2)+')';
+    this.svg.style.width = this.allWidth + 'px';
+    this.svg.style.height = this.allHeight + 'px';
+    this.setMarginLeft(-(this.clientWidth - this.allWidth)/2 );
+    this.setMarginTop(-(this.clientHeight - this.allHeight)/2 );
   },
   addRoom:function(svgData){
     return this.svgObj.add('image',{

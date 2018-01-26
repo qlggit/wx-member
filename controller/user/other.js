@@ -12,5 +12,13 @@ router.get('/info', function(req, res, next) {
     }
   });
 });
+router.get('/data', function(req, res, next) {
+  useRequest.send(req , res , {
+    url:useUrl.login.info,
+    done:function(data){
+      res.send(data);
+    }
+  });
+});
 exports.router = router;
 exports.__path = '/user/other';

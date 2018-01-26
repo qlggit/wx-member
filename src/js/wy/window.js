@@ -21,3 +21,13 @@ WY.confirm = function(options){
   if(options.showAble === undefined)options.showAble = 1;
   WY.trigger('confirm' , options);
 };
+WY.message = function(options){
+  if(!options || typeof options !== 'object'){
+    options = {
+      title:'消息',
+      content:options,
+    };
+  }
+  if(options.showAble === undefined)options.showAble = 1;
+  WY.trigger('message' , options);
+};

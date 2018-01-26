@@ -138,13 +138,14 @@ export default{
     setImg:function(list){
       list.forEach(function(data){
         var svgData = data.svgData;
-        //已选 不可选+不允许拼桌
-        if(!svgData.selectAble || !svgData.tableAble){
-          svgData.backImg += '-selected.png';
-        }else if(svgData.hasMe){
+        if(svgData.hasMe){
           //我的
           svgData.backImg += '-my.png';
-        }else if(!svgData.isSelected){
+        }
+        //已选 不可选+不允许拼桌
+        else if(!svgData.selectAble || !svgData.tableAble){
+          svgData.backImg += '-selected.png';
+        }else  if(!svgData.isSelected){
           //可选
           svgData.backImg += '-able.png';
         }else{
@@ -179,6 +180,7 @@ export default{
           img:backImg,
           backWidth:img.width,
           backHeight:img.height,
+          showSale:.3,
         };
         call();
       }
@@ -276,9 +278,13 @@ export default{
     //解析订座订单信息
     deSeatOrder:function(orderOne , itemOne){
       if(orderOne){
+        //忽略取消
+        if(orderOne.status === 'cancel'){
+          return false;
+        }
         //忽略过期的未支付订单
         if(orderOne.payStatus !== 'ALREADY_PAY'){
-          if(new Date(orderOne.expireTime) < Date.now())return false;
+          if(new Date(orderOne.expireTime.turnDate()) < Date.now())return false;
         }
         itemOne.isSelected = 1;
         itemOne.allGroup ++;
@@ -295,6 +301,7 @@ export default{
               cancelText:'买酒',
               submitText:'支付',
               content:'您已有未支付的订座订单！',
+              remark:'可前往个人中心取消',
               done:function(v){
                 vueRouter.push(v?
                   (
@@ -302,12 +309,16 @@ export default{
                       seatId:orderOne.seatId,
                       seatOrderNo:orderOne.orderNo,
                       supplierId:orderOne.supplierId,
+                      userId:WY.hrefData.userId,
+                      token:WY.hrefData.token,
                     })
                   ):(
                     WY.common.addUrlParam(that.basePath+'/product',{
                       seatId:orderOne.seatId,
                       seatOrderNo:orderOne.orderNo,
                       supplierId:orderOne.supplierId,
+                      userId:WY.hrefData.userId,
+                      token:WY.hrefData.token,
                     })
                   ))
               }
@@ -359,6 +370,8 @@ export default{
           seatId:seatData.seatId,
           seatOrderNo:seatData.orderNo,
           supplierId:WY.hrefData.supplierId,
+          userId:WY.hrefData.userId,
+          token:WY.hrefData.token,
         }));
         return false;
       }
@@ -378,7 +391,9 @@ export default{
         supplierId:WY.hrefData.supplierId,
       };
       var that = this;
+      WY.loading(1);
       WY.post('/order/seat/'+(data.orderType === 'table'?'pz':'add'),data , function(a){
+        WY.loading(0);
         if(a.code === 0){
           if(data.orderType === 'table'){
             WY.toast('拼桌申请成功，请等待通过');
@@ -389,18 +404,25 @@ export default{
                 seatOrderNo:a.data,
                 supplierId:data.supplierId,
                 seatId:data.seatId,
+                userId:WY.hrefData.userId,
+                token:WY.hrefData.token,
               }));
             }
             else vueRouter.push( WY.common.addUrlParam(that.basePath +'/product',{
               seatId:data.seatId,
               seatOrderNo:a.data,
               supplierId:data.supplierId,
+              userId:WY.hrefData.userId,
+              token:WY.hrefData.token,
             }));
           }
         }else{
           WY.toast(a.message);
         }
       });
+    },
+    scaleChange:function(num){
+      WY.trigger('change-svg-scale',num);
     }
   }
 }

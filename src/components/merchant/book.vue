@@ -1,8 +1,14 @@
 <template>
-  <div class="height-100-100 width-100-100 book-content"
+  <div class="height-100-100 width-100-100 book-content position-relative"
   :class="isServer?'':'pt-header'">
     <header-component v-if="!isServer" :header-data="{title:name}"></header-component>
     <wy-show-svg v-if="svgBackData" :svg-back-data="svgBackData" @click="svgClick"></wy-show-svg>
+    <div class="position-absolute top-0 right-0 z-index-100" :class="isServer?'':'pt-header'">
+      <div class="pr-30 pt-74 width-100">
+        <img class="mb-40 ico-66" @click="scaleChange(.1)" src="/images/seat/jia.png" alt="">
+        <img class="ico-66" @click="scaleChange(-.1)" src="/images/seat/jian.png" alt="">
+      </div>
+    </div>
     <div class="position-fixed width-100-100 bottom-0 left-0 z-index-100 book-window back-white shadow-top-auto">
       <div class="flex-between item-list border-b-194   pl-24 pr-24 pt-10 pb-20">
         <div v-for="item in footerList" class="item text-center">
@@ -17,7 +23,7 @@
          </div>
         <div class="fz-28 color-104">
           <span class="mr-10">选座：</span>
-          <span class="color-24">{{seatData.seatName}}</span>
+          <span class="color-24">{{seatData.seatName || '暂无选择'}}</span>
         </div>
       </div>
       <wy-date v-if="dateVisible" v-model="dateVisible" @click="onValuesChange"

@@ -44,10 +44,16 @@ router.post('/build', function(req, res, next) {
           url:useUrl.login.build,
           data:{
             phone:req.body.phone,
+            mobile:req.body.phone,
             userId:userId,
-            sType:'weixin',
             bindWay:'y',
-            uid:req.session.unionid
+            openId :wechatData.openid,
+            nickname   :wechatData.nickname,
+            headImg    :wechatData.headimgurl,
+            deviceType:'mp',
+            gender :wechatData.gender  || wechatData.sex,
+            sType :'weixin',
+            uid:req.session.unionid,
           },
           method:'POST',
           notBody:1,

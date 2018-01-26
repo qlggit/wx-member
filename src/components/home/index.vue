@@ -1,23 +1,25 @@
 <template>
-  <div class="pt-header pb-footer height-100-100 back-248" v-scroll-box="90">
+  <div class="pt-header-home pb-footer height-100-100 back-248" v-scroll-box="90">
     <header-component :header-data="{title:title,notBack:1}">
         <city-select v-if="selectedCity" slot="city-select" :city-select-data="{title:selectedCity}"></city-select>
       <img slot="search" src="/images/search.png" @click="showClubSearch" class="right-ico" alt="">
     </header-component>
     <wy-club-search v-if="clubSearchAble"></wy-club-search>
-    <div class="pt-430 position-relative height-100-100">
-      <div class="width-100-100 position-absolute left-0 top-0">
-        <div class="head-type-menu" >
-          <div v-for="(item, index) in headMenu"
-               @click="headMenuClick(index)"
-               class="item"
-               :class="headActiveIndex===index?'active':''">{{item.name}}</div>
-        </div>
+    <div class="width-100-100 pt-header position-absolute top-0 left-0">
+      <div class="head-type-menu" >
+        <div v-for="(item, index) in headMenu"
+             @click="headMenuClick(index)"
+             class="item"
+             :class="headActiveIndex===index?'active':''">{{item.name}}</div>
+      </div>
+    </div>
+    <div class=" position-relative height-100-100 overflow-scroll-y" v-scroll-box="">
+      <div class=" ">
         <div class="swiper-content">
           <wy-swiper :swiper-data="{list:swiperList}"></wy-swiper>
         </div>
       </div>
-      <div class="club-item-content overflow-scroll-y height-100-100" v-scroll-box="340" v-if="clubList">
+      <div class="club-item-content height-100-100"  v-if="clubList">
         <div v-for="item in clubList" class="club-item-list">
           <div class="shadow-bottom-auto" v-merchant-detail="item.supplierId">
             <img :src="item.headFile | imgUrlFilter" alt="" class="">

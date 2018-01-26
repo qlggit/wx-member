@@ -8,7 +8,7 @@ export default{
           name:'存取酒',
           code:'wine',
           ico:'/images/my/access',
-          url:'/my/wine',
+          url:'/wechat/download',
           number:0,
         },
         {
@@ -34,14 +34,16 @@ export default{
   created:function(){
     WY.autoVueObj = this;
     var that = this;
-    WY.oneReady('user-info',function(o){
-      var str = o.gender === '2'?'-2.png':'-1.png';
-      that.myList.forEach(function(a){
-         a.ico += str;
-      });
-      that.userInfo = o;
+    WY.trigger('login-flush',function(o){
+      WY.oneReady('user-info',function(o){
+        var str = o.gender === '2'?'-2.png':'-1.png';
+        that.myList.forEach(function(a){
+          a.ico += str;
+        });
+        that.userInfo = o;
+        that.doSearch();
+      } , that);
     } , this);
-    this.doSearch();
   },
   methods:{
     doSearch:function(){

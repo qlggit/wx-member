@@ -13,8 +13,14 @@ function putSession(newSession){
   session.userId = session.userInfo && session.userInfo.userId || '';
   if(location.href.indexOf('server/') > 0){
     session.userId = WY.hrefData.userId;
-    session.tokenInfo = localStorage.tokenInfo = [WY.hrefData.userId,WY.hrefData.token].join('_') || localStorage.tokenInfo;
-    WY.ready('token-complete',session.tokenInfo);
+    session.tokenInfo = localStorage.tokenInfo = (WY.hrefData.userId&&[WY.hrefData.userId,WY.hrefData.token].join('_')) || localStorage.tokenInfo;
+    WY.get('/user/other/data',function(a){
+      if(a.code === 0){
+        session.userInfo = a.data;
+        session.userId = a.data.userId;
+      }
+      WY.ready('token-complete',session.tokenInfo);
+    },{needAbort:0});
     return false;
   }
   if(session.sessionId){
@@ -26,7 +32,7 @@ function putSession(newSession){
     session.userInfo.nickName = session.userInfo.nickname;
     session.userInfo.userName = session.userInfo.mobile || session.userInfo.userName;
     WY.ready('user-info',session.userInfo);
-    if(!session.userInfo.userName){
+    if(location.href.indexOf('h5') ===-1 && !session.userInfo.userName){
       vueRouter.push('/login/phone');
     }
   }
@@ -64,7 +70,7 @@ function getSession(){
   },{needAbort:0});
 }
 var postXhr;
-function loginFlush(){
+function loginFlush(call){
   if(postXhr)postXhr.abort();
   postXhr = WY.post('/login/info',{
     userId:session.userId,
@@ -77,28 +83,33 @@ function loginFlush(){
     }else{
       wechatLogin();
     }
+    if(call)call();
   },{needAbort:0})
 }
 WY.bind('request-complete',function(status){
   if(status === 401){
     login(1);
   }
+  if(status === 402){
+    vueRouter.push('/login/phone');
+  }
 });
-WY.bind('login-flush',function(){
-  loginFlush();
+WY.bind('login-flush',function(call){
+  loginFlush(call);
 });
 WY.bind('session',function(){
   getSession();
 });
 session.isOwner = function(userId){
-  if(userId)userId = userId.split('_')[0];
+  if(!session.userId || !userId)return false;
+  userId = userId.split('_')[0];
   return userId && userId === session.userId || session.userId.split('_')[0] === userId;
 };
 session.isOwnerProp = function(key , val){
   return val != undefined && val === session[key];
 };
 session.getBackUrl = function(){
-  return session.threeToken && session.threeToken.backUrl;
+  //return session.threeToken && session.threeToken.backUrl;
 };
 session.set = function(session){
   putStorage(session);

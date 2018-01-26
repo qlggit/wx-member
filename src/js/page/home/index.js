@@ -34,7 +34,20 @@ export default{
     var that = this;
     WY.loading(1);
     WY.oneReady('user-info',function(o){
-
+      WY.oneReady('bmap-location' , function(o){
+        var addressComponents = o.addressComponents;
+        if(addressComponents){
+          var name = addressComponents.city.replace(/市$/,'');
+          that.selectedCity = name;
+          that.point = o.point;
+          getCode(name, function(code){
+            that.selectedCityCityCode = code;
+            that.reset();
+            that.searchBanner();
+            that.searchList();
+          });
+        }else WY.loading(0);
+      } , this);
     } , this);
     WY.oneBind('club-search',function(o){
         that.clubSearchAble = o;
@@ -56,20 +69,6 @@ export default{
           call(null);
       });
     }
-    WY.oneReady('bmap-location' , function(o){
-      var addressComponents = o.addressComponents;
-      if(addressComponents){
-        var name = addressComponents.city.replace(/市$/,'');
-        that.selectedCity = name;
-        that.point = o.point;
-        getCode(name, function(code){
-          that.selectedCityCityCode = code;
-          that.reset();
-          that.searchBanner();
-          that.searchList();
-        });
-      }else WY.loading(0);
-    } , this);
     WY.oneBind('city-location',function(val){
       getCode(val , function(code){
         that.selectedCityCityCode = code;

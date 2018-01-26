@@ -29,13 +29,13 @@ export default{
   created:function(){
     WY.loading(1);
     WY.autoVueObj = this;
-      this.isServer = location.href.indexOf('server') > 0;
-      this.basePath = this.isServer ? '/server/app' : '/merchant';
-      var that = this;
-      WY.oneReady(this.isServer?'token-complete':'user-info',function(o){
-        that.doSearch(WY.hrefData.orderNo?'':WY.hrefData.seatOrderNo);
-        if(WY.hrefData.seatOrderNo)that.searchSeatOrder();
-      } , this);
+    this.isServer = location.href.indexOf('server') > 0;
+    this.basePath = this.isServer ? '/server/app' : '/merchant';
+    var that = this;
+    WY.oneReady(this.isServer?'token-complete':'user-info',function(o){
+      that.doSearch(WY.hrefData.orderNo?'':WY.hrefData.seatOrderNo);
+      if(WY.hrefData.seatOrderNo)that.searchSeatOrder();
+    } , this);
   },
   methods:{
     doSum:function(){
@@ -120,9 +120,11 @@ export default{
     },
     doBuy:function(){
       var that = this;
+      WY.loading(1);
       WY.post('/order/pay' , {
         orderNo:this.orderNo || this.seatOrderNo,
       } , function(a){
+        WY.loading(0);
         if(a.code === 0){
           vueRouter.push(that.basePath + '/pay-complete?payStatus=1');
         }else{
