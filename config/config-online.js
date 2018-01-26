@@ -5,7 +5,6 @@ module.exports = {
     apiUrl:'http://172.19.56.132:4200',
     h5Api:'http://h5.yukew.com',
     wechatLoginUrl:'http://h5.yukew.com/wechat/entrance/wxmember',
-    wechatLoginH5Url:'http://h5.yukew.com/wechat/entrance/wxh5',
     wechatJssdkUrl:'http://h5.yukew.com/wechat/jssdk/wxmember',
     "log4js":{
         "customBaseDir" :"../logs/wx-member/",
